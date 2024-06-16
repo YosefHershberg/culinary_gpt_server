@@ -172,7 +172,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response) => {
     }
 }
 
-export const getRecipeById = async (req: CustomRequest, res: Response) => {
+export const getRecipe = async (req: CustomRequest, res: Response) => {
     const id = req.params.id;
 
     if (!id) {
@@ -182,8 +182,8 @@ export const getRecipeById = async (req: CustomRequest, res: Response) => {
     try {
         const user = await User.findOne({ clerkId: req.userId })
             .select('+recipes')
-            .exec()
-            ;
+            .exec();
+            
         if (!user) {
             throw new Error('User not found');
         }

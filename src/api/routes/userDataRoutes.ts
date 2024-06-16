@@ -19,6 +19,8 @@ router.get<{}, any[]>('/recipes', userDataController.getRecipes);
 
 router.post<{}, any>('/recipes', userDataController.addRecipe);
 
+router.get<{ id: string }, any>('/recipes/:id', userDataController.getRecipe);
+
 router.delete<{ id: string }, MessageResponse>('/recipes/:id', userDataController.deleteRecipe);
 
 export default router;

@@ -1,4 +1,4 @@
-import express, { Response } from 'express';
+import express from 'express';
 import { ingredientSuggestionsController } from './controllers/ingredientSuggestionsController';
 import userDataRoutes from './routes/userDataRoutes';
 import createRecipeController from './controllers/createRecipeController';

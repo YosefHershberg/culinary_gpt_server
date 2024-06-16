@@ -2,9 +2,9 @@ import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Webhook } from "svix";
 import User from "../models/user";
 import { kitchenUtils } from "../data/kitchenUtils";
+import { Request, Response, NextFunction } from "express";
 
-//@ts-ignore
-export const clerkWebhooks = async function (req, res, next) {
+export const clerkWebhooks = async function (req: Request, res: Response, next: NextFunction) {
 
     // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
@@ -55,7 +55,7 @@ export const clerkWebhooks = async function (req, res, next) {
                 ingredients: [],
                 kitchenUtils: kitchenUtils
             });
-            const res = await user.save()
+            await user.save()
         } catch (error) {
             // @ts-ignore
             console.log('Error creating user:', error.message);
