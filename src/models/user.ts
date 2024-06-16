@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+
+
 const userSchema = new mongoose.Schema({
     first_name: {
         type: String,
@@ -45,8 +47,28 @@ const userSchema = new mongoose.Schema({
         "Slow Cooker": Boolean,
         "BBQ": Boolean,
         "Grill": Boolean,
-    }
-});
+    },
+    recipes: [{
+        recipe: {
+            title: String,
+            description: String,
+            ingredients: [{
+                ingredient: String,
+            }],
+            steps: [{
+                step: String,
+                time: String,
+            }],
+            time: String,
+            level: String
+        },
+        image_url: String,
+    }],
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+
+userSchema.path('recipes').select(false)
+
+
 
 // userSchema.methods.toJSON = function () {
 //     const user = this.toObject();

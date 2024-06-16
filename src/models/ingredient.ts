@@ -11,20 +11,7 @@ const ingredientSchema = new mongoose.Schema({
         enum: ['common', 'dairy', 'vegetables', 'spices', 'carbs', 'meat'],
         required: true,
     },
-});
-
-ingredientSchema.virtual('id').get(function () {
-    return this._id.toHexString();
-});
-
-ingredientSchema.set('toJSON', {
-    virtuals: true,
-    transform: (doc, ret) => {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
-    }
-});
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
 
 const Ingredient = mongoose.model('Ingredient', ingredientSchema);
 

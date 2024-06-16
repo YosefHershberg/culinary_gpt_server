@@ -1,5 +1,5 @@
 import express from 'express';
-import * as userDataController from '../controllers/userDataController';
+import * as userDataController from '../controllers/userDataControllers';
 import Ingredient from '../../interfaces/Ingredient';
 import MessageResponse from '../../interfaces/MessageResponse';
 
@@ -11,8 +11,16 @@ router.post<{}, Ingredient>('/ingredients', userDataController.addIngredient);
 
 router.delete<{ id: string }, MessageResponse>('/ingredients/:id', userDataController.deleteIngredient);
 
-router.get<{}, string[]>('/kitchen-utils', userDataController.getKitchenUtils);
+router.get('/kitchen-utils', userDataController.getKitchenUtils);
 
-router.post<{}, string>('/kitchen-utils', userDataController.updateKitchenUtils);
+router.post('/kitchen-utils', userDataController.updateKitchenUtils);
+
+router.get<{}, any[]>('/recipes', userDataController.getRecipes);
+
+router.post<{}, any>('/recipes', userDataController.addRecipe);
+
+router.delete<{ id: string }, MessageResponse>('/recipes/:id', userDataController.deleteRecipe);
 
 export default router;
+
+//TODO: fix the types for the routes
