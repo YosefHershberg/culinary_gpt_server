@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-
-
+import { mongooseVirtuals } from '../utils/helperFunctions';
 
 const userSchema = new mongoose.Schema({
     first_name: {
@@ -64,11 +63,9 @@ const userSchema = new mongoose.Schema({
         },
         image_url: String,
     }],
-}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+}, mongooseVirtuals());
 
 userSchema.path('recipes').select(false)
-
-
 
 // userSchema.methods.toJSON = function () {
 //     const user = this.toObject();

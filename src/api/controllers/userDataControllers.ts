@@ -30,6 +30,7 @@ export const addIngredient = async (req: CustomRequest, res: Response) => {
         if (!user) {
             throw new Error('User not found');
         }
+
         user.ingredients.push(ingredient.id);
         await user.save();
         return res.json(ingredient);

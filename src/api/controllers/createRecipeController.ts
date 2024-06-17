@@ -20,7 +20,7 @@ type Recipe = {
 }
 
 const createRecipeController = async (req: CustomRequest, res: Response) => {
-    const { mealSelected, selectedTime, prompt } = req.body;
+    const { mealSelected, selectedTime, prompt, numOfPeople } = req.body;
 
     let kithchenUtils;
     let userIngredients;
@@ -48,6 +48,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
                     create a recipe for ${mealSelected} that takes ${selectedTime} minutes
                     the following ingredients are available: ${userIngredients?.join(', ')}
                     with the following kitchen utilities: ${kithchenUtils}
+                    the recipe should serve ${numOfPeople} people
                     add also keep in mind this - ${prompt}
                     the response that I want you to give me should VALID json that looks like this:
                     {

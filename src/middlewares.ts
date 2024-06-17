@@ -3,7 +3,6 @@ import ErrorResponse from './interfaces/ErrorResponse';
 import clerkClient from './utils/clerkClient';
 import CustomRequest from './interfaces/CustomRequest';
 
-
 export async function authMiddleware(req: CustomRequest, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(' ')[1];
 

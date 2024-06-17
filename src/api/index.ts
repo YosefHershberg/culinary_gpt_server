@@ -10,8 +10,6 @@ router.use('/user', userDataRoutes)
 
 router.get('/ingredient-suggestions/:category', ingredientSuggestionsController);
 
-router.get('/ingredient-suggestions', ingredientSuggestionsController);
-
 router.get('/search', searchIngredientsController);
 
 router.post('/create-recipe', createRecipeController);

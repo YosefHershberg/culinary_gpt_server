@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { mongooseVirtuals } from '../utils/helperFunctions';
 
 const ingredientSchema = new mongoose.Schema({
     name: {
@@ -11,7 +12,7 @@ const ingredientSchema = new mongoose.Schema({
         enum: ['common', 'dairy', 'vegetables', 'spices', 'carbs', 'meat'],
         required: true,
     },
-}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+}, mongooseVirtuals());
 
 const Ingredient = mongoose.model('Ingredient', ingredientSchema);
 
