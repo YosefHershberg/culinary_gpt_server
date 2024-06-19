@@ -4,6 +4,7 @@ import CustomRequest from '../../interfaces/CustomRequest';
 import openai from '../../utils/openai';
 import axios from 'axios';
 import sharp from 'sharp';
+import { isValidJSON } from '../../utils/helperFunctions';
 
 type Recipe = {
     title: string,
@@ -24,7 +25,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
 
     let kithchenUtils;
     let userIngredients;
-    let recipe: Recipe;
+    let recipe: Recipe | null = null;
 
     if (!mealSelected || !selectedTime) {
         console.log(mealSelected, selectedTime, prompt);
@@ -40,51 +41,68 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 
-    try {
-        const completion = await openai.chat.completions.create({
-            messages: [
-                {
-                    "role": "user", "content": `
-                    create a recipe for ${mealSelected} that takes ${selectedTime} minutes
-                    the following ingredients are available: ${userIngredients?.join(', ')}
-                    with the following kitchen utilities: ${kithchenUtils}
-                    the recipe should serve ${numOfPeople} people
-                    add also keep in mind this - ${prompt}
-                    the response that I want you to give me should VALID json that looks like this:
-                    {
-                        "title": "Recipe title",
-                        "description": "Recipe description",
-                        "ingredients": [{
-                            "ingredient": "ingredient name and quantity",
-                        }],
-                        "steps": [{
-                            "step": "step description",
-                            "time": "time to complete the step"
-                        }],
-                        "time": "total time to complete the recipe",
-                        "level": "difficulty level of the recipe (easy, medium, hard)",
-                    }
-                    NOTE: the json i want you to genarate must be a valid json object
-                    ` },
-            ],
-            model: "gpt-3.5-turbo",
-        });
-        if (completion.choices[0].message.content) {
-            recipe = JSON.parse(completion.choices[0].message.content)
+    const maxRetries = 3;
+    let attempts = 0;
+    let isValidJson = false;
 
-        } else {
+    while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
+        try {
+            const completion = await openai.chat.completions.create({
+                messages: [
+                    {
+                        role: "user", content: `
+                        create a recipe for ${mealSelected} that takes ${selectedTime} minutes
+                        the following ingredients are available: ${userIngredients?.join(', ')}
+                        with the following kitchen utilities: ${kithchenUtils}
+                        the recipe should serve ${numOfPeople} people
+                        add also keep in mind this - ${prompt}
+                        the response that I want you to give me should VALID json that looks like this:
+                        {
+                            "title": "Recipe title",
+                            "description": "Recipe description",
+                            "ingredients": [{
+                                "ingredient": "ingredient name and quantity",
+                            }],
+                            "steps": [{
+                                "step": "step description",
+                                "time": "time to complete the step"
+                            }],
+                            "time": "total time to complete the recipe",
+                            "level": "difficulty level of the recipe (easy, medium, hard)",
+                        }
+                        NOTE: the json i want you to genarate must be a valid json object
+                        `
+                    }
+                ],
+                model: "gpt-3.5-turbo",
+            });
+
+            if (completion.choices[0].message.content) {
+                isValidJson = isValidJSON(completion.choices[0].message.content);
+                if (isValidJson) {
+                    recipe = JSON.parse(completion.choices[0].message.content);
+                } else {
+                    attempts++;
+                    if (attempts >= maxRetries) {
+                        return res.status(400).json({ message: 'Invalid JSON after multiple attempts' });
+                    }
+                }
+            } else {
+                return res.status(500).json({ message: 'Internal server error' });
+            }
+
+        } catch (error) {
+            console.log(error);
             return res.status(500).json({ message: 'Internal server error' });
         }
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: 'Internal server error' });
     }
+
+    console.log(attempts);
 
     try {
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of ${recipe.title}`,
+            prompt: `A realistic photo of ${recipe?.title}`,
             n: 1,
             size: "1024x1024",
         });
