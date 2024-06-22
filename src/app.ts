@@ -9,7 +9,6 @@ import api from './api';
 import MessageResponse from './interfaces/MessageResponse';
 
 import { clerkWebhooks } from './utils/webhooks';
-import Ingredient from './models/ingredient';
 
 require('dotenv').config();
 
