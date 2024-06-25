@@ -1,8 +1,26 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../utils/helperFunctions';
+import { Recipe, KitchenUtils, Ingredient } from '../interfaces';
 
-const userSchema = new mongoose.Schema({
+interface UserDocument extends Document {
+    first_name: string;
+    last_name: string;
+    clerkId: string;
+    email: string;
+    createdAt: Date;
+    updatedAt: Date;
+    ingredients: string[];
+    kitchenUtils: KitchenUtils;
+    recipes: Recipe[]
+}
+
+const userSchema = new mongoose.Schema<UserDocument>({
     first_name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    last_name: {
         type: String,
         required: true,
         trim: true,
@@ -10,11 +28,6 @@ const userSchema = new mongoose.Schema({
     clerkId: {
         type: String,
         required: true,
-    },
-    last_name: {
-        type: String,
-        required: true,
-        trim: true,
     },
     email: {
         type: String,
@@ -89,13 +102,14 @@ userSchema.path('recipes').select(false)
 // });
 
 userSchema.pre('save', function (next) {
-    this.updatedAt = new Date();
+    // this.updatedAt = new Date();
+
     // NOTE: can throw error here to stop the save
     // throw new Error('Error in pre save hook');
     next();
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<UserDocument>('User', userSchema);
 
 export default User;
 

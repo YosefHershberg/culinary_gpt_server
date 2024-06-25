@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import User from '../../models/user';
 import CustomRequest from '../../interfaces/CustomRequest';
+import { Recipe } from '../../interfaces';
 
 // INGREDEINTS ------------------------------------------------------------
 
@@ -36,7 +37,7 @@ export const addIngredient = async (req: CustomRequest, res: Response) => {
         return res.json(ingredient);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'An error acoured while adding your ingredient' });
     }
 };
 
@@ -163,7 +164,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response) => {
         if (!user) {
             throw new Error('User not found');
         }
-        const newRecipes = user.recipes.filter(recipe => recipe._id && recipe._id.toString() !== id);
+        const newRecipes = user.recipes.filter(recipe => recipe.id && recipe.id !== id);
         user.recipes = newRecipes as any;
         await user.save();
         return res.json({ message: 'Recipe deleted' });
@@ -188,7 +189,7 @@ export const getRecipe = async (req: CustomRequest, res: Response) => {
         if (!user) {
             throw new Error('User not found');
         }
-        const recipe = user.recipes.find(recipe => recipe._id && recipe._id.toString() === id);
+        const recipe = user.recipes.find(recipe => recipe.id === id);
         return res.json(recipe);
     } catch (error: any) {
         console.log(error.message);

@@ -1,6 +1,6 @@
 import express from 'express';
 import * as userDataController from '../controllers/userDataControllers';
-import Ingredient from '../../interfaces/Ingredient';
+import { Ingredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 const router = express.Router();

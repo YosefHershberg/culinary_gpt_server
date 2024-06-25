@@ -1,7 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../utils/helperFunctions';
 
-const ingredientSchema = new mongoose.Schema({
+interface IngredientDocument extends Document {
+    name: string;
+    category: string[];
+}
+
+const ingredientSchema = new mongoose.Schema<IngredientDocument>({
     name: {
         type: String,
         required: true,
@@ -14,6 +19,6 @@ const ingredientSchema = new mongoose.Schema({
     },
 }, mongooseVirtuals());
 
-const Ingredient = mongoose.model('Ingredient', ingredientSchema);
+const Ingredient = mongoose.model<IngredientDocument>('Ingredient', ingredientSchema);
 
 export default Ingredient;
