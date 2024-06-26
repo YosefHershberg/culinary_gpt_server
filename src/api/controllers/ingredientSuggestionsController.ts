@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Ingredient from '../../models/Ingredient';
+import Ingredient from '../../models/ingredient';
 
 const categoryArr = [
     'common',
