@@ -1,7 +1,6 @@
 import { Response } from 'express';
-import User from '../../models/user';
+import User from '../../models/User';
 import CustomRequest from '../../interfaces/CustomRequest';
-import { Recipe } from '../../interfaces';
 
 // INGREDEINTS ------------------------------------------------------------
 
