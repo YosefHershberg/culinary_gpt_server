@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import User from '../../models/XUser';
+import User from '../../models/User';
 import CustomRequest from '../../interfaces/CustomRequest';
 import openai from '../../utils/openai';
 import axios from 'axios';

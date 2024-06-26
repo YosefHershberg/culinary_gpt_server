@@ -1,4 +1,4 @@
-import Ingredient from '../models/XIngredient';
+import Ingredient from '../models/Ingredient';
 import * as ingredients from '../data/ingredients';
 
 const seedDatabase = async () => {
