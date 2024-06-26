@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import CustomRequest from '../../interfaces/CustomRequest';
-import Ingredient from '../../models/Ingredient';
+import Ingredient from '../../models/XIngredient';
 
 const searchIngredientsController = async (req: CustomRequest, res: Response) => {
     const { query } = req.query;

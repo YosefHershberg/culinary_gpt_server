@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import User from '../../models/user';
+import User from '../../models/XUser';
 import CustomRequest from '../../interfaces/CustomRequest';
 
 // INGREDEINTS ------------------------------------------------------------
