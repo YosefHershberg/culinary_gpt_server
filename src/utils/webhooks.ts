@@ -1,6 +1,6 @@
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Webhook } from "svix";
-import User from "../models/User";
+import User from "../models/user";
 import { kitchenUtils } from "../data/kitchenUtils";
 import { Request, Response, NextFunction } from "express";
 
