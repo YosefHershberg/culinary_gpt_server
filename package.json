@@ -9,8 +9,7 @@
     "build": "tsc",
     "start:dist": "node dist/src/index.js",
     "lint": "eslint --fix src test",
-    "typecheck": "tsc --noEmit",
-    "preinstall": "npx only-allow pnpm"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "CJ R. <cj@null.computer> (https://w3cj.now.sh)",
