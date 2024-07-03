@@ -3,6 +3,7 @@ import { Webhook } from "svix";
 import User from "../models/User";
 import { kitchenUtils } from "../data/kitchenUtils";
 import { Request, Response, NextFunction } from "express";
+import { Error } from "mongoose";
 
 export const clerkWebhooks = async function (req: Request, res: Response, next: NextFunction) {
 
@@ -56,17 +57,55 @@ export const clerkWebhooks = async function (req: Request, res: Response, next: 
                 kitchenUtils: kitchenUtils
             });
             await user.save()
+            console.log('User created:', user.first_name, user.last_name)
+            return res.status(200).json({
+                success: true,
+                message: "Webhook received and user created successfully.",
+            });
         } catch (error) {
             // @ts-ignore
             console.log('Error creating user:', error.message);
-            return next(error)    
+            return next(error)
         }
     }
-
-    // console.log("Webhook received:");
-    
-    return res.status(200).json({
-        success: true,
-        message: "Webhook received",
-    });
+    if (evt.type === 'user.deleted') {
+        console.log('userId:', evt.data.id)
+        try {
+            const user = await User.findOneAndDelete({ clerkId: evt.data.id });
+            console.log(user);
+            console.log('User deleted. clerk id:', evt.data.id)
+            return res.status(200).json({
+                success: true,
+                message: "Webhook received and user deleted successfully.",
+            });
+        } catch (error: any) {
+            console.log('Error deleting user:', error.message);
+            return next(error)
+        }
+    }
+    if (evt.type === 'user.updated') {
+        console.log('userId:', evt.data.id)
+        try {
+            const user = await User.findOne({ clerkId: evt.data.id });
+            if (!user) {
+                console.log('User not found. clerk id:', evt.data.id)
+                return res.status(200).json({
+                    success: false,
+                    message: "User not found.",
+                });
+            }
+            user.first_name = evt.data.first_name as string;
+            user.last_name = evt.data.last_name as string;
+            user.email = evt.data.email_addresses[0].email_address;
+            await user.save()
+            console.log('User updated:', user.first_name, user.last_name)
+            return res.status(200).json({
+                success: true,
+                message: "Webhook received and user updated successfully.",
+            });
+        } catch (error: any) {
+            console.log('Error updating user:', error.message);
+            return next(error)
+        }
+    }
 }

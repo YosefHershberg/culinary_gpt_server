@@ -102,7 +102,7 @@ userSchema.path('recipes').select(false)
 // });
 
 userSchema.pre('save', function (next) {
-    // this.updatedAt = new Date();
+    this.updatedAt = new Date();
 
     // NOTE: can throw error here to stop the save
     // throw new Error('Error in pre save hook');
