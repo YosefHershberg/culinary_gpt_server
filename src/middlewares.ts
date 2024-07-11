@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { ZodSchema } from 'zod';
 import ErrorResponse from './interfaces/ErrorResponse';
 import clerkClient from './utils/clerkClient';
 import CustomRequest from './interfaces/CustomRequest';
@@ -38,4 +39,21 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
   });
+}
+
+// This function will return a middleware fucntion
+export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
+  try {
+    schema.parse({
+      body: req.body,
+      query: req.query,
+      params: req.params,
+    });
+    next();
+  } catch (error: any) {
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: error.errors,
+    });
+  }
 }

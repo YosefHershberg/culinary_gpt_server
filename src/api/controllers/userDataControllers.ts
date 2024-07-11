@@ -1,6 +1,8 @@
 import { Response } from 'express';
-import User from '../../models/User';
+import User from '../models/User';
 import CustomRequest from '../../interfaces/CustomRequest';
+import { z } from 'zod';
+// import { ingredientSchema, recipeSchema } from '../schemas';
 
 // INGREDEINTS ------------------------------------------------------------
 
@@ -21,6 +23,13 @@ export const getIngredients = async (req: CustomRequest, res: Response) => {
     }
 };
 
+export const addIngredientSchema = z.object({
+    body: z.object({
+        // ingredient: ingredientSchema
+        ingredient: z.any() // NOTO: This is a temporary solution
+    })
+});
+
 export const addIngredient = async (req: CustomRequest, res: Response) => {
     const ingredient = req.body;
 
@@ -40,12 +49,15 @@ export const addIngredient = async (req: CustomRequest, res: Response) => {
     }
 };
 
+
+export const doSomethingByIdSchema = z.object({
+    params: z.object({
+        id: z.string(),
+    }),
+});
+
 export const deleteIngredient = async (req: CustomRequest, res: Response) => {
     const id = req.params.id;
-
-    if (!id) {
-        return res.status(400).json({ message: 'Invalid id' });
-    }
 
     try {
         const user = await User.findOne({ clerkId: req.userId });
@@ -77,13 +89,15 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response) => {
     }
 };
 
+export const updateKitchenUtilsSchema = z.object({
+    body: z.object({
+        name: z.enum(['Stove Top', 'Oven', 'Microwave', 'Air Fryer', 'Blender', 'Food Processor', 'Slow Cooker', 'BBQ', 'Grill']),
+        value: z.boolean()
+    })
+});
+
 export const updateKitchenUtils = async (req: CustomRequest, res: Response) => {
     const { name, value } = req.body;
-
-    if (!name || !value === undefined) {
-        console.log(name, value);
-        return res.status(400).json({ message: 'Invalid kitchen utility' });
-    }
 
     try {
         const user: any = await User.findOne({ clerkId: req.userId });
@@ -125,6 +139,13 @@ export const getRecipes = async (req: CustomRequest, res: Response) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+export const addRecipeSchema = z.object({
+    body: z.object({
+        // recipe: recipeSchema
+        recipe: z.any() // NOTO: This is a temporary solution
+    })
+});
 
 export const addRecipe = async (req: CustomRequest, res: Response) => {
     const recipe = req.body;
@@ -184,7 +205,7 @@ export const getRecipe = async (req: CustomRequest, res: Response) => {
         const user = await User.findOne({ clerkId: req.userId })
             .select('+recipes')
             .exec();
-            
+
         if (!user) {
             throw new Error('User not found');
         }
@@ -195,4 +216,3 @@ export const getRecipe = async (req: CustomRequest, res: Response) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
-

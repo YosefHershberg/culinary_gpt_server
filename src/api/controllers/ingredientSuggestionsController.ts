@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import Ingredient from '../../models/Ingredient';
+import Ingredient from '../models/Ingredient';
+import { z } from 'zod';
 
 const categoryArr = [
     'common',
@@ -8,14 +9,16 @@ const categoryArr = [
     'spices',
     'carbs',
     'meat'
-]
+] as const;
 
-export const ingredientSuggestionsController = async (req: Request, res: Response) => {
+export const ingredientSuggestionsSchema = z.object({
+    params: z.object({
+        category: z.enum(categoryArr),
+    }),
+});
+
+const ingredientSuggestionsController = async (req: Request, res: Response) => {
     const { category } = req.params;
-
-    if (!categoryArr.includes(category)) {
-        return res.status(400).json({ message: 'Invalid category' });
-    }
 
     try {
         const result = await Ingredient.find({ category })
@@ -25,3 +28,5 @@ export const ingredientSuggestionsController = async (req: Request, res: Respons
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+export default ingredientSuggestionsController;
