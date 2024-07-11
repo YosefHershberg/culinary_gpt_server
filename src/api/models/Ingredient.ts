@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-import { mongooseVirtuals } from '../utils/helperFunctions';
+import { mongooseVirtuals } from '../../utils/helperFunctions';
 
 interface IngredientDocument extends Document {
     name: string;

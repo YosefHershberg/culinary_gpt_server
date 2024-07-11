@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose';
-import { mongooseVirtuals } from '../utils/helperFunctions';
-import { Recipe, KitchenUtils, Ingredient } from '../interfaces';
+import { mongooseVirtuals } from '../../utils/helperFunctions';
+import { Recipe, KitchenUtils, Ingredient } from '../../interfaces';
 
 interface UserDocument extends Document {
     first_name: string;

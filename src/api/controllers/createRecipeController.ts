@@ -1,24 +1,22 @@
 import { Response } from 'express';
-import User from '../../models/User';
+import User from '../models/User';
 import CustomRequest from '../../interfaces/CustomRequest';
 import openai from '../../utils/openai';
 import axios from 'axios';
 import sharp from 'sharp';
 import { isValidJSON } from '../../utils/helperFunctions';
+import { z } from "zod";
+import { Recipe } from '../../interfaces';
 
-type Recipe = {
-    title: string,
-    description: string,
-    ingredients: {
-        ingredient: string,
-    }[],
-    steps: {
-        step: string,
-        time: string,
-    }[],
-    time: string,
-    level: string
-}
+export const createRecipeSchema = z.object({
+    body: z.object({
+        mealSelected: z.enum(['breakfast', 'lunch', 'dinner', 'snack', 'dessert']),
+        selectedTime: z.number().min(5).max(180),
+        prompt: z.string(),
+        numOfPeople: z.number().min(1).max(99),
+    }),
+});
+
 
 const createRecipeController = async (req: CustomRequest, res: Response) => {
     const { mealSelected, selectedTime, prompt, numOfPeople } = req.body;
@@ -27,18 +25,13 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
     let userIngredients;
     let recipe: Recipe | null = null;
 
-    if (!mealSelected || !selectedTime) {
-        console.log(mealSelected, selectedTime, prompt);
-        return res.status(400).json({ message: 'Missing fields' });
-    }
-
     try {
         const user = await User.findOne({ clerkId: req.userId }).populate('ingredients').exec();
         kithchenUtils = user?.kitchenUtils;
         userIngredients = user?.ingredients.map((ingredient: any) => ingredient.name);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Error accoured fetching user from DB' });
     }
 
     const maxRetries = 3;
@@ -93,7 +86,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
 
         } catch (error) {
             console.log(error);
-            return res.status(500).json({ message: 'Internal server error' });
+            return res.status(500).json({ message: 'Error accourd while genarating the recipe' });
         }
     }
 
@@ -131,7 +124,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Error accourd while genarating the image' });
     }
 }
 

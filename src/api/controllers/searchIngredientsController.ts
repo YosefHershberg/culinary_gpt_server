@@ -1,6 +1,13 @@
 import { Response } from 'express';
 import CustomRequest from '../../interfaces/CustomRequest';
-import Ingredient from '../../models/Ingredient';
+import Ingredient from '../models/Ingredient';
+import { z } from 'zod';
+
+export const searchIngredientsSchema = z.object({
+    query: z.object({
+        query: z.string(),
+    })
+});
 
 const searchIngredientsController = async (req: CustomRequest, res: Response) => {
     const { query } = req.query;

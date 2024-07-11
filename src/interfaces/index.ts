@@ -1,3 +1,6 @@
+
+//NOTE: WHEN MAKE CHANGES HERE MAKE SAME CHANGES IN api/schemas/index.ts
+
 export interface Ingredient {
     category: string[]
     name: string;
