@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Ingredient from '../models/Ingredient';
 import { z } from 'zod';
+import { StatusCodes } from 'http-status-codes';
 
 const categoryArr = [
     'common',
@@ -25,7 +26,7 @@ const ingredientSuggestionsController = async (req: Request, res: Response) => {
         return res.status(200).json(result);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while fething suggestions' });
     }
 }
 

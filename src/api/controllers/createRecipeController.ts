@@ -1,12 +1,14 @@
 import { Response } from 'express';
-import User from '../models/User';
-import CustomRequest from '../../interfaces/CustomRequest';
-import openai from '../../utils/openai';
 import axios from 'axios';
 import sharp from 'sharp';
-import { isValidJSON } from '../../utils/helperFunctions';
 import { z } from "zod";
+import { StatusCodes } from 'http-status-codes';
+
+import CustomRequest from '../../interfaces/CustomRequest';
 import { Recipe } from '../../interfaces';
+import User from '../models/User';
+import openai from '../../utils/openai';
+import { isValidJSON } from '../../utils/helperFunctions';
 
 export const createRecipeSchema = z.object({
     body: z.object({
@@ -31,7 +33,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
         userIngredients = user?.ingredients.map((ingredient: any) => ingredient.name);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Error accoured fetching user from DB' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error accoured fetching user from DB' });
     }
 
     const maxRetries = 3;
@@ -81,16 +83,14 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
                     }
                 }
             } else {
-                return res.status(500).json({ message: 'Internal server error' });
+                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
             }
 
         } catch (error) {
             console.log(error);
-            return res.status(500).json({ message: 'Error accourd while genarating the recipe' });
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error accourd while genarating the recipe' });
         }
     }
-
-    console.log(attempts);
 
     try {
         const response = await openai.images.generate({
@@ -124,7 +124,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: 'Error accourd while genarating the image' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error accourd while genarating the image' });
     }
 }
 

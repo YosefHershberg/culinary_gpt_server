@@ -1,8 +1,10 @@
 import express from 'express';
+
+import { validate } from '../../middlewares';
+
 import * as userDataController from '../controllers/userDataControllers';
 import { Ingredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
-import { validate } from '../../middlewares';
 
 
 const router = express.Router();

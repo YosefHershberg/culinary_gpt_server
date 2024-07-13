@@ -1,7 +1,9 @@
 import { Response } from 'express';
+import { z } from 'zod';
+import { StatusCodes } from 'http-status-codes';
+
 import CustomRequest from '../../interfaces/CustomRequest';
 import Ingredient from '../models/Ingredient';
-import { z } from 'zod';
 
 export const searchIngredientsSchema = z.object({
     query: z.object({
@@ -21,7 +23,7 @@ const searchIngredientsController = async (req: CustomRequest, res: Response) =>
         return res.json(ingredients);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while searching' });
     }
 
 };

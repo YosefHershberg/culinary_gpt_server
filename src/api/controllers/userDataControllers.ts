@@ -1,7 +1,9 @@
 import { Response } from 'express';
+import { z } from 'zod';
+import { StatusCodes } from 'http-status-codes';
+
 import User from '../models/User';
 import CustomRequest from '../../interfaces/CustomRequest';
-import { z, ZodError } from 'zod';
 import { ingredientSchema, recipeSchema } from '../schemas';
 
 // INGREDEINTS ------------------------------------------------------------
@@ -19,7 +21,7 @@ export const getIngredients = async (req: CustomRequest, res: Response) => {
         return res.json(user.ingredients);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while adding your ingredients' });
     }
 };
 
@@ -42,7 +44,7 @@ export const addIngredient = async (req: CustomRequest, res: Response) => {
         return res.json(ingredient);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'An error acoured while adding your ingredient' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while adding your ingredient' });
     }
 };
 
@@ -67,7 +69,7 @@ export const deleteIngredient = async (req: CustomRequest, res: Response) => {
         return res.json({ message: 'Ingredient deleted' });
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while deleting your ingredient' });
     }
 };
 
@@ -82,7 +84,7 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response) => {
         return res.json(user.kitchenUtils);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while getting Kitchen Utils' });
     }
 };
 
@@ -111,7 +113,8 @@ export const updateKitchenUtils = async (req: CustomRequest, res: Response) => {
         return res.json({ message: 'Kitchen utilities updated successfully' });
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while updating Kitchen Utils' });
+
     }
 };
 
@@ -133,7 +136,7 @@ export const getRecipes = async (req: CustomRequest, res: Response) => {
 
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while getting your recipes' });
     }
 }
 
@@ -161,7 +164,7 @@ export const addRecipe = async (req: CustomRequest, res: Response) => {
         return res.json(recipe);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while adding recipe' });
     }
 }
 
@@ -186,7 +189,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response) => {
         return res.json({ message: 'Recipe deleted' });
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while deleting recipe' });
     }
 }
 
@@ -209,6 +212,6 @@ export const getRecipe = async (req: CustomRequest, res: Response) => {
         return res.json(recipe);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while getting your recipe'});
     }
 }
