@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ZodSchema } from 'zod';
+import { ZodError, ZodSchema } from 'zod';
 import ErrorResponse from './interfaces/ErrorResponse';
 import clerkClient from './utils/clerkClient';
 import CustomRequest from './interfaces/CustomRequest';
@@ -15,7 +15,7 @@ export async function authMiddleware(req: CustomRequest, res: Response, next: Ne
   let client;
   try {
     client = await clerkClient.verifyToken(token as string);
-    
+
     if (!req.userId) req.userId = client.sub;
     next()
   } catch (error) {
@@ -43,6 +43,8 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
 
 // This function will return a middleware fucntion
 export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
+  console.log('BODY: ', req.body.recipe?.ingredients)
+
   try {
     schema.parse({
       body: req.body,
@@ -51,9 +53,14 @@ export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response
     });
     next();
   } catch (error: any) {
-    return res.status(400).json({
-      message: "Validation failed",
-      errors: error.errors,
-    });
+    console.log(error.errors)
+    if (error instanceof ZodError) {
+      const errorMessages = error.errors.map((issue: any) => ({
+        message: `${issue.path.join('.')} is ${issue.message}`,
+      }))
+      res.status(400).json({ error: 'Invalid data', details: errorMessages });
+    } else {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 }

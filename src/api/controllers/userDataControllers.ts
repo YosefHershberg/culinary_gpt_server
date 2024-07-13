@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import User from '../models/User';
 import CustomRequest from '../../interfaces/CustomRequest';
-import { z } from 'zod';
-// import { ingredientSchema, recipeSchema } from '../schemas';
+import { z, ZodError } from 'zod';
+import { ingredientSchema, recipeSchema } from '../schemas';
 
 // INGREDEINTS ------------------------------------------------------------
 
@@ -24,10 +24,7 @@ export const getIngredients = async (req: CustomRequest, res: Response) => {
 };
 
 export const addIngredientSchema = z.object({
-    body: z.object({
-        // ingredient: ingredientSchema
-        ingredient: z.any() // NOTO: This is a temporary solution
-    })
+    body: ingredientSchema
 });
 
 export const addIngredient = async (req: CustomRequest, res: Response) => {
@@ -142,8 +139,7 @@ export const getRecipes = async (req: CustomRequest, res: Response) => {
 
 export const addRecipeSchema = z.object({
     body: z.object({
-        // recipe: recipeSchema
-        recipe: z.any() // NOTO: This is a temporary solution
+        recipe: recipeSchema
     })
 });
 

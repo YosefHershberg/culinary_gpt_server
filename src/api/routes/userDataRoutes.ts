@@ -7,6 +7,8 @@ import { validate } from '../../middlewares';
 
 const router = express.Router();
 
+// INGREDIENTS ------------------------------------------------------------
+
 router.get<{}, Ingredient[]>(
     '/ingredients',
     userDataController.getIngredients
@@ -24,6 +26,8 @@ router.delete<{ id: string }, MessageResponse>(
     userDataController.deleteIngredient
 );
 
+// KITCHEN UTILS ------------------------------------------------------------
+
 router.get(
     '/kitchen-utils',
     userDataController.getKitchenUtils
@@ -34,6 +38,8 @@ router.post(
     validate(userDataController.updateKitchenUtilsSchema),
     userDataController.updateKitchenUtils
 );
+
+// RECIPES ------------------------------------------------------------
 
 router.get<{}, any[]>(
     '/recipes',
@@ -59,5 +65,3 @@ router.delete<{ id: string }, MessageResponse>(
 );
 
 export default router;
-
-//TODO: fix the types for the routes
