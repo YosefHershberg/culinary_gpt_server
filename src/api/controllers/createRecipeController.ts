@@ -117,7 +117,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
         // Convert the compressed image data to Base64
         const base64Image = compressedImageBuffer.toString('base64');
 
-        // Optional: create a data URL if you need it for an image tag
+        // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
 
         return res.json({ recipe, image_url: base64DataUrl });
