@@ -2,6 +2,8 @@ import Ingredient from '../api/models/Ingredient';
 import * as ingredients from '../data/ingredients';
 
 const seedDatabase = async () => {
+    //TODO: Check if the database is already seeded
+
     try {
         await Ingredient.insertMany([
             ...ingredients.commonProducts,

@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import User from '../models/User';
 import CustomRequest from '../../interfaces/CustomRequest';
 import { ingredientSchema, recipeSchema } from '../schemas';
+import Recipe from '../models/Recipe';
 
 // INGREDEINTS ------------------------------------------------------------
 
@@ -122,9 +123,7 @@ export const updateKitchenUtils = async (req: CustomRequest, res: Response) => {
 
 export const getRecipes = async (req: CustomRequest, res: Response) => {
     try {
-        const user = await User.findOne({ clerkId: req.userId })
-            .select('+recipes')
-            .exec();
+        const user = await User.findOne({ clerkId: req.userId }).populate('recipes').exec();
 
         if (!user) {
             throw new Error('User not found');
@@ -150,18 +149,24 @@ export const addRecipe = async (req: CustomRequest, res: Response) => {
     const recipe = req.body;
 
     try {
-        const user = await User.findOne({ clerkId: req.userId })
-            .select('+recipes')
-            .exec();
+        const newRecipe = new Recipe({
+            ...recipe,
+            userId: req.userId
+        });
 
+        const savedRecipe = await newRecipe.save();
+
+        const user = await User.findOne({ clerkId: req.userId });
+        
         if (!user) {
             throw new Error('User not found');
         }
 
-        user.recipes.push(recipe);
+        user.recipes.push(savedRecipe.id);
+
         await user.save();
 
-        return res.json(recipe);
+        return res.json(newRecipe);
     } catch (error: any) {
         console.log(error.message);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while adding recipe' });
@@ -183,9 +188,12 @@ export const deleteRecipe = async (req: CustomRequest, res: Response) => {
         if (!user) {
             throw new Error('User not found');
         }
-        const newRecipes = user.recipes.filter(recipe => recipe.id && recipe.id !== id);
+        const newRecipes = user.recipes.filter(recipeId => recipeId !== id);
         user.recipes = newRecipes as any;
         await user.save();
+
+        await Recipe.findByIdAndDelete(id);
+
         return res.json({ message: 'Recipe deleted' });
     } catch (error: any) {
         console.log(error.message);
@@ -201,14 +209,8 @@ export const getRecipe = async (req: CustomRequest, res: Response) => {
     }
 
     try {
-        const user = await User.findOne({ clerkId: req.userId })
-            .select('+recipes')
-            .exec();
+        const recipe = await Recipe.findById(id);
 
-        if (!user) {
-            throw new Error('User not found');
-        }
-        const recipe = user.recipes.find(recipe => recipe.id === id);
         return res.json(recipe);
     } catch (error: any) {
         console.log(error.message);

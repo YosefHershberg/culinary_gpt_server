@@ -45,7 +45,6 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
 
 // This function will return a middleware fucntion
 export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
-  console.log('BODY: ', req.body.recipe?.ingredients)
 
   try {
     schema.parse({

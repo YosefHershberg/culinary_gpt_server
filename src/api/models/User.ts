@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { Recipe, KitchenUtils, Ingredient } from '../../interfaces';
+import { KitchenUtils } from '../../interfaces';
 
 interface UserDocument extends Document {
     first_name: string;
@@ -11,7 +11,7 @@ interface UserDocument extends Document {
     updatedAt: Date;
     ingredients: string[];
     kitchenUtils: KitchenUtils;
-    recipes: Recipe[]
+    recipes: string[]
 }
 
 const userSchema = new mongoose.Schema<UserDocument>({
@@ -61,24 +61,12 @@ const userSchema = new mongoose.Schema<UserDocument>({
         "Grill": Boolean,
     },
     recipes: [{
-        recipe: {
-            title: String,
-            description: String,
-            ingredients: [{
-                ingredient: String,
-            }],
-            steps: [{
-                step: String,
-                time: String,
-            }],
-            time: String,
-            level: String
-        },
-        image_url: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Recipe'
     }],
 }, mongooseVirtuals());
 
-userSchema.path('recipes').select(false)
+// userSchema.path('recipes').select(false)
 
 // userSchema.methods.toJSON = function () {
 //     const user = this.toObject();
