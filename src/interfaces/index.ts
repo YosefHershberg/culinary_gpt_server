@@ -32,4 +32,5 @@ export interface Recipe {
     time: string;
     level: string;
     id?: string;
+    userId: string
 }

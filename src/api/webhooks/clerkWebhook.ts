@@ -1,11 +1,11 @@
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Webhook } from "svix";
-import User from "../api/models/User";
-import { kitchenUtils } from "../data/kitchenUtils";
+import User from "../models/User";
+import { kitchenUtils } from "../../data/kitchenUtils";
 import { Request, Response, NextFunction } from "express";
 import { Error } from "mongoose";
 
-export const clerkWebhooks = async function (req: Request, res: Response, next: NextFunction) {
+const clerkWebhook = async function (req: Request, res: Response, next: NextFunction) {
 
     // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
@@ -109,3 +109,5 @@ export const clerkWebhooks = async function (req: Request, res: Response, next: 
         }
     }
 }
+
+export default clerkWebhook;
