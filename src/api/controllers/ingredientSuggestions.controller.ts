@@ -18,7 +18,7 @@ export const ingredientSuggestionsSchema = z.object({
     }),
 });
 
-const ingredientSuggestionsController = async (req: Request, res: Response) => {
+const ingredientSuggestions = async (req: Request, res: Response) => {
     const { category } = req.params;
 
     try {
@@ -30,4 +30,4 @@ const ingredientSuggestionsController = async (req: Request, res: Response) => {
     }
 }
 
-export default ingredientSuggestionsController;
+export default ingredientSuggestions;

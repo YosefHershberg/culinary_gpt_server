@@ -1,9 +1,9 @@
 import express from 'express';
 
 import userDataRoutes from './routes/userDataRoutes';
-import ingredientSuggestionsController, { ingredientSuggestionsSchema } from './controllers/ingredientSuggestionsController';
-import createRecipeController, { createRecipeSchema } from './controllers/createRecipeController';
-import searchIngredientsController, { searchIngredientsSchema } from './controllers/searchIngredientsController';
+import ingredientSuggestions, { ingredientSuggestionsSchema } from './controllers/ingredientSuggestions.controller';
+import createRecipe, { createRecipeSchema } from './controllers/createRecipe.controller';
+import searchIngredients, { searchIngredientsSchema } from './controllers/searchIngredients.controller';
 
 import { validate } from '../middlewares';
 
@@ -17,19 +17,19 @@ router.use(
 router.get(
     '/ingredient-suggestions/:category',
     validate(ingredientSuggestionsSchema),
-    ingredientSuggestionsController
+    ingredientSuggestions
 );
 
 router.get(
     '/search',
     validate(searchIngredientsSchema),
-    searchIngredientsController
+    searchIngredients
 );
 
 router.post(
     '/create-recipe',
     validate(createRecipeSchema),
-    createRecipeController
+    createRecipe
 );
 
 export default router;
