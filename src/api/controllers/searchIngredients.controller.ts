@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import Ingredient from '../models/Ingredient';
+import Ingredient from '../models/ingredient.model';
 
 export const searchIngredientsSchema = z.object({
     query: z.object({

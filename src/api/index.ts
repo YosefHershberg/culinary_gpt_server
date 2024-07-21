@@ -1,17 +1,30 @@
 import express from 'express';
 
-import userDataRoutes from './routes/userDataRoutes';
+import { validate } from '../middlewares';
+
+import ingredientRoutes from './routes/ingredients.routes';
+import kitchenUtilsRoutes from './routes/kithchenUtils.routes';
+import recipesRoutes from './routes/recipes.routes';
+
 import ingredientSuggestions, { ingredientSuggestionsSchema } from './controllers/ingredientSuggestions.controller';
 import createRecipe, { createRecipeSchema } from './controllers/createRecipe.controller';
 import searchIngredients, { searchIngredientsSchema } from './controllers/searchIngredients.controller';
 
-import { validate } from '../middlewares';
-
 const router = express.Router();
 
 router.use(
-    '/user',
-    userDataRoutes
+    '/user/ingredients',
+    ingredientRoutes
+)
+
+router.use(
+    '/user/kitchen-utils',
+    kitchenUtilsRoutes
+)
+
+router.use(
+    '/user/recipes',
+    recipesRoutes
 )
 
 router.get(
@@ -19,6 +32,7 @@ router.get(
     validate(ingredientSuggestionsSchema),
     ingredientSuggestions
 );
+
 
 router.get(
     '/search',

@@ -1,12 +1,10 @@
 import { Response } from 'express';
-import axios from 'axios';
-import sharp from 'sharp';
 import { z } from "zod";
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import { Recipe } from '../../interfaces';
-import User from '../models/User';
+import User from '../models/user.model';
 import openai from '../../utils/openai';
 import { isValidJSON, compressBase64Image } from '../../utils/helperFunctions';
 
