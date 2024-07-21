@@ -3,7 +3,7 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as recipesController from '../controllers/recipes.controller';
-import createRecipe, { createRecipeSchema } from '../controllers/createRecipe.controller';
+import { createRecipe, createRecipeSchema } from '../controllers/recipes.controller';
 
 import MessageResponse from '../../interfaces/MessageResponse';
 

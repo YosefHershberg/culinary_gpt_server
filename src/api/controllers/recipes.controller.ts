@@ -6,6 +6,7 @@ import { recipeOperations } from '../services/recipes.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import { doSomethingByIdSchema, recipeSchema } from '../validations';
+import { createRecipeOperations } from '../services/createRecipe.service';
 
 export const getRecipes = async (req: CustomRequest, res: Response) => {
     try {
@@ -61,6 +62,31 @@ export const getRecipe = async (req: CustomRequest, res: Response) => {
         console.log(error.message);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while getting your recipe' });
     }
+}
+
+export const createRecipeSchema = z.object({
+    body: z.object({
+        mealSelected: z.enum(['breakfast', 'lunch', 'dinner', 'snack', 'dessert']),
+        selectedTime: z.number().min(5).max(180),
+        prompt: z.string(),
+        numOfPeople: z.number().min(1).max(99),
+    }),
+});
+
+export const createRecipe = async (req: CustomRequest, res: Response) => {
+
+    try {
+        const recipe = await createRecipeOperations.createRecipe(req.userId as string, req.body);
+        return res.json(recipe);
+    } catch (error) {
+        console.log(error);
+        let message = 'Error accourd while genarating the recipe';
+        if (error instanceof Error) {
+            message = error.message;
+        }
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
+    }
+
 }
 
 export { doSomethingByIdSchema }
