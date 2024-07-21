@@ -6,7 +6,7 @@ import ingredientRoutes from './routes/ingredients.routes';
 import kitchenUtilsRoutes from './routes/kithchenUtils.routes';
 import recipesRoutes from './routes/recipes.routes';
 
-import ingredientSuggestions, { ingredientSuggestionsSchema } from './controllers/ingredientSuggestions.controller';
+import { ingredientSuggestions, ingredientSuggestionsSchema } from './controllers/ingredients.controller';
 import createRecipe, { createRecipeSchema } from './controllers/createRecipe.controller';
 import searchIngredients, { searchIngredientsSchema } from './controllers/searchIngredients.controller';
 
