@@ -1,35 +1,42 @@
 import express from 'express';
 
-import userDataRoutes from './routes/userDataRoutes';
-import ingredientSuggestionsController, { ingredientSuggestionsSchema } from './controllers/ingredientSuggestionsController';
-import createRecipeController, { createRecipeSchema } from './controllers/createRecipeController';
-import searchIngredientsController, { searchIngredientsSchema } from './controllers/searchIngredientsController';
-
 import { validate } from '../middlewares';
+
+import ingredientRoutes from './routes/ingredients.routes';
+import kitchenUtilsRoutes from './routes/kithchenUtils.routes';
+import recipesRoutes from './routes/recipes.routes';
+
+import { ingredientSuggestions, ingredientSuggestionsSchema } from './controllers/ingredients.controller';
+import searchIngredients, { searchIngredientsSchema } from './controllers/searchIngredients.controller';
 
 const router = express.Router();
 
 router.use(
-    '/user',
-    userDataRoutes
+    '/user/ingredients',
+    ingredientRoutes
+)
+
+router.use(
+    '/user/kitchen-utils',
+    kitchenUtilsRoutes
+)
+
+router.use(
+    '/user/recipes',
+    recipesRoutes
 )
 
 router.get(
     '/ingredient-suggestions/:category',
     validate(ingredientSuggestionsSchema),
-    ingredientSuggestionsController
+    ingredientSuggestions
 );
+
 
 router.get(
     '/search',
     validate(searchIngredientsSchema),
-    searchIngredientsController
-);
-
-router.post(
-    '/create-recipe',
-    validate(createRecipeSchema),
-    createRecipeController
+    searchIngredients
 );
 
 export default router;

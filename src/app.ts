@@ -6,9 +6,9 @@ import bodyParser from "body-parser";
 
 import * as middlewares from './middlewares';
 import api from './api';
-import MessageResponse from './interfaces/MessageResponse';
 
-import { clerkWebhooks } from './utils/webhooks';
+import clerkWebhook from './api/webhooks/clerkWebhook';
+import rateLimiter from './utils/rateLinit';
 
 require('dotenv').config();
 
@@ -21,16 +21,12 @@ app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : true,
 }));
 
-app.get<{}, MessageResponse>('/', (req, res) => {
-  res.json({
-    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
-  });
-});
+app.use(rateLimiter)
 
 app.post(
   "/api/webhooks",
   bodyParser.raw({ type: "application/json" }),
-  clerkWebhooks
+  clerkWebhook
 );
 
 app.use(express.json());

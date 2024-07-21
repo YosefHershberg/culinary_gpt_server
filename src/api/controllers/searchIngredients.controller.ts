@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import Ingredient from '../models/Ingredient';
+import Ingredient from '../models/ingredient.model';
 
 export const searchIngredientsSchema = z.object({
     query: z.object({
@@ -11,7 +11,7 @@ export const searchIngredientsSchema = z.object({
     })
 });
 
-const searchIngredientsController = async (req: CustomRequest, res: Response) => {
+const searchIngredients = async (req: CustomRequest, res: Response) => {
     const { query } = req.query;
 
     if (!query) {
@@ -28,4 +28,4 @@ const searchIngredientsController = async (req: CustomRequest, res: Response) =>
 
 };
 
-export default searchIngredientsController;
+export default searchIngredients;

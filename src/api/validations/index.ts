@@ -39,3 +39,9 @@ export const recipeSchema = z.object({
     level: z.string(),
     id: z.string().optional()
 });
+
+export const doSomethingByIdSchema = z.object({
+    params: z.object({
+        id: z.string(),
+    }),
+});

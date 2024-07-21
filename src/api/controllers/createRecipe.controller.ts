@@ -1,14 +1,12 @@
 import { Response } from 'express';
-import axios from 'axios';
-import sharp from 'sharp';
 import { z } from "zod";
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import { Recipe } from '../../interfaces';
-import User from '../models/User';
+import User from '../models/user.model';
 import openai from '../../utils/openai';
-import { isValidJSON } from '../../utils/helperFunctions';
+import { isValidJSON, compressBase64Image } from '../../utils/helperFunctions';
 
 export const createRecipeSchema = z.object({
     body: z.object({
@@ -20,7 +18,7 @@ export const createRecipeSchema = z.object({
 });
 
 
-const createRecipeController = async (req: CustomRequest, res: Response) => {
+const createRecipe = async (req: CustomRequest, res: Response) => {
     const { mealSelected, selectedTime, prompt, numOfPeople } = req.body;
 
     let kithchenUtils;
@@ -65,7 +63,7 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
                             "time": "total time to complete the recipe",
                             "level": "difficulty level of the recipe (easy, medium, hard)",
                         }
-                        NOTE: the json i want you to genarate must be a valid json object
+                        NOTE: the json i want you to genarate must be a valid json object and without the backticks
                         `
                     }
                 ],
@@ -92,40 +90,29 @@ const createRecipeController = async (req: CustomRequest, res: Response) => {
         }
     }
 
+    let imageUrl
+
     try {
         const response = await openai.images.generate({
             model: "dall-e-3",
             prompt: `A realistic photo of ${recipe?.title}`,
             n: 1,
             size: "1024x1024",
+            response_format: 'b64_json',
         });
-        const imageUrl = response.data[0].url;
-
-        // Download the image
-        const imageResponse = await axios({
-            url: imageUrl,
-            method: 'GET',
-            responseType: 'arraybuffer'
-        });
-
-        // Compress the image using sharp
-        const compressedImageBuffer = await sharp(imageResponse.data)
-            .resize({ width: 300 })
-            .toFormat('jpeg', { quality: 20 })
-            .toBuffer();
-
-        // Convert the compressed image data to Base64
-        const base64Image = compressedImageBuffer.toString('base64');
-
-        // for an image tag
-        const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
-
-        return res.json({ recipe, image_url: base64DataUrl });
-
+        imageUrl = response.data[0].b64_json;
     } catch (error) {
         console.log(error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error accourd while genarating the image' });
     }
+
+    const base64Image = await compressBase64Image(imageUrl as string, 30); //13 KB
+
+    // for an image tag
+    const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
+
+
+    return res.json({ recipe, image_url: base64DataUrl });
 }
 
-export default createRecipeController;
+export default createRecipe;
