@@ -31,5 +31,5 @@ export const recipeOperations = {
     getRecipe: async (recipeId: string) => {
         const recipe = await getRecipe(recipeId)
         return recipe
-    }
+    },
 }

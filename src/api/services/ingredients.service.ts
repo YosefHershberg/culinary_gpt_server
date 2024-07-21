@@ -1,8 +1,9 @@
 
 import { Ingredient } from "../../interfaces";
 import { getUserWithIngredientsDB, getUserDB } from "../data-access/user.da";
+import * as ingredientOperationsDB from "../data-access/ingredient.da";
 
-const ingredientOperations = {
+export const userIngredientOperations = {
     getAll: async (userId: string) => {
         const user = await getUserWithIngredientsDB(userId)
         return user.ingredients
@@ -24,4 +25,14 @@ const ingredientOperations = {
     }
 }
 
-export default ingredientOperations
+export const ingredientOperations = {
+    getByCategory: async (category: string) => {
+        const ingredients = await ingredientOperationsDB.getByCategory(category)
+        return ingredients
+    },
+    search: async (query: string) => {
+        const ingredients = await ingredientOperationsDB.search(query)
+        console.log(ingredients)
+        return ingredients
+    }
+}
