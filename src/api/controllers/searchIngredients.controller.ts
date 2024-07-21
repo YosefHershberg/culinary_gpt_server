@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import Ingredient from '../models/ingredient.model';
+import { ingredientOperations } from '../services/ingredients.service';
 
 export const searchIngredientsSchema = z.object({
     query: z.object({
@@ -14,12 +14,8 @@ export const searchIngredientsSchema = z.object({
 const searchIngredients = async (req: CustomRequest, res: Response) => {
     const { query } = req.query;
 
-    if (!query) {
-        return res.status(400).json({ message: 'No query provided' });
-    }
-
     try {
-        const ingredients = await Ingredient.find({ name: { $regex: query, $options: 'i' } });
+        const ingredients = await ingredientOperations.search(query as string);
         return res.json(ingredients);
     } catch (error: any) {
         console.log(error.message);

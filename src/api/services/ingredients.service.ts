@@ -32,6 +32,7 @@ export const ingredientOperations = {
     },
     search: async (query: string) => {
         const ingredients = await ingredientOperationsDB.search(query)
+        console.log(ingredients)
         return ingredients
     }
 }
