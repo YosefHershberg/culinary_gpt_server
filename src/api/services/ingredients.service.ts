@@ -2,7 +2,7 @@
 import { Ingredient } from "../../interfaces";
 import { getUserWithIngredientsDB, getUserDB } from "../data-access/user.da";
 
-const userIngredientOperations = {
+const ingredientOperations = {
     getAll: async (userId: string) => {
         const user = await getUserWithIngredientsDB(userId)
         return user.ingredients
@@ -24,4 +24,4 @@ const userIngredientOperations = {
     }
 }
 
-export default userIngredientOperations
+export default ingredientOperations

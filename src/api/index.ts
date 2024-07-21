@@ -7,7 +7,6 @@ import kitchenUtilsRoutes from './routes/kithchenUtils.routes';
 import recipesRoutes from './routes/recipes.routes';
 
 import { ingredientSuggestions, ingredientSuggestionsSchema } from './controllers/ingredients.controller';
-import createRecipe, { createRecipeSchema } from './controllers/createRecipe.controller';
 import searchIngredients, { searchIngredientsSchema } from './controllers/searchIngredients.controller';
 
 const router = express.Router();
@@ -38,12 +37,6 @@ router.get(
     '/search',
     validate(searchIngredientsSchema),
     searchIngredients
-);
-
-router.post(
-    '/create-recipe',
-    validate(createRecipeSchema),
-    createRecipe
 );
 
 export default router;

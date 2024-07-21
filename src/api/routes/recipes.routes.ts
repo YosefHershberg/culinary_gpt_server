@@ -3,10 +3,17 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as recipesController from '../controllers/recipes.controller';
+import createRecipe, { createRecipeSchema } from '../controllers/createRecipe.controller';
 
 import MessageResponse from '../../interfaces/MessageResponse';
 
 const router = express.Router();
+
+router.post(
+    '/create',
+    validate(createRecipeSchema),
+    createRecipe
+);
 
 router.get<{}, any[]>(
     '/',
@@ -26,7 +33,7 @@ router.get<{ id: string }, any>(
 );
 
 router.delete<{ id: string }, MessageResponse>(
-    '/recipes/:id',
+    '/:id',
     validate(recipesController.doSomethingByIdSchema),
     recipesController.deleteRecipe
 );

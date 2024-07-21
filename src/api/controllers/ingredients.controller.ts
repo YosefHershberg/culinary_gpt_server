@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
-import userIngredientOperations from '../services/ingredient.service';
+import userIngredientOperations from '../services/ingredients.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import { ingredientSchema } from '../validations';
