@@ -1,7 +1,9 @@
-import { Ingredient, KitchenUtils, Recipe } from "../../interfaces";
-import { getUserWithIngredientsDB } from "../data-access/user.da";
-import openai from '../../utils/openai';
+import { Ingredient, KitchenUtils } from "../../interfaces";
+import openai from '../../lib/openai';
 import { compressBase64Image, isValidJSON } from "../../utils/helperFunctions";
+import { getUserIngredients } from "../data-access/ingredient.da";
+import { getUserDB } from "../data-access/user.da";
+import { UserIngrdientDocument } from "../models/UserIngredients.model";
 
 interface createRecipeInput {
     mealSelected: string;
@@ -13,26 +15,23 @@ interface createRecipeInput {
 export const createRecipeOperations = {
     createRecipe: async (userId: string, recipeInput: createRecipeInput) => {
         let kithchenUtils;
-        let userIngredients;
+        let userIngredients: string[];
 
         try {
-            const user = await getUserWithIngredientsDB(userId)
-
-            if (!user) {
-                throw new Error('User not found')
-            }
+            const ingredients = await getUserIngredients(userId);
+            const user = await getUserDB(userId);
 
             kithchenUtils = user.kitchenUtils;
-            userIngredients = user.ingredients.map((ingredient: any) => ingredient.name);
+            userIngredients = ingredients.map((ingredient: UserIngrdientDocument) => ingredient.name);
 
         } catch (error: any) {
             console.log(error.message);
             throw new Error('Error accoured fetching user from DB')
         }
 
-        const recipe = await createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kithchenUtils) as Recipe;
+        const recipe = await createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kithchenUtils);
 
-        const imageUrl = await createRecipeOperations.createImageOpenAI(recipe.title);
+        const imageUrl = await createRecipeOperations.createImageOpenAI(recipe.title)
 
         const base64Image = await compressBase64Image(imageUrl as string, 30); //13 KB
 
@@ -42,28 +41,28 @@ export const createRecipeOperations = {
         return { recipe, image_url: base64DataUrl };
     },
 
-    createRecipeOpenAI: async (recipeInput: createRecipeInput, userIngredients: Ingredient[], kithchenUtils: KitchenUtils) => {
+    createRecipeOpenAI: async (recipeInput: createRecipeInput, userIngredients: string[], kithchenUtils: KitchenUtils) => {
         const { mealSelected, selectedTime, prompt, numOfPeople } = recipeInput;
 
         const maxRetries = 3;
         let attempts = 0;
         let isValidJson = false;
 
-        let recipe: Recipe | null = null;
+        let recipe = null;
 
         while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
                     messages: [
                         {
-                            role: "user", 
+                            role: "user",
                             content: `
                                 create a recipe for ${mealSelected} that takes ${selectedTime} minutes
                                 the following ingredients are available: ${userIngredients?.join(', ')}
                                 with the following kitchen utilities: ${kithchenUtils}
                                 the recipe should serve ${numOfPeople} people
                                 add also keep in mind this - ${prompt}
-                                the response that I want you to give me should VALID json that looks like this:
+                                the response that I want you to give me should be a VALID json that looks like this:
                                 {
                                     "title": "Recipe title",
                                     "description": "Recipe description",

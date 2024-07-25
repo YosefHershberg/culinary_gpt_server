@@ -7,8 +7,9 @@ import { ingredientOperations, userIngredientOperations } from '../services/ingr
 import CustomRequest from '../../interfaces/CustomRequest';
 import { ingredientSchema } from '../validations';
 import { doSomethingByIdSchema } from '../validations';
+import { UserIngrdientDocument } from '../models/UserIngredients.model';
 
-export const getIngredients = async (req: CustomRequest, res: Response) => {
+export const getIngredients = async (req: CustomRequest, res: Response): Promise<Response<UserIngrdientDocument[]>> => {
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
 
@@ -28,7 +29,7 @@ export const addIngredient = async (req: CustomRequest, res: Response) => {
 
     try {
         const newIngredient =
-            await userIngredientOperations.addIngredient(req.userId as string, ingredient);
+            await userIngredientOperations.addIngredient(req.userId as string, ingredient.id, ingredient.name);
         return res.json(newIngredient);
     } catch (error: any) {
         console.log(error.message);

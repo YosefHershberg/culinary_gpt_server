@@ -10,7 +10,7 @@ import { createRecipeOperations } from '../services/createRecipe.service';
 
 export const getRecipes = async (req: CustomRequest, res: Response) => {
     try {
-        const recipes = await recipeOperations.getAllUserRecipes(req.userId as string);
+        const recipes = await recipeOperations.getAll(req.userId as string);
 
         return res.json(recipes);
     } catch (error: any) {

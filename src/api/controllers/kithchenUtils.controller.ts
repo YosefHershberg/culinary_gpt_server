@@ -2,7 +2,6 @@ import { Response } from 'express';
 import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
-import User from '../models/user.model';
 import { kitchenUtilsOperations } from '../services/kithchenUtils.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
@@ -36,7 +35,6 @@ export const updateKitchenUtils = async (req: CustomRequest, res: Response) => {
     } catch (error: any) {
         console.log(error.message);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while updating Kitchen Utils' });
-
     }
 };
 

@@ -1,7 +1,7 @@
 import mongoose, { Document } from "mongoose";
 import { mongooseVirtuals } from '../../utils/helperFunctions';
 
-interface Recipe extends Document {
+export interface RecipeDocument extends Document {
     recipe: {
         title: string;
         description: string;
@@ -19,7 +19,7 @@ interface Recipe extends Document {
     userId: string;
 }
 
-const recipeSchema = new mongoose.Schema<Recipe>({
+const recipeSchema = new mongoose.Schema<RecipeDocument>({
     recipe: {
         title: {
             type: String,
@@ -76,6 +76,6 @@ const recipeSchema = new mongoose.Schema<Recipe>({
 //     next();
 // });
 
-const Recipe = mongoose.model<Recipe>('Recipe', recipeSchema);
+const Recipe = mongoose.model<RecipeDocument>('Recipe', recipeSchema);
 
 export default Recipe;

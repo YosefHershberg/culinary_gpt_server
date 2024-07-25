@@ -2,16 +2,14 @@ import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
 import { KitchenUtils } from '../../interfaces';
 
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
     first_name: string;
     last_name: string;
     clerkId: string;
     email: string;
     createdAt: Date;
     updatedAt: Date;
-    ingredients: string[];
     kitchenUtils: KitchenUtils;
-    recipes: string[]
 }
 
 const userSchema = new mongoose.Schema<UserDocument>({
@@ -45,10 +43,6 @@ const userSchema = new mongoose.Schema<UserDocument>({
         type: Date,
         default: Date.now,
     },
-    ingredients: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ingredient'
-    }],
     kitchenUtils: {
         "Stove Top": Boolean,
         "Oven": Boolean,
@@ -60,10 +54,6 @@ const userSchema = new mongoose.Schema<UserDocument>({
         "BBQ": Boolean,
         "Grill": Boolean,
     },
-    recipes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Recipe'
-    }],
 }, mongooseVirtuals());
 
 // userSchema.path('recipes').select(false)

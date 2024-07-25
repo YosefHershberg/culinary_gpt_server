@@ -1,6 +1,14 @@
 import Recipe from "../models/recipe.model";
+import { Recipe as RecipeInterface } from "../../interfaces";
 
-export const createRecipe = async (userId: string, recipe: Recipe) => {
+export const getRecipes = async (userId: string) => {
+    const recipes = await Recipe.find({ userId })
+
+    return recipes;
+}
+
+
+export const addRecipe = async (userId: string, recipe: RecipeInterface) => {
     try {
         const newRecipe = new Recipe({
             ...recipe,
@@ -31,5 +39,15 @@ export const deleteRecipe = async (recipeId: string) => {
     } catch (error: any) {
         console.log(error.message);
         throw new Error('An error acoured while deleting recipe');
+    }
+}
+
+export const deleteUserRecipes = async (userId: string) => {
+    try {
+        const deletedRecipes = await Recipe.deleteMany({ userId });
+        return deletedRecipes;
+    } catch (error: any) {
+        console.log(error.message);
+        throw new Error('An error acoured while deleting user recipes');
     }
 }
