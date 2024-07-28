@@ -1,9 +1,6 @@
 import { Ingredient } from "../interfaces";
 
-export const userIngredients: Ingredient[] = [
-]
-
-export const commonProducts: Ingredient[] = [
+export const commonProducts = [
     { category: ['common'], name: "Canola Oil" },
     { category: ['common'], name: "Lemon" },
     { category: ['common'], name: "Lime" },
@@ -47,7 +44,7 @@ export const commonProducts: Ingredient[] = [
     { category: ['common'], name: "Lentil" },
 ]
 
-export const dairyProducts: Ingredient[] = [
+export const dairyProducts = [
     { category: ['dairy', 'common'], name: "Milk" },
     { category: ['dairy', 'common'], name: "Cheese" },
     { category: ['dairy', 'common'], name: "Yogurt" },
@@ -128,7 +125,7 @@ export const dairyProducts: Ingredient[] = [
     { category: ['dairy'], name: "Rice Whipped Cream" },
 ]
 
-export const vegetables: Ingredient[] = [
+export const vegetables = [
     { category: ['vegetables', "common"], name: "Carrot" },
     { category: ['vegetables'], name: "Broccoli" },
     { category: ['vegetables'], name: "Spinach" },
@@ -231,7 +228,7 @@ export const vegetables: Ingredient[] = [
     { category: ['vegetables'], name: "Dandelion Greens" }
 ];
 
-export const spices: Ingredient[] = [
+export const spices = [
     { category: ['spices', 'common'], name: "Salt" },
     { category: ['spices', 'common'], name: "Sugar" },
     { category: ['spices', 'common'], name: "Pepper" },
@@ -323,7 +320,7 @@ export const spices: Ingredient[] = [
     { category: ['spices'], name: "Tandoori Masala" },
 ]
 
-export const carbProducts: Ingredient[] = [
+export const carbProducts = [
     { category: ['carbs', 'common'], name: "Flower" },
     { category: ['carbs', 'common'], name: "White Rice" },
     { category: ['carbs'], name: "Brown Rice" },
@@ -418,7 +415,7 @@ export const carbProducts: Ingredient[] = [
     { category: ['carbs'], name: "Strozzapreti" },
 ]
 
-export const meatProducts: Ingredient[] = [
+export const meatProducts = [
     { category: ['meat', 'common'], name: "Chicken Breast" },
     { category: ['meat', 'common'], name: "Ground Beef" },
     { category: ['meat'], name: "Pork Chops" },
