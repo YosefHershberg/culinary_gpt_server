@@ -8,7 +8,7 @@ import * as middlewares from './middlewares';
 import api from './api';
 
 import clerkWebhook from './api/webhooks/clerkWebhook';
-import rateLimiter from './utils/rateLinit';
+import rateLimiter from './lib/rateLinit';
 
 require('dotenv').config();
 

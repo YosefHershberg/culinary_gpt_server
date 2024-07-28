@@ -7,10 +7,12 @@ import { recipeOperations } from '../services/recipes.service';
 import CustomRequest from '../../interfaces/CustomRequest';
 import { doSomethingByIdSchema, recipeSchema } from '../validations';
 import { createRecipeOperations } from '../services/createRecipe.service';
+import { RecipeDocument } from '../models/recipe.model';
+import MessageResponse from '../../interfaces/MessageResponse';
 
-export const getRecipes = async (req: CustomRequest, res: Response) => {
+export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>) => {
     try {
-        const recipes = await recipeOperations.getAllUserRecipes(req.userId as string);
+        const recipes = await recipeOperations.getAll(req.userId as string);
 
         return res.json(recipes);
     } catch (error: any) {
@@ -25,7 +27,7 @@ export const addRecipeSchema = z.object({
     })
 });
 
-export const addRecipe = async (req: CustomRequest, res: Response) => {
+export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>) => {
     const recipe = req.body;
 
     try {
@@ -38,20 +40,7 @@ export const addRecipe = async (req: CustomRequest, res: Response) => {
     }
 }
 
-export const deleteRecipe = async (req: CustomRequest, res: Response) => {
-    const id = req.params.id;
-
-    try {
-        const message = await recipeOperations.deleteRecipe(req.userId as string, id);
-
-        return res.json({ message });
-    } catch (error: any) {
-        console.log(error.message);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while deleting recipe' });
-    }
-}
-
-export const getRecipe = async (req: CustomRequest, res: Response) => {
+export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>) => {
     const id = req.params.id;
 
     try {
@@ -61,6 +50,19 @@ export const getRecipe = async (req: CustomRequest, res: Response) => {
     } catch (error: any) {
         console.log(error.message);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while getting your recipe' });
+    }
+}
+
+export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResponse>) => {
+    const id = req.params.id;
+
+    try {
+        const message = await recipeOperations.deleteRecipe(req.userId as string, id);
+
+        return res.json(message);
+    } catch (error: any) {
+        console.log(error.message);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while deleting recipe' });
     }
 }
 

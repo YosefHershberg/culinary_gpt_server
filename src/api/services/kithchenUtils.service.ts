@@ -1,6 +1,5 @@
 import { getUserDB } from "../data-access/user.da";
 
-
 export const kitchenUtilsOperations = {
     get: async (userId: string) => {
         const user = await getUserDB(userId)

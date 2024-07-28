@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ZodError, ZodSchema } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
-import clerkClient from './utils/clerkClient';
+import clerkClient from './lib/clerkClient';
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';
 
@@ -34,7 +34,7 @@ export function notFound(req: Request, res: Response, next: NextFunction) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function errorHandler(err: Error, req: Request, res: Response<ErrorResponse>, next: NextFunction) {
+export function errorHandler(err: Error, _req: Request, res: Response<ErrorResponse>, _next: NextFunction) {
   const statusCode = res.statusCode !== StatusCodes.OK ? res.statusCode : StatusCodes.OK;
   res.status(statusCode);
   res.json({
@@ -56,7 +56,6 @@ export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response
     next();
   } catch (error: any) {
     console.log(error.errors)
-
     if (error instanceof ZodError) {
       const errorMessages = error.errors.map((issue: any) => ({
         message: `${issue.path.join('.')} is ${issue.message}`,

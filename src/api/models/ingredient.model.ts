@@ -1,10 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
 
-interface IngredientDocument extends Document {
+export interface IngredientDocument extends Document {
     name: string;
     category: string[];
-}
+};
 
 const ingredientSchema = new mongoose.Schema<IngredientDocument>({
     name: {

@@ -1,11 +1,11 @@
 import sharp from "sharp";
 
-export const mongooseVirtuals = () => {
+export const mongooseVirtuals = (): Object => {
   return {
     toJSON: {
       virtuals: true,
       versionKey: false,
-      transform: (doc: any, ret: any) => {
+      transform: (_doc: any, ret: any) => {
         ret.id = ret._id;
         delete ret._id;
       }
@@ -13,7 +13,7 @@ export const mongooseVirtuals = () => {
     toObject: {
       virtuals: true,
       versionKey: false,
-      transform: (doc: any, ret: any) => {
+      transform: (_doc: any, ret: any) => {
         ret.id = ret._id;
         delete ret._id;
       }

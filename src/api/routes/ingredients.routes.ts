@@ -10,12 +10,12 @@ const router = express.Router();
 
 // INGREDIENTS ------------------------------------------------------------
 
-router.get<{}, Ingredient[]>(
+router.get<{}, Ingredient[] | MessageResponse>(
     '/',
     ingredientControllers.getIngredients
 );
 
-router.post<{}, Ingredient>(
+router.post<{}, Ingredient | MessageResponse>(
     '/',
     validate(ingredientControllers.addIngredientSchema),
     ingredientControllers.addIngredient

@@ -7,8 +7,11 @@ import { ingredientOperations, userIngredientOperations } from '../services/ingr
 import CustomRequest from '../../interfaces/CustomRequest';
 import { ingredientSchema } from '../validations';
 import { doSomethingByIdSchema } from '../validations';
+import MessageResponse from '../../interfaces/MessageResponse';
+import { IngredientDocument } from '../models/ingredient.model';
+import { Ingredient } from '../../interfaces';
 
-export const getIngredients = async (req: CustomRequest, res: Response) => {
+export const getIngredients = async (req: CustomRequest, res: Response<Ingredient[] | MessageResponse>) => {
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
 
@@ -23,12 +26,12 @@ export const addIngredientSchema = z.object({
     body: ingredientSchema
 });
 
-export const addIngredient = async (req: CustomRequest, res: Response) => {
+export const addIngredient = async (req: CustomRequest, res: Response<Ingredient | MessageResponse>) => {
     const ingredient = req.body;
 
     try {
         const newIngredient =
-            await userIngredientOperations.addIngredient(req.userId as string, ingredient);
+            await userIngredientOperations.addIngredient(req.userId as string, ingredient.id, ingredient.name);
         return res.json(newIngredient);
     } catch (error: any) {
         console.log(error.message);
@@ -36,7 +39,7 @@ export const addIngredient = async (req: CustomRequest, res: Response) => {
     }
 };
 
-export const deleteIngredient = async (req: CustomRequest, res: Response) => {
+export const deleteIngredient = async (req: CustomRequest, res: Response<MessageResponse>) => {
     const id = req.params.id;
 
     try {
@@ -54,12 +57,12 @@ export const ingredientSuggestionsSchema = z.object({
     }),
 });
 
-export const ingredientSuggestions = async (req: Request, res: Response) => {
+export const ingredientSuggestions = async (req: Request, res: Response<IngredientDocument[] | MessageResponse>) => {
     const { category } = req.params;
 
     try {
         const result = await ingredientOperations.getByCategory(category);
-        return res.status(200).json(result);
+        return res.json(result);
     } catch (error: any) {
         console.log(error.message);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while fething suggestions' });
@@ -72,7 +75,7 @@ export const searchIngredientsSchema = z.object({
     })
 });
 
-const searchIngredients = async (req: CustomRequest, res: Response) => {
+const searchIngredients = async (req: CustomRequest, res: Response<IngredientDocument[] | MessageResponse>) => {
     const { query } = req.query;
 
     try {
