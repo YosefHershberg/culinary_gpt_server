@@ -8,7 +8,7 @@ import * as middlewares from './middlewares';
 import api from './api';
 
 import clerkWebhook from './api/webhooks/clerkWebhook';
-import rateLimiter from './lib/rateLinit';
+import rateLimiter from './lib/rateLimit';
 
 require('dotenv').config();
 
@@ -21,7 +21,7 @@ app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : true,
 }));
 
-// app.use(rateLimiter)
+app.use(rateLimiter)
 
 app.post(
   "/api/webhooks",
