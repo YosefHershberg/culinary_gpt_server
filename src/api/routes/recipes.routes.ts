@@ -6,6 +6,7 @@ import * as recipesController from '../controllers/recipes.controller';
 import { createRecipe, createRecipeSchema } from '../controllers/recipes.controller';
 
 import MessageResponse from '../../interfaces/MessageResponse';
+import { RecipeDocument } from '../models/recipe.model';
 
 const router = express.Router();
 
@@ -15,18 +16,18 @@ router.post(
     createRecipe
 );
 
-router.get<{}, any[]>(
+router.get<{}, RecipeDocument[] | MessageResponse>(
     '/',
     recipesController.getRecipes
 );
 
-router.post<{}, any>(
+router.post<{}, RecipeDocument | MessageResponse>(
     '/',
     validate(recipesController.addRecipeSchema),
     recipesController.addRecipe
 );
 
-router.get<{ id: string }, any>(
+router.get<{ id: string }, RecipeDocument | MessageResponse>(
     '/:id',
     validate(recipesController.doSomethingByIdSchema),
     recipesController.getRecipe

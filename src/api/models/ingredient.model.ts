@@ -4,7 +4,7 @@ import { mongooseVirtuals } from '../../utils/helperFunctions';
 export interface IngredientDocument extends Document {
     name: string;
     category: string[];
-}
+};
 
 const ingredientSchema = new mongoose.Schema<IngredientDocument>({
     name: {

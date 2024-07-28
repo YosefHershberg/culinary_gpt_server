@@ -1,10 +1,8 @@
 
-//NOTE: WHEN MAKE CHANGES HERE MAKE SAME CHANGES IN api/schemas/index.ts
-
-export interface Ingredient {
-    category: string[]
+export interface Ingredient{
+    category?: string[]
     name: string;
-    id?: string;
+    id: string;
 }
 
 export interface KitchenUtils {
@@ -31,6 +29,4 @@ export interface Recipe {
     }[];
     time: string;
     level: string;
-    id?: string;
-    userId: string
 }
