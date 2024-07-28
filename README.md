@@ -1,4 +1,4 @@
-# Recipe Generator App
+# CulinaryGPT - server
 
 ## Description
 
