@@ -8,8 +8,6 @@ import MessageResponse from '../../interfaces/MessageResponse';
 
 const router = express.Router();
 
-// INGREDIENTS ------------------------------------------------------------
-
 router.get<{}, Ingredient[] | MessageResponse>(
     '/',
     ingredientControllers.getIngredients

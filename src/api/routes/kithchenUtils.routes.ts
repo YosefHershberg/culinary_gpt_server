@@ -3,17 +3,17 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as kithchenUtilsController from '../controllers/kithchenUtils.controller';
+import { KitchenUtils } from '../../interfaces';
+import MessageResponse from '../../interfaces/MessageResponse';
 
 const router = express.Router();
 
-// KITCHEN UTILS ------------------------------------------------------------
-
-router.get(
+router.get<{}, KitchenUtils | MessageResponse>(
     '/',
     kithchenUtilsController.getKitchenUtils
 );
 
-router.post(
+router.post<{}, KitchenUtils | MessageResponse>(
     '/',
     validate(kithchenUtilsController.updateKitchenUtilsSchema),
     kithchenUtilsController.updateKitchenUtils

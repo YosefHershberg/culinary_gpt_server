@@ -21,7 +21,7 @@ app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : true,
 }));
 
-app.use(rateLimiter)
+// app.use(rateLimiter)
 
 app.post(
   "/api/webhooks",

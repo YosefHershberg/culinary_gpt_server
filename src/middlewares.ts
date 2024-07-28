@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import clerkClient from './lib/clerkClient';
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';
+import { HttpError } from './lib/HttpError';
 
 export async function authMiddleware(req: CustomRequest, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -14,9 +15,8 @@ export async function authMiddleware(req: CustomRequest, res: Response, next: Ne
     next(new Error('Unauthorized. No token provided'));
   }
 
-  let client;
   try {
-    client = await clerkClient.verifyToken(token as string);
+    const client = await clerkClient.verifyToken(token as string);
 
     if (!req.userId) req.userId = client.sub;
     next()
@@ -35,9 +35,14 @@ export function notFound(req: Request, res: Response, next: NextFunction) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function errorHandler(err: Error, _req: Request, res: Response<ErrorResponse>, _next: NextFunction) {
+  if (err instanceof HttpError) {
+    return res.status(err.statusCode).json({ message: err.message });
+  }
+  
+  // catching errors that are not HttpError
   const statusCode = res.statusCode !== StatusCodes.OK ? res.statusCode : StatusCodes.OK;
   res.status(statusCode);
-  res.json({
+  return res.json({
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
   });

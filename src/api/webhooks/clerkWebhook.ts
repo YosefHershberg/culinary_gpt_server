@@ -1,5 +1,4 @@
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
-import User from "../models/user.model";
 import { Request, Response, NextFunction } from "express";
 import userOperations from "../services/user.service";
 import varifyCvixHeaders from "../../utils/varifyCvixHeaders";
@@ -33,7 +32,7 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
                 return next(error)
             }
             break;
-            
+
         case 'user.deleted':
             try {
                 const user = await userOperations.deleteUser(evt.data.id as string);

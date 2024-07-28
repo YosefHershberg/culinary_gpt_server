@@ -1,20 +1,9 @@
 import mongoose, { Document } from "mongoose";
 import { mongooseVirtuals } from '../../utils/helperFunctions';
+import { Recipe } from "../../interfaces";
 
 export interface RecipeDocument extends Document {
-    recipe: {
-        title: string;
-        description: string;
-        ingredients: {
-            ingredient: string;
-        }[];
-        steps: {
-            step: string;
-            time: string;
-        }[];
-        time: string;
-        level: string;
-    },
+    recipe: Recipe,
     image_url: string;
     userId: string;
 }

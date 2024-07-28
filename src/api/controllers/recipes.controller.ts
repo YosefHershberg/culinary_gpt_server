@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
@@ -9,15 +9,17 @@ import { doSomethingByIdSchema, recipeSchema } from '../validations';
 import { createRecipeOperations } from '../services/createRecipe.service';
 import { RecipeDocument } from '../models/recipe.model';
 import MessageResponse from '../../interfaces/MessageResponse';
+import { Recipe } from '../../interfaces';
+import { HttpError } from '../../lib/HttpError';
 
-export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>) => {
+export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
     try {
         const recipes = await recipeOperations.getAll(req.userId as string);
-
+        
         return res.json(recipes);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while getting your recipes' });
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching your recipes'));
     }
 }
 
@@ -27,7 +29,7 @@ export const addRecipeSchema = z.object({
     })
 });
 
-export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>) => {
+export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>, next: NextFunction) => {
     const recipe = req.body;
 
     try {
@@ -36,11 +38,11 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
         return res.json(newRecipe);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while adding recipe' });
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while adding your recipe'));
     }
 }
 
-export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>) => {
+export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>, next: NextFunction) => {
     const id = req.params.id;
 
     try {
@@ -49,11 +51,11 @@ export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument
         return res.json(recipe);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while getting your recipe' });
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching your recipe'));
     }
 }
 
-export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResponse>) => {
+export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     const id = req.params.id;
 
     try {
@@ -62,7 +64,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
         return res.json(message);
     } catch (error: any) {
         console.log(error.message);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error acoured while deleting recipe' });
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while deleting your recipe'));
     }
 }
 
@@ -75,18 +77,15 @@ export const createRecipeSchema = z.object({
     }),
 });
 
-export const createRecipe = async (req: CustomRequest, res: Response) => {
+export const createRecipe = async (req: CustomRequest, res: Response<{ recipe: Recipe, image_url: string }>, next: NextFunction) => {
 
     try {
         const recipe = await createRecipeOperations.createRecipe(req.userId as string, req.body);
+
         return res.json(recipe);
     } catch (error) {
         console.log(error);
-        let message = 'Error accourd while genarating the recipe';
-        if (error instanceof Error) {
-            message = error.message;
-        }
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while creating your recipe'));
     }
 
 }

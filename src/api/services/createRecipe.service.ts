@@ -4,7 +4,7 @@ import { compressBase64Image, isValidJSON } from "../../utils/helperFunctions";
 import { getUserIngredients } from "../data-access/ingredient.da";
 import { getUserDB } from "../data-access/user.da";
 
-interface createRecipeInput {
+interface CreateRecipeInput {
     mealSelected: string;
     selectedTime: number;
     prompt: string;
@@ -12,7 +12,7 @@ interface createRecipeInput {
 }
 
 export const createRecipeOperations = {
-    createRecipe: async (userId: string, recipeInput: createRecipeInput): Promise<{ recipe: Recipe, image_url: string }> => {
+    createRecipe: async (userId: string, recipeInput: CreateRecipeInput): Promise<{ recipe: Recipe, image_url: string }> => {
         let kithchenUtils;
         let userIngredients: string[];
 
@@ -37,7 +37,7 @@ export const createRecipeOperations = {
     },
 
     createRecipeOpenAI:
-        async (recipeInput: createRecipeInput, userIngredients: string[], kithchenUtils: KitchenUtils)
+        async (recipeInput: CreateRecipeInput, userIngredients: string[], kithchenUtils: KitchenUtils)
             : Promise<Recipe> => {
             const { mealSelected, selectedTime, prompt, numOfPeople } = recipeInput;
 
