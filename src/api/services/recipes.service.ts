@@ -1,4 +1,5 @@
 import MessageResponse from "../../interfaces/MessageResponse";
+import { uploadBase64ImageToStorage } from "../../utils/uploadImage";
 import * as recipeOperationsDB from "../data-access/recipe.da";
 import { RecipeDocument } from "../models/recipe.model";
 
@@ -8,8 +9,11 @@ export const recipeOperations = {
         return recipes
     },
 
-    addRecipe: async (userId: string, recipe: any): Promise<RecipeDocument> => {
-        const newRecipe = await recipeOperationsDB.addRecipe(userId, recipe)
+    addRecipe: async (recipe: RecipeDocument): Promise<RecipeDocument> => {
+        const image_url = await uploadBase64ImageToStorage(recipe.image_url, Date.now().toString())
+
+        const newRecipe = await recipeOperationsDB.addRecipe({...recipe, image_url} as RecipeDocument)
+
         return newRecipe
     },
 

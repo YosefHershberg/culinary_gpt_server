@@ -2,14 +2,15 @@ import { NextFunction, Response } from 'express';
 import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
+import { RecipeDocument } from '../models/recipe.model';
 import { recipeOperations } from '../services/recipes.service';
+import { createRecipeOperations } from '../services/createRecipe.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { doSomethingByIdSchema, recipeSchema } from '../validations';
-import { createRecipeOperations } from '../services/createRecipe.service';
-import { RecipeDocument } from '../models/recipe.model';
+import { Recipe, RecipeWithImage } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
-import { Recipe } from '../../interfaces';
+
+import { doSomethingByIdSchema, recipeSchema } from '../validations';
 import { HttpError } from '../../lib/HttpError';
 
 export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
@@ -25,7 +26,8 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocumen
 
 export const addRecipeSchema = z.object({
     body: z.object({
-        recipe: recipeSchema
+        recipe: recipeSchema,
+        image_url: z.string()
     })
 });
 
@@ -33,7 +35,7 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
     const recipe = req.body;
 
     try {
-        const newRecipe = await recipeOperations.addRecipe(req.userId as string, recipe);
+        const newRecipe = await recipeOperations.addRecipe({...recipe, userId: req.userId as string});
 
         return res.json(newRecipe);
     } catch (error: any) {
@@ -77,7 +79,7 @@ export const createRecipeSchema = z.object({
     }),
 });
 
-export const createRecipe = async (req: CustomRequest, res: Response<{ recipe: Recipe, image_url: string }>, next: NextFunction) => {
+export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
 
     try {
         const recipe = await createRecipeOperations.createRecipe(req.userId as string, req.body);

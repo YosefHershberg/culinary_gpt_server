@@ -17,6 +17,11 @@ export interface KitchenUtils {
     "Grill": boolean,
 }
 
+export interface RecipeWithImage {
+    image_url: string;
+    recipe: Recipe;
+}
+
 export interface Recipe {
     title: string;
     description: string;

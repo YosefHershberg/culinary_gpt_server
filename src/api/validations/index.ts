@@ -37,7 +37,6 @@ export const recipeSchema = z.object({
     steps: z.array(stepSchema),
     time: z.string(),
     level: z.string(),
-    id: z.string().optional()
 });
 
 export const doSomethingByIdSchema = z.object({

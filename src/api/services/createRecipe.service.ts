@@ -1,5 +1,5 @@
-import { Ingredient, KitchenUtils, Recipe } from "../../interfaces";
-import openai from '../../lib/openai';
+import { Ingredient, KitchenUtils, Recipe, RecipeWithImage } from "../../interfaces";
+import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON } from "../../utils/helperFunctions";
 import { getUserIngredients } from "../data-access/ingredient.da";
 import { getUserDB } from "../data-access/user.da";
@@ -12,7 +12,7 @@ interface CreateRecipeInput {
 }
 
 export const createRecipeOperations = {
-    createRecipe: async (userId: string, recipeInput: CreateRecipeInput): Promise<{ recipe: Recipe, image_url: string }> => {
+    createRecipe: async (userId: string, recipeInput: CreateRecipeInput): Promise<RecipeWithImage> => {
         let kithchenUtils;
         let userIngredients: string[];
 
@@ -28,7 +28,7 @@ export const createRecipeOperations = {
 
         const imageUrl = await createRecipeOperations.createImageOpenAI(recipe.title)
 
-        const base64Image = await compressBase64Image(imageUrl as string, 30); //13 KB
+        const base64Image = await compressBase64Image(imageUrl as string, 60); //13 KB
 
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
@@ -37,8 +37,7 @@ export const createRecipeOperations = {
     },
 
     createRecipeOpenAI:
-        async (recipeInput: CreateRecipeInput, userIngredients: string[], kithchenUtils: KitchenUtils)
-            : Promise<Recipe> => {
+        async (recipeInput: CreateRecipeInput, userIngredients: string[], kithchenUtils: KitchenUtils): Promise<Recipe> => {
             const { mealSelected, selectedTime, prompt, numOfPeople } = recipeInput;
 
             const maxRetries = 3;

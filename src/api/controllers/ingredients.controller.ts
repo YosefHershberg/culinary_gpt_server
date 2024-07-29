@@ -3,14 +3,14 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
+import { IngredientDocument } from '../models/ingredient.model';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { ingredientSchema } from '../validations';
-import { doSomethingByIdSchema } from '../validations';
-import MessageResponse from '../../interfaces/MessageResponse';
-import { IngredientDocument } from '../models/ingredient.model';
 import { Ingredient } from '../../interfaces';
+import MessageResponse from '../../interfaces/MessageResponse';
+
 import { HttpError } from '../../lib/HttpError';
+import { ingredientSchema, doSomethingByIdSchema } from '../validations';
 
 export const getIngredients = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
     try {

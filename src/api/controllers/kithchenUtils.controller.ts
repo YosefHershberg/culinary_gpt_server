@@ -3,10 +3,9 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import { kitchenUtilsOperations } from '../services/kithchenUtils.service';
-
-import CustomRequest from '../../interfaces/CustomRequest';
 import { KitchenUtils } from '../../interfaces';
-import MessageResponse from '../../interfaces/MessageResponse';
+import CustomRequest from '../../interfaces/CustomRequest';
+
 import { HttpError } from '../../lib/HttpError';
 
 export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {

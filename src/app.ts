@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import bodyParser from "body-parser";
+import * as dotenv from 'dotenv';
 
 import * as middlewares from './middlewares';
 import api from './api';
@@ -10,7 +11,7 @@ import api from './api';
 import clerkWebhook from './api/webhooks/clerkWebhook';
 import rateLimiter from './lib/rateLimit';
 
-require('dotenv').config();
+dotenv.config();
 
 const app = express();
 

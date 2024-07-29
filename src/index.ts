@@ -1,6 +1,5 @@
 import app from './app';
 import mongoose from 'mongoose';
-// import seedDatabase from '@/utils/seed';
 
 require('dotenv').config();
 

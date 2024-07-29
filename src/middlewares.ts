@@ -2,10 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import { ZodError, ZodSchema } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
-import clerkClient from './lib/clerkClient';
+import clerkClient from './config/clerkClient';
+import { HttpError } from './lib/HttpError';
+
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';
-import { HttpError } from './lib/HttpError';
 
 export async function authMiddleware(req: CustomRequest, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -65,9 +66,9 @@ export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response
       const errorMessages = error.errors.map((issue: any) => ({
         message: `${issue.path.join('.')} is ${issue.message}`,
       }))
-      res.status(StatusCodes.BAD_REQUEST).json({ error: 'Invalid data', details: errorMessages });
+      return res.status(StatusCodes.BAD_REQUEST).json({ error: 'Invalid data', details: errorMessages });
     } else {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 
   }

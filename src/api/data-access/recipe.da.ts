@@ -1,5 +1,5 @@
 import Recipe, { RecipeDocument } from "../models/recipe.model";
-import { Recipe as RecipeInterface } from "../../interfaces";
+import { RecipeWithImage } from "../../interfaces";
 import { DeleteResult } from "mongodb";
 
 export const getRecipes = async (userId: string): Promise<RecipeDocument[]> => {
@@ -8,11 +8,8 @@ export const getRecipes = async (userId: string): Promise<RecipeDocument[]> => {
     return recipes;
 }
 
-export const addRecipe = async (userId: string, recipe: RecipeInterface): Promise<RecipeDocument> => {
-    const newRecipe = new Recipe({
-        ...recipe,
-        userId
-    });
+export const addRecipe = async (recipe: RecipeDocument): Promise<RecipeDocument> => {
+    const newRecipe = new Recipe(recipe);
     const savedRecipe = await newRecipe.save();
     return savedRecipe;
 }
