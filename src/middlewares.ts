@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import clerkClient from './config/clerkClient';
 import { HttpError } from './lib/HttpError';
+import env from './lib/env';
 
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';
@@ -45,7 +46,7 @@ export function errorHandler(err: Error, _req: Request, res: Response<ErrorRespo
   res.status(statusCode);
   return res.json({
     message: err.message,
-    stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
+    stack: env.NODE_ENV === 'production' ? '🥞' : err.stack,
   });
 }
 

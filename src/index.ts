@@ -1,11 +1,10 @@
 import app from './app';
 import mongoose from 'mongoose';
+import env from './lib/env';
 
-require('dotenv').config();
+const port = env.PORT || 5000;
 
-const port = process.env.PORT || 5000;
-
-mongoose.connect(process.env.MONGODB_URI!).then(() => {
+mongoose.connect(env.MONGODB_URI!).then(() => {
   app.listen(port, () => {
     /* eslint-disable no-console */
     console.log(`Listening: http://localhost:${port}`);
