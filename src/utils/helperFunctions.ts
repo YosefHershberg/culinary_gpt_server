@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import crypto from "crypto";
 
 export const mongooseVirtuals = (): Object => {
   return {
@@ -44,4 +45,24 @@ export async function compressBase64Image(base64Image: string, quality: number):
   const compressedBase64 = compressedBuffer.toString('base64');
 
   return compressedBase64;
+}
+
+export const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
+  // Decode base64 to raw binary string
+  const binaryString = atob(base64);
+
+  // Create a new ArrayBuffer with the length of the binary string
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+
+  // Fill the array buffer with the binary string's char codes
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  return bytes.buffer;
+}
+
+export const hashString = (str: string): string => {
+  return crypto.createHash('sha256').update(str).digest('hex')
 }
