@@ -5,7 +5,7 @@ import { RecipeDocument } from "../models/recipe.model";
 import { firebaseStorageOperations } from "./firebase.service";
 
 export const recipeOperations = {
-    getAll: async (userId: string): Promise<RecipeDocument[]> => {
+    getUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
         const recipes = await recipeOperationsDB.getRecipes(userId)
         return recipes
     },

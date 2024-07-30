@@ -15,7 +15,7 @@ import { HttpError } from '../../lib/HttpError';
 
 export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
     try {
-        const recipes = await recipeOperations.getAll(req.userId as string);
+        const recipes = await recipeOperations.getUserRecipes(req.userId as string);
         
         return res.json(recipes);
     } catch (error: any) {

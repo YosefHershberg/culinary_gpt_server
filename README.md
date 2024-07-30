@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a Node.js Express server application built with TypeScript that generates recipes using the OpenAI API. It uses MongoDB as the database and Clerk for authentication. The project follows a clean, scalable, object-oriented, and layered architecture.
+This is a Node.js Express server application built with TypeScript that generates recipes using the OpenAI API. It uses MongoDB as the main database, firebase for image storage, zod for validation and Clerk for authentication. The project follows a clean, scalable, object-oriented, and layered architecture.
 
 ## Features
 
@@ -10,14 +10,8 @@ This is a Node.js Express server application built with TypeScript that generate
 - Recipe generation using the OpenAI API
 - CRUD operations for managing user-generated recipes
 - MongoDB for storing recipes and user data
+- Image storage with firebase
 - Structured and scalable codebase
-
-## Prerequisites
-
-- Node.js
-- MongoDB
-- Clerk account
-- OpenAI API key
 
 ## Project Structure
 

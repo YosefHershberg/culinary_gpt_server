@@ -1,5 +1,4 @@
 import Recipe, { RecipeDocument } from "../models/recipe.model";
-import { RecipeWithImage } from "../../interfaces";
 import { DeleteResult } from "mongodb";
 
 export const getRecipes = async (userId: string): Promise<RecipeDocument[]> => {

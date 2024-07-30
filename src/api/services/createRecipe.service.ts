@@ -28,7 +28,7 @@ export const createRecipeOperations = {
 
         const imageUrl = await createRecipeOperations.createImageOpenAI(recipe.title)
 
-        const base64Image = await compressBase64Image(imageUrl as string, 60); //13 KB
+        const base64Image = await compressBase64Image(imageUrl as string, 60); //30 KB
 
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;

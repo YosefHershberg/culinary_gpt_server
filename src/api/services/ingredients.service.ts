@@ -1,7 +1,7 @@
 import { Ingredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 import * as ingredientOperationsDB from "../data-access/ingredient.da";
-import { addUserIngredient, deleteUserIngredient, getUserIngredients } from "../data-access/ingredient.da";
+import { addUserIngredient, deleteAllUserIngredients, deleteUserIngredient, getUserIngredients } from "../data-access/ingredient.da";
 import { IngredientDocument } from "../models/ingredient.model";
 
 export const userIngredientOperations = {
@@ -10,8 +10,7 @@ export const userIngredientOperations = {
         return ingredients;
     },
 
-    addIngredient: 
-    async (userId: string, ingredientId: string, name: string): Promise<Ingredient> => {
+    addIngredient: async (userId: string, ingredientId: string, name: string): Promise<Ingredient> => {
         const newIngredient = await addUserIngredient(userId, ingredientId, name);
         return newIngredient;
     },
@@ -19,6 +18,11 @@ export const userIngredientOperations = {
     deleteIngredient: async (userId: string, ingredientId: string): Promise<MessageResponse> => {
         await deleteUserIngredient(userId, ingredientId);
         return { message: "Ingredient deleted" };
+    },
+
+    deleteAll: async (userId: string): Promise<MessageResponse> => {
+        await deleteAllUserIngredients(userId);
+        return { message: "All ingredients deleted" };
     }
 }
 

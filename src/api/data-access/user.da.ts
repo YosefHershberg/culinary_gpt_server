@@ -1,9 +1,7 @@
 import { kitchenUtils } from "../../data/kitchenUtils";
-import User from "../models/user.model";
+import User, { UserDocument } from "../models/user.model";
 
-//TODO: Add return types
-
-export const getUserDB = async (userId: string) => {
+export const getUserDB = async (userId: string): Promise<UserDocument> => {
     const user = await User.findOne({ clerkId: userId });
 
     if (!user) {
@@ -20,7 +18,7 @@ export interface CreateUserDBProps {
     email: string;
 }
 
-export const createUserDB = async ({ clerkId, first_name, last_name, email }: CreateUserDBProps) => {
+export const createUserDB = async ({ clerkId, first_name, last_name, email }: CreateUserDBProps): Promise<UserDocument> => {
     const user = new User({
         clerkId,
         first_name,
@@ -33,7 +31,7 @@ export const createUserDB = async ({ clerkId, first_name, last_name, email }: Cr
     return newUser;
 }
 
-export const deleteUserDB = async (userId: string) => {
+export const deleteUserDB = async (userId: string): Promise<UserDocument> => {
     const user = await User.findOneAndDelete({ clerkId: userId });
 
     if (!user) {
@@ -50,7 +48,7 @@ export interface UpdateUserDBProps {
 }
 
 
-export const updateUserDB = async (userId: string, update: UpdateUserDBProps) => {
+export const updateUserDB = async (userId: string, update: UpdateUserDBProps): Promise<UserDocument>   => {
     const updatedUser = await User.findOneAndUpdate(
         { clerkId: userId },
         update,

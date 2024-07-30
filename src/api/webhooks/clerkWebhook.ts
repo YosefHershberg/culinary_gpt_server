@@ -24,7 +24,7 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
                     last_name: evt.data.last_name as string,
                     email: evt.data.email_addresses[0].email_address
                 });
-
+                
                 console.log('User created:', user.id)
                 message = "Webhook received and user created successfully."
             } catch (error: any) {

@@ -32,3 +32,10 @@ export const getUserIngredients = async (userId: string): Promise<IngredientInte
     const ingredients = await UserIngredient.find({ userId })
     return ingredients as IngredientInterface[]
 }
+
+export const deleteAllUserIngredients = async (userId: string): Promise<void> => {
+    const data = await UserIngredient.find({ userId })
+    console.log(data)
+
+    await UserIngredient.deleteMany({ userId })
+}
