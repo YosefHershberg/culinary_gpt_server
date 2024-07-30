@@ -18,8 +18,10 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocumen
         const recipes = await recipeOperations.getUserRecipes(req.userId as string);
         
         return res.json(recipes);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching your recipes'));
     }
 }
@@ -38,8 +40,10 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
         const newRecipe = await recipeOperations.addRecipe({...recipe, userId: req.userId as string});
 
         return res.json(newRecipe);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while adding your recipe'));
     }
 }
@@ -51,8 +55,10 @@ export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument
         const recipe = await recipeOperations.getRecipe(id);
 
         return res.json(recipe);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching your recipe'));
     }
 }
@@ -64,8 +70,10 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
         const message = await recipeOperations.deleteRecipe(req.userId as string, id);
 
         return res.json(message);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while deleting your recipe'));
     }
 }
@@ -86,7 +94,9 @@ export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithI
 
         return res.json(recipe);
     } catch (error) {
-        console.log(error);
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while creating your recipe'));
     }
 

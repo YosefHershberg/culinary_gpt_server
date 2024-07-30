@@ -20,8 +20,10 @@ const searchIngredients = async (req: CustomRequest, res: Response<IngredientDoc
         const ingredients = await ingredientOperations.search(query as string);
         
         return res.json(ingredients);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while searching for ingredients'));
     }
 

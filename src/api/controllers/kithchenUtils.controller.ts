@@ -13,8 +13,10 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenU
         const kitchenUtils = await kitchenUtilsOperations.get(req.userId as string);
 
         return res.json(kitchenUtils);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching Kitchen Utils'));
     }
 };
@@ -34,8 +36,10 @@ export const updateKitchenUtils = async (req: CustomRequest, res: Response<Kitch
             await kitchenUtilsOperations.update(req.userId as string, name, value);
 
         return res.json(message);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while updating Kitchen Utils'));
     }
 };

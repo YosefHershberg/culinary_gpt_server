@@ -35,8 +35,10 @@ export const addIngredient = async (req: CustomRequest, res: Response<Ingredient
             await userIngredientOperations.addIngredient(req.userId as string, ingredient.id, ingredient.name);
 
         return res.json(newIngredient);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while adding your ingredient'));
     }
 };
@@ -48,8 +50,10 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
         const message = await userIngredientOperations.deleteIngredient(req.userId as string, id);
 
         return res.json(message);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while deleting your ingredient'));
     }
 };
@@ -67,8 +71,10 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
         const result = await ingredientOperations.getByCategory(category);
 
         return res.json(result);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching ingredients'));
     }
 }
@@ -86,8 +92,10 @@ const searchIngredients = async (req: CustomRequest, res: Response<IngredientDoc
         const ingredients = await ingredientOperations.search(query as string);
 
         return res.json(ingredients);
-    } catch (error: any) {
-        console.log(error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while searching ingredients'));
     }
 

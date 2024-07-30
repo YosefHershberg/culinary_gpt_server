@@ -18,12 +18,9 @@ export interface CreateUserDBProps {
     email: string;
 }
 
-export const createUserDB = async ({ clerkId, first_name, last_name, email }: CreateUserDBProps): Promise<UserDocument> => {
+export const createUserDB = async (userData: CreateUserDBProps): Promise<UserDocument> => {
     const user = new User({
-        clerkId,
-        first_name,
-        last_name,
-        email,
+        ...userData,
         kitchenUtils: kitchenUtils
     });
     const newUser = await user.save()

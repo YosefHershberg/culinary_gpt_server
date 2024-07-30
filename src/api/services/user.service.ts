@@ -7,8 +7,8 @@ import { userIngredientOperations } from "./ingredients.service";
 import { recipeOperations } from "./recipes.service";
 
 export const userOperations = {
-    createUser: async ({ clerkId, first_name, last_name, email }: CreateUserDBProps): Promise<UserDocument> => {
-        const user = await createUserDB({ clerkId, first_name, last_name, email });
+    createUser: async (userData: CreateUserDBProps): Promise<UserDocument> => {
+        const user = await createUserDB(userData);
         return user;
     },
 
