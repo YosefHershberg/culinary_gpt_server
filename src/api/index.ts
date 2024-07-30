@@ -8,19 +8,8 @@ import recipesRoutes from './routes/recipes.routes';
 
 import { ingredientSuggestions, ingredientSuggestionsSchema } from './controllers/ingredients.controller';
 import searchIngredients, { searchIngredientsSchema } from './controllers/searchIngredients.controller';
-import CustomRequest from '../interfaces/CustomRequest';
-import { userIngredientOperations } from './services/ingredients.service';
 
 const router = express.Router();
-
-router.delete('/del', async (req: CustomRequest, res) => {
-    try {
-        await userIngredientOperations.deleteAll(req.userId as string);
-        return res.json({ message: 'All ingredients deleted' });
-    } catch (error) {
-        console.log(error instanceof Error && error.message);
-    }
-})
 
 router.use(
     '/user/ingredients',
