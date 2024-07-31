@@ -7,7 +7,7 @@ import { recipeOperations } from '../services/recipes.service';
 import { createRecipeOperations } from '../services/createRecipe.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { Recipe, RecipeWithImage } from '../../interfaces';
+import { RecipeWithImage } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 import { doSomethingByIdSchema, recipeSchema } from '../validations';

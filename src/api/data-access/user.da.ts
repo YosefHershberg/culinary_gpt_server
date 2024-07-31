@@ -45,7 +45,7 @@ export interface UpdateUserDBProps {
 }
 
 
-export const updateUserDB = async (userId: string, update: UpdateUserDBProps): Promise<UserDocument>   => {
+export const updateUserDB = async (userId: string, update: UpdateUserDBProps): Promise<UserDocument> => {
     const updatedUser = await User.findOneAndUpdate(
         { clerkId: userId },
         update,

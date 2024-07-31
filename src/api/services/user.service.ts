@@ -1,10 +1,12 @@
 import { hashString } from "../../utils/helperFunctions";
+import { firebaseStorageOperations } from "./firebase.service";
+
+import { recipeOperations } from "./recipes.service";
+import { userIngredientOperations } from "./ingredients.service";
+
 import { deleteUserRecipes } from "../data-access/recipe.da";
 import { createUserDB, CreateUserDBProps, deleteUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
 import { UserDocument } from "../models/user.model";
-import { firebaseStorageOperations } from "./firebase.service";
-import { userIngredientOperations } from "./ingredients.service";
-import { recipeOperations } from "./recipes.service";
 
 export const userOperations = {
     createUser: async (userData: CreateUserDBProps): Promise<UserDocument> => {

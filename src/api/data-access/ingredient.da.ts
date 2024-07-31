@@ -1,3 +1,4 @@
+import { DeleteResult } from "mongodb"
 import { Ingredient as IngredientInterface } from "../../interfaces"
 import Ingredient from "../models/ingredient.model"
 import UserIngredient from "../models/UserIngredients.model"
@@ -33,9 +34,6 @@ export const getUserIngredients = async (userId: string): Promise<IngredientInte
     return ingredients as IngredientInterface[]
 }
 
-export const deleteAllUserIngredients = async (userId: string): Promise<void> => {
-    const data = await UserIngredient.find({ userId })
-    console.log(data)
-
-    await UserIngredient.deleteMany({ userId })
+export const deleteAllUserIngredients = async (userId: string): Promise<DeleteResult>  => {
+    return await UserIngredient.deleteMany({ userId })
 }

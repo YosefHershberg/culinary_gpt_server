@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import clerkClient from './config/clerkClient';
 import { HttpError } from './lib/HttpError';
-import env from './lib/env';
+import env from './config/env';
 
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';

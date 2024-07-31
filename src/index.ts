@@ -1,6 +1,6 @@
 import app from './app';
 import mongoose from 'mongoose';
-import env from './lib/env';
+import env from './config/env';
 
 const port = env.PORT || 5000;
 

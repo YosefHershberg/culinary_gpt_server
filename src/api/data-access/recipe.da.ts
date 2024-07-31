@@ -13,13 +13,23 @@ export const addRecipe = async (recipe: RecipeDocument): Promise<RecipeDocument>
     return savedRecipe;
 }
 
-export const getRecipe = async (recipeId: string): Promise<RecipeDocument | null> => {
+export const getRecipe = async (recipeId: string): Promise<RecipeDocument> => {
     const recipe = await Recipe.findById(recipeId);
+
+    if (!recipe) {
+        throw new Error('Recipe not found');
+    }
+
     return recipe;
 }
 
-export const deleteRecipe = async (recipeId: string): Promise<RecipeDocument | null> => {
+export const deleteRecipe = async (recipeId: string): Promise<RecipeDocument> => {
     const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
+
+    if (!deletedRecipe) {
+        throw new Error('Recipe not found');
+    }
+
     return deletedRecipe;
 }
 

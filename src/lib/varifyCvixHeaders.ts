@@ -1,7 +1,7 @@
 import { Request } from "express"
 import { Webhook } from "svix";
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
-import env from "../lib/env";
+import env from "../config/env";
 
 const varifyCvixHeaders = (req: Request) => {
 

@@ -27,20 +27,19 @@ const stepSchema = z.object({
     time: z.string()
 });
 
-
 export const recipeSchema = z.object({
-    title: z.string(),
-    description: z.string(),
+    title: z.string().min(3).max(100),
+    description: z.string().max(500),
     ingredients: z.array(z.object({
-        ingredient: z.string()
-    })),
-    steps: z.array(stepSchema),
+        ingredient: z.string().min(2)
+    })).min(1),
+    steps: z.array(stepSchema).min(1),
     time: z.string(),
     level: z.string(),
 });
 
 export const doSomethingByIdSchema = z.object({
     params: z.object({
-        id: z.string(),
+        id: z.string().uuid(),
     }),
 });

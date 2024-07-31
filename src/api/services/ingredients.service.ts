@@ -1,8 +1,9 @@
+import { IngredientDocument } from "../models/ingredient.model";
+
 import { Ingredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 import * as ingredientOperationsDB from "../data-access/ingredient.da";
 import { addUserIngredient, deleteAllUserIngredients, deleteUserIngredient, getUserIngredients } from "../data-access/ingredient.da";
-import { IngredientDocument } from "../models/ingredient.model";
 
 export const userIngredientOperations = {
     getAll: async (userId: string): Promise<Ingredient[]> => {

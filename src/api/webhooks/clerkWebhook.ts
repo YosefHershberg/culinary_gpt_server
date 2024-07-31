@@ -1,7 +1,7 @@
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Request, Response, NextFunction } from "express";
 import userOperations from "../services/user.service";
-import varifyCvixHeaders from "../../utils/varifyCvixHeaders";
+import varifyCvixHeaders from "../../lib/varifyCvixHeaders";
 
 const clerkWebhook = async function (req: Request, res: Response, next: NextFunction) {
 

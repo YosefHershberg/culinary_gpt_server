@@ -9,7 +9,7 @@ import api from './api';
 
 import clerkWebhook from './api/webhooks/clerkWebhook';
 import rateLimiter from './lib/rateLimit';
-import env from './lib/env';
+import env from './config/env';
 
 const app = express();
 
