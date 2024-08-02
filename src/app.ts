@@ -6,9 +6,9 @@ import bodyParser from "body-parser";
 
 import * as middlewares from './middlewares';
 import api from './api';
-
 import clerkWebhook from './api/webhooks/clerkWebhook';
-import rateLimiter from './lib/rateLimit';
+
+import rateLimiter from './config/rateLimit';
 import env from './config/env';
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(cors({
   origin: env.NODE_ENV === 'production' ? env.CORS_ORIGIN : true,
 }));
 
-app.use(rateLimiter)
+app.use(rateLimiter);
 
 app.post(
   "/api/webhooks",

@@ -1,4 +1,5 @@
 import Ingredient from '../api/models/ingredient.model';
+import logger from '../config/logger';
 import * as ingredients from '../data/ingredients';
 
 const seedDatabase = async () => {
@@ -14,7 +15,7 @@ const seedDatabase = async () => {
             ...ingredients.meatProducts,
         ]);
 
-        console.log('Database seeded successfully!');
+        logger.info('Database seeded successfully!');
     } catch (error) {
         console.error('Error seeding database:', error);
     }

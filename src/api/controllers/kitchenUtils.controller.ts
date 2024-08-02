@@ -2,11 +2,12 @@ import { NextFunction, Response } from 'express';
 import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
-import { kitchenUtilsOperations } from '../services/kithchenUtils.service';
+import { kitchenUtilsOperations } from '../services/kitchenUtils.service';
 import { KitchenUtils } from '../../interfaces';
 import CustomRequest from '../../interfaces/CustomRequest';
 
 import { HttpError } from '../../lib/HttpError';
+import logger from '../../config/logger';
 
 export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
     try {
@@ -15,9 +16,9 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenU
         return res.json(kitchenUtils);
     } catch (error) {
         if (error instanceof Error) {
-            console.log(error.message);
+            logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching Kitchen Utils'));
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while fetching Kitchen Utils'));
     }
 };
 
@@ -38,9 +39,9 @@ export const updateKitchenUtils = async (req: CustomRequest, res: Response<Kitch
         return res.json(message);
     } catch (error) {
         if (error instanceof Error) {
-            console.log(error.message);
+            logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while updating Kitchen Utils'));
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while updating Kitchen Utils'));
     }
 };
 

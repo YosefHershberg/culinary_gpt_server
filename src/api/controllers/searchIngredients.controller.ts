@@ -6,6 +6,7 @@ import CustomRequest from '../../interfaces/CustomRequest';
 import { ingredientOperations } from '../services/ingredients.service';
 import { IngredientDocument } from '../models/ingredient.model';
 import { HttpError } from '../../lib/HttpError';
+import logger from '../../config/logger';
 
 export const searchIngredientsSchema = z.object({
     query: z.object({
@@ -18,13 +19,13 @@ const searchIngredients = async (req: CustomRequest, res: Response<IngredientDoc
 
     try {
         const ingredients = await ingredientOperations.search(query as string);
-        
+
         return res.json(ingredients);
     } catch (error) {
         if (error instanceof Error) {
-            console.log(error.message);
+            logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while searching for ingredients'));
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while searching for ingredients'));
     }
 
 };

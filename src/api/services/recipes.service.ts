@@ -1,3 +1,10 @@
+/**
+ * @module recipes.service
+ * 
+ * @description This module provides operations for getting, adding and deleting recipes
+ * @exports recipeOperations
+ */
+
 import { base64ToArrayBuffer, hashString } from "../../utils/helperFunctions";
 import { firebaseStorageOperations } from "./firebase.service";
 
@@ -11,6 +18,11 @@ export const recipeOperations = {
         return recipes
     },
 
+    /**
+     * 
+     * @param recipe 
+     * @returns 
+     */
     addRecipe: async (recipe: RecipeDocument): Promise<RecipeDocument> => {
         // Extract the base64 part
         const base64Image = recipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, '');
@@ -41,7 +53,7 @@ export const recipeOperations = {
             recipeOperationsDB.deleteRecipe(recipeId)
         ]);
 
-        return { message: 'Recipe deleted' }
+        return { message: 'Recipe deleted successfully' }
     },
 
     getRecipe: async (recipeId: string): Promise<RecipeDocument> => {

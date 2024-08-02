@@ -2,6 +2,7 @@ import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Request, Response, NextFunction } from "express";
 import userOperations from "../services/user.service";
 import varifyCvixHeaders from "../../lib/varifyCvixHeaders";
+import logger from "../../config/logger";
 
 const clerkWebhook = async function (req: Request, res: Response, next: NextFunction) {
 
@@ -10,8 +11,10 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
 
     try {
         evt = varifyCvixHeaders(req) as WebhookEvent;
-    } catch (error: any) {
-        console.log(error.message)
+    } catch (error) {
+        if (error instanceof Error) {
+            logger.error(error.message)
+        }
         return next(error)
     }
 
@@ -24,11 +27,13 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
                     last_name: evt.data.last_name as string,
                     email: evt.data.email_addresses[0].email_address
                 });
-                
-                console.log('User created:', user.id)
+
+                logger.info('User created:', user.id)
                 message = "Webhook received and user created successfully."
-            } catch (error: any) {
-                console.log('Error creating user:', error.message);
+            } catch (error) {
+                if (error instanceof Error) {
+                    logger.error(error.message)
+                }
                 return next(error)
             }
             break;
@@ -37,11 +42,13 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
             try {
                 const user = await userOperations.deleteUser(evt.data.id as string);
 
-                console.log('User deleted. clerk id:', user.id)
+                logger.info('User deleted. clerk id:', user.id)
 
                 message = "Webhook received and user deleted successfully."
-            } catch (error: any) {
-                console.log('Error deleting user:', error.message);
+            } catch (error) {
+                if (error instanceof Error) {
+                    logger.error(error.message)
+                }
                 return next(error)
             }
             break;
@@ -54,16 +61,18 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
                     email: evt.data.email_addresses[0].email_address
                 });
 
-                console.log('User updated:', user.id)
+                logger.info('User updated:', user.id)
 
                 message = "Webhook received and user updated successfully."
-            } catch (error: any) {
-                console.log('Error updating user:', error.message);
+            } catch (error) {
+                if (error instanceof Error) {
+                    logger.error(error.message)
+                }
                 return next(error)
             }
             break;
         default:
-            console.log('Webhook event not recognized:', evt.type)
+            logger.error('Webhook event not recognized:', evt.type)
     }
 
     return res.status(200).json({

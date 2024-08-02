@@ -8,6 +8,7 @@ import env from './config/env';
 
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';
+import logger from './config/logger';
 
 export async function authMiddleware(req: CustomRequest, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -23,7 +24,7 @@ export async function authMiddleware(req: CustomRequest, res: Response, next: Ne
     if (!req.userId) req.userId = client.sub;
     next()
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(StatusCodes.UNAUTHORIZED);
     next(new Error('Unauthorized. Invalid token'));
   }
@@ -62,7 +63,7 @@ export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response
 
     next();
   } catch (error: any) {
-    console.log(error.errors)
+    logger.error(error.errors)
     if (error instanceof ZodError) {
       const errorMessages = error.errors.map((issue: any) => ({
         message: `${issue.path.join('.')} is ${issue.message}`,

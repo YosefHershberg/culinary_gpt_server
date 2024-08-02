@@ -18,12 +18,12 @@ export const userIngredientOperations = {
 
     deleteIngredient: async (userId: string, ingredientId: string): Promise<MessageResponse> => {
         await deleteUserIngredient(userId, ingredientId);
-        return { message: "Ingredient deleted" };
+        return { message: "Ingredient deleted successfully" };
     },
 
     deleteAll: async (userId: string): Promise<MessageResponse> => {
         await deleteAllUserIngredients(userId);
-        return { message: "All ingredients deleted" };
+        return { message: "All ingredients deleted successfully" };
     }
 }
 

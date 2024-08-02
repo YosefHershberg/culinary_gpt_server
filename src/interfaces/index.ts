@@ -1,5 +1,5 @@
 
-export interface Ingredient{
+export interface Ingredient {
     category?: string[]
     name: string;
     id: string;

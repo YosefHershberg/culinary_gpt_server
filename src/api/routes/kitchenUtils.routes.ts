@@ -2,7 +2,7 @@ import express from 'express';
 
 import { validate } from '../../middlewares';
 
-import * as kithchenUtilsController from '../controllers/kithchenUtils.controller';
+import * as kitchenUtilsController from '../controllers/kitchenUtils.controller';
 import { KitchenUtils } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
@@ -10,13 +10,13 @@ const router = express.Router();
 
 router.get<{}, KitchenUtils | MessageResponse>(
     '/',
-    kithchenUtilsController.getKitchenUtils
+    kitchenUtilsController.getKitchenUtils
 );
 
 router.post<{}, KitchenUtils | MessageResponse>(
     '/',
-    validate(kithchenUtilsController.updateKitchenUtilsSchema),
-    kithchenUtilsController.updateKitchenUtils
+    validate(kitchenUtilsController.updateKitchenUtilsSchema),
+    kitchenUtilsController.updateKitchenUtils
 );
 
 export default router;

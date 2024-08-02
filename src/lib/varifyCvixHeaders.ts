@@ -2,6 +2,7 @@ import { Request } from "express"
 import { Webhook } from "svix";
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import env from "../config/env";
+import logger from "../config/logger";
 
 const varifyCvixHeaders = (req: Request) => {
 
@@ -21,7 +22,7 @@ const varifyCvixHeaders = (req: Request) => {
 
     // If there are no Svix headers, error out
     if (!svix_id || !svix_timestamp || !svix_signature) {
-        console.log("Error occured -- no svix headers");
+        logger.error("Error occured -- no svix headers");
         return new Response("Error occured -- no svix headers", {
             status: 400,
         });
@@ -38,7 +39,7 @@ const varifyCvixHeaders = (req: Request) => {
     try {
         evt = wh.verify(payload as string, headers as any) as WebhookEvent;
     } catch (err: any) {
-        console.log("Error verifying webhook:", err.message);
+        logger.error("Error verifying webhook:", err.message);
         throw new Error(err)
     }
 

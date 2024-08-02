@@ -1,16 +1,17 @@
 import app from './app';
-import mongoose from 'mongoose';
 import env from './config/env';
+import logger from './config/logger';
+import { connectToDatabase } from './config/database';
 
 const port = env.PORT || 5000;
 
-mongoose.connect(env.MONGODB_URI!).then(() => {
+connectToDatabase().then(() => {
   app.listen(port, () => {
     /* eslint-disable no-console */
-    console.log(`Listening: http://localhost:${port}`);
+    logger.info(`Listening: http://localhost:${port}`);
     /* eslint-enable no-console */
   });
 }).catch((error) => {
-  console.log('Error connecting to MongoDB');
+  logger.error('Error connecting to MongoDB');
   throw error;
 });

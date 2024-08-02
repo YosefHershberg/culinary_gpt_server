@@ -12,14 +12,20 @@ import MessageResponse from '../../interfaces/MessageResponse';
 import { HttpError } from '../../lib/HttpError';
 import { ingredientSchema, doSomethingByIdSchema } from '../validations';
 
+import logger from '../../config/logger';
+
 export const getIngredients = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
+    console.log(req.userId);
+
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
 
         return res.json(ingredients);
-    } catch (error: any) {
-        console.log(error.message);
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching your ingredients'));
+    } catch (error) {
+        if (error instanceof Error) {
+            logger.error(error.message);
+        }
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while fetching your ingredients'));
     }
 };
 
@@ -37,9 +43,9 @@ export const addIngredient = async (req: CustomRequest, res: Response<Ingredient
         return res.json(newIngredient);
     } catch (error) {
         if (error instanceof Error) {
-            console.log(error.message);
+            logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while adding your ingredient'));
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while adding your ingredient'));
     }
 };
 
@@ -52,9 +58,9 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
         return res.json(message);
     } catch (error) {
         if (error instanceof Error) {
-            console.log(error.message);
+            logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while deleting your ingredient'));
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while deleting your ingredient'));
     }
 };
 
@@ -73,9 +79,9 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
         return res.json(result);
     } catch (error) {
         if (error instanceof Error) {
-            console.log(error.message);
+            logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while fetching ingredients'));
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while fetching ingredients'));
     }
 }
 
@@ -94,9 +100,9 @@ const searchIngredients = async (req: CustomRequest, res: Response<IngredientDoc
         return res.json(ingredients);
     } catch (error) {
         if (error instanceof Error) {
-            console.log(error.message);
+            logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error acoured while searching ingredients'));
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while searching ingredients'));
     }
 
 };

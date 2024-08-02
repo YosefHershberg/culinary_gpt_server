@@ -5,7 +5,6 @@ dotenv.config();
 
 const envSchema = z.object({
     PORT: z.string(),
-    NODE_ENV: z.string(),
     CLERK_SECRET_KEY: z.string(),
     CLERK_PUBLISHABLE_KEY: z.string(),
     MONGODB_URI: z.string(),
@@ -30,4 +29,4 @@ if (!parsedResults.success) {
 
 const env = parsedResults.data
 
-export default env;
+export default {...env, NODE_ENV: process.env.NODE_ENV || 'development'};
