@@ -14,6 +14,19 @@ import { doSomethingByIdSchema, recipeSchema } from '../validations';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 
+/**
+ * @openapi
+ * /api/user/recipes:
+ *  get:
+ *     tags:
+ *     - User Recipes
+ *     description: Gets all user recipes
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
     try {
         const recipes = await recipeOperations.getUserRecipes(req.userId as string);
@@ -27,6 +40,19 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocumen
     }
 }
 
+/**
+ * @openapi
+ * /api/user/recipes:
+ *  post:
+ *     tags:
+ *     - User Recipes
+ *     description: Adds a new recipe to the user's list
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const addRecipeSchema = z.object({
     body: z.object({
         recipe: recipeSchema,
@@ -49,6 +75,19 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
     }
 }
 
+/**
+ * @openapi
+ * /api/user/recipes/{id}:
+ *  get:
+ *     tags:
+ *     - User Recipes
+ *     description: Gets a user recipe by id
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>, next: NextFunction) => {
     const id = req.params.id;
 
@@ -64,6 +103,19 @@ export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument
     }
 }
 
+/**
+ * @openapi
+ * /api/user/recipes/{id}:
+ *  delete:
+ *     tags:
+ *     - User Recipes
+ *     description: Deletes a user recipe by id
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     const id = req.params.id;
 
@@ -88,6 +140,19 @@ export const createRecipeSchema = z.object({
     }),
 });
 
+/**
+ * @openapi
+ * /api/user/recipes/create:
+ *  post:
+ *     tags:
+ *     - User Recipes
+ *     description: Creates a new recipe
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
 
     try {

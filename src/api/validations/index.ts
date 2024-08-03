@@ -5,9 +5,9 @@ import { z } from "zod";
 //NOTE: WHEN MAKE CHANGES HERE MAKE SAME CHANGES IN interfaces/index.ts
 
 export const ingredientSchema = z.object({
-    category: z.array(z.string()),
+    category: z.array(z.enum(['common', 'dairy', 'vegetables', 'spices', 'carbs', 'meat'])),
     name: z.string(),
-    id: z.string().optional(),
+    id: z.string(),
 })
 
 export const kitchenUtilsSchema = z.object({

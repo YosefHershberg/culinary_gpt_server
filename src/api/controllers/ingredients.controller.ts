@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { Ingredient } from '../../interfaces';
+import { UserIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
@@ -14,7 +14,20 @@ import { HttpError } from '../../lib/HttpError';
 import { ingredientSchema, doSomethingByIdSchema } from '../validations';
 import logger from '../../config/logger';
 
-export const getIngredients = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
+/**
+ * @openapi
+ * /api/user/ingredients:
+ *  get:
+ *     tags:
+ *     - User Ingredients
+ *     description: Gets all user ingredients
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
+export const getIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
 
@@ -27,11 +40,24 @@ export const getIngredients = async (req: CustomRequest, res: Response<Ingredien
     }
 };
 
+/**
+ * @openapi
+ * /api/user/ingredients:
+ *  post:
+ *     tags:
+ *     - User Ingredients
+ *     description: Adds a new ingredient to the user's list
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const addIngredientSchema = z.object({
     body: ingredientSchema
 });
 
-export const addIngredient = async (req: CustomRequest, res: Response<Ingredient>, next: NextFunction) => {
+export const addIngredient = async (req: CustomRequest, res: Response<UserIngredient>, next: NextFunction) => {
     const ingredient = req.body;
 
     try {
@@ -47,6 +73,19 @@ export const addIngredient = async (req: CustomRequest, res: Response<Ingredient
     }
 };
 
+/**
+ * @openapi
+ * /api/user/ingredients/{id}:
+ *  delete:
+ *     tags:
+ *     - User Ingredients
+ *     description: Deletes an ingredient from the user's list
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const deleteIngredient = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     const id = req.params.id;
 
@@ -62,6 +101,19 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
     }
 };
 
+/**
+ * @openapi
+ * /user/ingredients/suggestions/{category}:
+ *  get:
+ *     tags:
+ *     - Ingredients
+ *     description: queries the ingredients collection for a specific category
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const ingredientSuggestionsSchema = z.object({
     params: z.object({
         category: z.enum(['common', 'vegetables', 'dairy', 'spices', 'carbs', 'meat']),
@@ -89,6 +141,19 @@ export const searchIngredientsSchema = z.object({
     })
 });
 
+/**
+ * @openapi
+ * api/ingredients/search:
+ *  get:
+ *     tags:
+ *     - Ingredients
+ *     description: queries the ingredients by substring
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 const searchIngredients = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction) => {
     const { query } = req.query;
 

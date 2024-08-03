@@ -10,11 +10,14 @@ import clerkWebhook from './api/webhooks/clerkWebhook';
 
 import rateLimiter from './config/rateLimit';
 import env from './config/env';
+import swagger from './utils/swagger';
 
 const app = express();
 
 app.use(morgan('dev'));
 app.use(helmet());
+
+swagger(app);
 
 app.use(cors({
   origin: env.NODE_ENV === 'production' ? env.CORS_ORIGIN : true,

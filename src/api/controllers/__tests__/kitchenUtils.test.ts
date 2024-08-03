@@ -4,7 +4,7 @@ import app, { userId } from '../../../lib/mock/mockApp';
 import { kitchenUtilsOperations } from '../../services/kitchenUtils.service';
 import { KitchenUtils } from '../../../interfaces';
 
-jest.mock('../api/services/kitchenUtils.service');
+jest.mock('../../services/kitchenUtils.service');
 
 const mockKitchenUtils: KitchenUtils = {
     "Stove Top": true,

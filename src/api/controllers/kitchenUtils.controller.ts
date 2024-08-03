@@ -9,6 +9,19 @@ import CustomRequest from '../../interfaces/CustomRequest';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 
+/**
+ * @openapi
+ * /api/user/kitchen-utils:
+ *  get:
+ *     tags:
+ *     - User Kitchen Utils
+ *     description: Gets all user kitchen utils
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
     try {
         const kitchenUtils = await kitchenUtilsOperations.get(req.userId as string);
@@ -22,6 +35,19 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenU
     }
 };
 
+/**
+ * @openapi
+ * /api/user/kitchen-utils:
+ *  patch:
+ *     tags:
+ *     - User Kitchen Utils
+ *     description: Updates a user's kitchen utils
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ *       400:
+ *         description: Bad request
+ */
 export const updateKitchenUtilsSchema = z.object({
     body: z.object({
         name: z.enum(['Stove Top', 'Oven', 'Microwave', 'Air Fryer', 'Blender', 'Food Processor', 'Slow Cooker', 'BBQ', 'Grill']),

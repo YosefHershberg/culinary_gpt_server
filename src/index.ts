@@ -10,6 +10,7 @@ connectToDatabase().then(() => {
     /* eslint-disable no-console */
     logger.info(`Listening: http://localhost:${port}`);
     /* eslint-enable no-console */
+    
   });
 }).catch((error) => {
   logger.error('Error connecting to MongoDB');

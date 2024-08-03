@@ -6,8 +6,8 @@ import { StatusCodes } from 'http-status-codes';
 import mockRecipe from '../../../lib/mock/mockRecipe';
 
 // Mock the recipeOperations and createRecipeOperations
-jest.mock('../api/services/recipes.service');
-jest.mock('../api/services/createRecipe.service');
+jest.mock('../../services/recipes.service');
+jest.mock('../../services/createRecipe.service');
 
 describe('Recipe Controller', () => {
     const mockRecipes = [{ id: '1', name: 'Test Recipe' }];

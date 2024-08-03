@@ -1,5 +1,5 @@
 import { DeleteResult } from "mongodb"
-import { Ingredient as IngredientInterface } from "../../interfaces"
+import { UserIngredient as IngredientInterface } from "../../interfaces"
 import Ingredient, { IngredientDocument } from "../models/ingredient.model"
 import UserIngredient from "../models/UserIngredients.model"
 import { FilterQuery } from "mongoose"

@@ -1,16 +1,16 @@
 import request from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import { Ingredient } from '../../../interfaces';
+import { UserIngredient } from '../../../interfaces';
 import { ingredientOperations, userIngredientOperations } from '../../services/ingredients.service';
 import app, { userId } from '../../../lib/mock/mockApp';
 
 // Mock data
-const mockIngredient: Ingredient = { id: '1', name: 'Bread', category: ['carbs'] };
-const mockIngredients: Ingredient[] = [mockIngredient];
+const mockIngredient: UserIngredient = { id: '1', name: 'Bread', category: ['carbs'] };
+const mockIngredients: UserIngredient[] = [mockIngredient];
 const mockMessageResponse = { message: 'Ingredient deleted successfully' };
 
 // Mock the services
-jest.mock('../api/services/ingredients.service', () => ({
+jest.mock('../../services/ingredients.service', () => ({
     userIngredientOperations: {
         getAll: jest.fn(),
         addIngredient: jest.fn(),

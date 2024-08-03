@@ -21,7 +21,7 @@ export const recipeOperations = {
     /**
      * 
      * @param recipe 
-     * @returns 
+     * @returns {RecipeDocument}
      */
     addRecipe: async (recipe: RecipeDocument): Promise<RecipeDocument> => {
         // Extract the base64 part

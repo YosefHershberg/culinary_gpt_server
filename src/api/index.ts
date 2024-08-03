@@ -1,3 +1,9 @@
+/**
+ * @module router
+ * @description This module provides the routes for the API
+ * @exports router
+ */
+
 import express from 'express';
 
 import { validate } from '../middlewares';
