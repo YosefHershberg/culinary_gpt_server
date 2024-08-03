@@ -13,7 +13,7 @@ router.get<{}, KitchenUtils | MessageResponse>(
     kitchenUtilsController.getKitchenUtils
 );
 
-router.post<{}, KitchenUtils | MessageResponse>(
+router.patch<{}, KitchenUtils | MessageResponse>(
     '/',
     validate(kitchenUtilsController.updateKitchenUtilsSchema),
     kitchenUtilsController.updateKitchenUtils

@@ -2,19 +2,19 @@ import { Response, Request, NextFunction } from 'express';
 import { FilterQuery } from 'mongoose';
 import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
+
 import CustomRequest from '../../interfaces/CustomRequest';
 import { Ingredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
 import { IngredientDocument } from '../models/ingredient.model';
+
 import { HttpError } from '../../lib/HttpError';
 import { ingredientSchema, doSomethingByIdSchema } from '../validations';
 import logger from '../../config/logger';
 
 export const getIngredients = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
-    console.log(req.userId);
-
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
 

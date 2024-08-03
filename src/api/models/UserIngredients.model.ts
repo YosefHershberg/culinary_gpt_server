@@ -1,14 +1,14 @@
 import mongoose, { Document } from 'mongoose';
 
-export interface UserIngrdientDocument extends Document {
+export interface UserIngredientDocument extends Document {
     userId: string;
     ingredientId: string;
     name: string;
 }
-// NOTE: This model does not retrun json in this format ^^^
-// it is recunstructed to { id, name } in the toJSON and toObject methods
+// NOTE: This model does not return json in this format ^^^
+// it is reconstructed to { id, name } in the toJSON and toObject methods
 
-const userIngredientSchema = new mongoose.Schema<UserIngrdientDocument>({
+const userIngredientSchema = new mongoose.Schema<UserIngredientDocument>({
     userId: {
         type: String,
         required: true,
@@ -46,6 +46,6 @@ const userIngredientSchema = new mongoose.Schema<UserIngrdientDocument>({
     }
 });
 
-const UserIngredient = mongoose.model<UserIngrdientDocument>('UserIngredient', userIngredientSchema);
+const UserIngredient = mongoose.model<UserIngredientDocument>('UserIngredient', userIngredientSchema);
 
 export default UserIngredient;

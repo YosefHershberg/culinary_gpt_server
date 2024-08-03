@@ -6,6 +6,7 @@ export interface RecipeDocument extends Document {
     recipe: Recipe,
     image_url: string;
     userId: string;
+    createdAt: Date;
 }
 
 const recipeSchema = new mongoose.Schema<RecipeDocument>({
@@ -53,6 +54,10 @@ const recipeSchema = new mongoose.Schema<RecipeDocument>({
         type: String,
         ref: 'User',
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
     }
 }, mongooseVirtuals());
 

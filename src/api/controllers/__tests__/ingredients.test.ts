@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import { Ingredient } from '../interfaces';
-import { ingredientOperations, userIngredientOperations } from '../api/services/ingredients.service';
-import app, { userId } from '../lib/mock/mockApp';
+import { Ingredient } from '../../../interfaces';
+import { ingredientOperations, userIngredientOperations } from '../../services/ingredients.service';
+import app, { userId } from '../../../lib/mock/mockApp';
 
 // Mock data
 const mockIngredient: Ingredient = { id: '1', name: 'Bread', category: ['carbs'] };
@@ -23,6 +23,10 @@ jest.mock('../api/services/ingredients.service', () => ({
 }));
 
 describe('Ingredients API', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
 
     describe('GET /api/user/ingredients', () => {
         it('should return all ingredients for a user', async () => {
@@ -64,13 +68,13 @@ describe('Ingredients API', () => {
         });
     });
 
-    describe('GET /api/ingredient-suggestions/:category', () => {
+    describe('GET /api/ingredients/suggestions/:category', () => {
         it('should return ingredient suggestions by category', async () => {
             const category = 'carbs';
             (ingredientOperations.getByCategory as jest.Mock).mockResolvedValue(mockIngredients);
 
             const res = await request(app)
-                .get(`/api/ingredient-suggestions/${category}`);
+                .get(`/api/ingredients/suggestions/${category}`);
 
             expect(res.status).toBe(StatusCodes.OK);
             expect(res.body).toEqual(mockIngredients);
