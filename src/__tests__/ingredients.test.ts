@@ -1,9 +1,8 @@
 import request from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import { connectToDatabase, disconnectFromDatabase } from '../config/database';
 import { Ingredient } from '../interfaces';
 import { ingredientOperations, userIngredientOperations } from '../api/services/ingredients.service';
-import app, { userId } from '../mock/mockApp';
+import app, { userId } from '../lib/mock/mockApp';
 
 // Mock data
 const mockIngredient: Ingredient = { id: '1', name: 'Bread', category: ['carbs'] };
@@ -22,14 +21,6 @@ jest.mock('../api/services/ingredients.service', () => ({
         search: jest.fn(),
     },
 }));
-
-beforeAll(async () => {
-    await connectToDatabase();
-});
-
-afterAll(async () => {
-    await disconnectFromDatabase();
-});
 
 describe('Ingredients API', () => {
 

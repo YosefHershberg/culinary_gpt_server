@@ -4,6 +4,7 @@ import { Ingredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 import * as ingredientOperationsDB from "../data-access/ingredient.da";
 import { addUserIngredient, deleteAllUserIngredients, deleteUserIngredient, getUserIngredients } from "../data-access/ingredient.da";
+import { FilterQuery } from "mongoose";
 
 export const userIngredientOperations = {
     getAll: async (userId: string): Promise<Ingredient[]> => {
@@ -32,7 +33,9 @@ export const ingredientOperations = {
         const ingredients = await ingredientOperationsDB.getByCategory(category)
         return ingredients as IngredientDocument[]
     },
-    search: async (query: string): Promise<IngredientDocument[]> => {
+    search: async (
+        query: FilterQuery<IngredientDocument>
+    ): Promise<IngredientDocument[]> => {
         const ingredients = await ingredientOperationsDB.search(query)
         return ingredients as IngredientDocument[]
     }

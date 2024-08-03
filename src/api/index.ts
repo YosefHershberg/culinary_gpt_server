@@ -7,7 +7,7 @@ import kitchenUtilsRoutes from './routes/kitchenUtils.routes';
 import recipesRoutes from './routes/recipes.routes';
 
 import { ingredientSuggestions, ingredientSuggestionsSchema } from './controllers/ingredients.controller';
-import searchIngredients, { searchIngredientsSchema } from './controllers/searchIngredients.controller';
+import searchIngredients, { searchIngredientsSchema } from './controllers/ingredients.controller';
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ router.use(
 )
 
 router.get(
-    '/ingredient-suggestions/:category',
+    '/ingredients/suggestions/:category',
     validate(ingredientSuggestionsSchema),
     ingredientSuggestions
 );

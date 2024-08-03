@@ -1,17 +1,15 @@
 import { Response, Request, NextFunction } from 'express';
+import { FilterQuery } from 'mongoose';
 import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
-
-import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
-import { IngredientDocument } from '../models/ingredient.model';
-
 import CustomRequest from '../../interfaces/CustomRequest';
 import { Ingredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
+import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
+import { IngredientDocument } from '../models/ingredient.model';
 import { HttpError } from '../../lib/HttpError';
 import { ingredientSchema, doSomethingByIdSchema } from '../validations';
-
 import logger from '../../config/logger';
 
 export const getIngredients = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
@@ -74,7 +72,7 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
     const { category } = req.params;
 
     try {
-        const result = await ingredientOperations.getByCategory(category);
+        const result = await ingredientOperations.getByCategory(category as string);
 
         return res.json(result);
     } catch (error) {
@@ -95,7 +93,7 @@ const searchIngredients = async (req: CustomRequest, res: Response<IngredientDoc
     const { query } = req.query;
 
     try {
-        const ingredients = await ingredientOperations.search(query as string);
+        const ingredients = await ingredientOperations.search(query as FilterQuery<IngredientDocument>);
 
         return res.json(ingredients);
     } catch (error) {
