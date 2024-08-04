@@ -1,4 +1,4 @@
-import { Ingredient } from "../interfaces";
+
 
 export const commonProducts = [
     { category: ['common'], name: "Canola Oil" },
