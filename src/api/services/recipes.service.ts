@@ -1,16 +1,16 @@
-/**
- * @module recipes.service
- * 
- * @description This module provides operations for getting, adding and deleting recipes
- * @exports recipeOperations
- */
-
 import { base64ToArrayBuffer, hashString } from "../../utils/helperFunctions";
 import { firebaseStorageOperations } from "./firebase.service";
 
 import MessageResponse from "../../interfaces/MessageResponse";
 import * as recipeOperationsDB from "../data-access/recipe.da";
 import { RecipeDocument } from "../models/recipe.model";
+
+/**
+ * @module recipes.service
+ * 
+ * @description This module provides operations for getting, adding and deleting recipes
+ * @exports recipeOperations
+ */
 
 export const recipeOperations = {
     getUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {

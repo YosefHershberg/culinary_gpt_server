@@ -1,12 +1,12 @@
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import firebaseApp from "../../config/firebase";
+
 /**
  * @module firebase.service
  * 
  * @description This module provides operations for uploading and deleting images from Firebase Storage
  * @exports firebaseStorageOperations
  */
-
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import firebaseApp from "../../config/firebase";
 
 export const firebaseStorageOperations = {
 

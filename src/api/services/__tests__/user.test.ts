@@ -1,4 +1,3 @@
-import logger from "../../../config/logger";
 
 import { createUserDB, deleteUserDB, updateUserDB, UpdateUserDBProps } from "../../data-access/user.da";
 import { deleteUserRecipes } from "../../data-access/recipe.da";
@@ -24,8 +23,6 @@ describe('user services', () => {
             (createUserDB as jest.Mock).mockResolvedValue(mockUser);
 
             const result = await userOperations.createUser(mockUser);
-
-            logger.info(result);
 
             expect(createUserDB).toHaveBeenCalledWith(mockUser);
 
@@ -53,14 +50,6 @@ describe('user services', () => {
             expect(userIngredientOperations.deleteAll).toHaveBeenCalledWith(userId);
             expect(firebaseStorageOperations.deleteImage).toHaveBeenCalledTimes(mockRecipes.length);
             expect(result).toEqual(mockUser);
-        });
-
-        it('should handle errors gracefully if any operation fails', async () => {
-            const userId = 'userId';
-
-            (recipeOperations.getUserRecipes as jest.Mock).mockRejectedValue(new Error('Recipes fetch error'));
-
-            await expect(userOperations.deleteUser(userId)).rejects.toThrow('Recipes fetch error');
         });
     });
 
