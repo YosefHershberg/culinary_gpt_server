@@ -19,9 +19,6 @@ const mockKitchenUtils: KitchenUtils = {
 };
 
 describe('Kitchen Utils Controller', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
 
     describe('GET /api/user/kitchen-utils', () => {
         it('should return kitchen utils for a user', async () => {

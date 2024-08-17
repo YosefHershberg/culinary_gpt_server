@@ -6,5 +6,5 @@ module.exports = {
     verbose: true,
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     forceExit: true,
-    // clearMocks: true,
+    clearMocks: true,
 };

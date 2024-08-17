@@ -95,7 +95,7 @@ export const createRecipeOperations = {
                                     "time": "total time to complete the recipe",
                                     "level": "difficulty level of the recipe (easy, medium, hard)",
                                 }
-                                NOTE: the json i want you to genarate must be a valid json object and without the backticks
+                                NOTE: the json i want you to generate must be a valid json object and without the backticks
                             `
                             }
                         ],

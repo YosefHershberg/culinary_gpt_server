@@ -1,6 +1,8 @@
+import { CreateUserDBProps } from "../../api/data-access/user.da";
+import { UserDocument } from "../../api/models/user.model";
 import { RecipeWithImage } from "../../interfaces";
 
-const mockRecipe: RecipeWithImage = {
+export const mockRecipe: RecipeWithImage = {
     image_url: "https://example.com/recipe-image.jpg",
     recipe: {
         title: "Classic Spaghetti Carbonara",
@@ -28,4 +30,29 @@ const mockRecipe: RecipeWithImage = {
     }
 };
 
-export default mockRecipe;
+export const mockUser: CreateUserDBProps = {
+    clerkId: 'clerk123',
+    first_name: 'John',
+    last_name: 'Doe',
+    email: 'john.doe@example.com',
+};
+
+export const mockUserDoc = {
+    first_name: 'John',
+    last_name: 'Doe',
+    clerkId: 'clerk123',
+    email: 'john.doe@example.com',
+    createdAt: new Date('2023-01-01T00:00:00Z'),
+    updatedAt: new Date('2023-01-02T00:00:00Z'),
+    kitchenUtils: {
+        "Stove Top": true,
+        "Oven": true,
+        "Microwave": true,
+        "Air Fryer": false,
+        "Blender": true,
+        "Food Processor": false,
+        "Slow Cooker": false,
+        "BBQ": false,
+        "Grill": false,
+    },
+} as UserDocument; //Typed like this because UserDocument extends mongoose.Document

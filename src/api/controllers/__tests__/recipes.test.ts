@@ -3,18 +3,13 @@ import app, { userId } from '../../../lib/mock/mockApp';
 import { recipeOperations } from '../../services/recipes.service';
 import { createRecipeOperations } from '../../services/createRecipe.service';
 import { StatusCodes } from 'http-status-codes';
-import mockRecipe from '../../../lib/mock/mockRecipe';
+import { mockRecipe } from '../../../lib/mock/mockData';
 
-// Mock the recipeOperations and createRecipeOperations
 jest.mock('../../services/recipes.service');
 jest.mock('../../services/createRecipe.service');
 
 describe('Recipe Controller', () => {
     const mockRecipes = [{ id: '1', name: 'Test Recipe' }];
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
 
     describe('GET /api/user/recipes', () => {
         it('should return a list of recipes for the user', async () => {

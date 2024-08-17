@@ -23,11 +23,7 @@ jest.mock('../../services/ingredients.service', () => ({
 }));
 
 describe('Ingredients API', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
-
+    
     describe('GET /api/user/ingredients', () => {
         it('should return all ingredients for a user', async () => {
             (userIngredientOperations.getAll as jest.Mock).mockResolvedValue(mockIngredients);
