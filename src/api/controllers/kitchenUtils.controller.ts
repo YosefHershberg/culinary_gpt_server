@@ -15,10 +15,15 @@ import logger from '../../config/logger';
  *  get:
  *     tags:
  *     - User Kitchen Utils
- *     description: Gets all user kitchen utils
+ *     summary: Gets all user kitchen utils
+ * 
  *     responses:
  *       200:
- *         description: App is up and running
+ *         description: Successfully retrieved all user utils
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/KitchenUtils'
  *       400:
  *         description: Bad request
  */
@@ -38,16 +43,43 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenU
 /**
  * @openapi
  * /api/user/kitchen-utils:
- *  patch:
+ *   patch:
  *     tags:
- *     - User Kitchen Utils
- *     description: Updates a user's kitchen utils
+ *       - User Kitchen Utils
+ *     summary: Update a user's kitchen utility
+ *     requestBody:
+ *       description: Information needed to update the kitchen utility
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 enum: ['Stove Top', 'Oven', 'Microwave', 'Air Fryer', 'Blender', 'Food Processor', 'Slow Cooker', 'BBQ', 'Grill']
+ *                 description: The name of the kitchen utility to update.
+ *               value:
+ *                 type: boolean
+ *                 description: The new status of the kitchen utility (true for available, false for unavailable).
+ *             required:
+ *               - name
+ *               - value
  *     responses:
  *       200:
- *         description: App is up and running
+ *         description: Successfully updated the kitchen utility
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MessageResponse'
  *       400:
- *         description: Bad request
+ *         description: Bad request due to invalid input
+ *       401:
+ *         description: Unauthorized access if authentication fails
+ *       500:
+ *         description: Internal server error
  */
+
 export const updateKitchenUtilsSchema = z.object({
     body: z.object({
         name: z.enum(['Stove Top', 'Oven', 'Microwave', 'Air Fryer', 'Blender', 'Food Processor', 'Slow Cooker', 'BBQ', 'Grill']),
