@@ -11,7 +11,8 @@ import { ingredientOperations, userIngredientOperations } from '../services/ingr
 import { IngredientDocument } from '../models/ingredient.model';
 
 import { HttpError } from '../../lib/HttpError';
-import { ingredientSchema, doSomethingByIdSchema } from '../validations';
+import { doSomethingByIdSchema } from '../schemas';
+import { ingredientSchema } from '../schemas/ingredient.schema';
 import logger from '../../config/logger';
 
 /**
@@ -20,13 +21,22 @@ import logger from '../../config/logger';
  *  get:
  *     tags:
  *     - User Ingredients
- *     description: Gets all user ingredients
+ *     summary: Retrieves all ingredients for the user
  *     responses:
  *       200:
- *         description: App is up and running
+ *         description: Successfully retrieved all user ingredients
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ingredient'
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
+
 export const getIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
@@ -36,7 +46,10 @@ export const getIngredients = async (req: CustomRequest, res: Response<UserIngre
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while fetching your ingredients'));
+        next(new HttpError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'An error accrued while fetching your ingredients'
+        ));
     }
 };
 
@@ -46,13 +59,26 @@ export const getIngredients = async (req: CustomRequest, res: Response<UserIngre
  *  post:
  *     tags:
  *     - User Ingredients
- *     description: Adds a new ingredient to the user's list
+ *     summary: Adds a new ingredient to the user's list
+ *     requestBody:
+ *        required: true
+ *        content:
+ *           application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Ingredient'
  *     responses:
  *       200:
- *         description: App is up and running
+ *         description: Ingredient deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Ingredient'
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
+
 export const addIngredientSchema = z.object({
     body: ingredientSchema
 });
@@ -69,7 +95,10 @@ export const addIngredient = async (req: CustomRequest, res: Response<UserIngred
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while adding your ingredient'));
+        next(new HttpError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'An error accrued while adding your ingredient'
+        ));
     }
 };
 
@@ -79,13 +108,29 @@ export const addIngredient = async (req: CustomRequest, res: Response<UserIngred
  *  delete:
  *     tags:
  *     - User Ingredients
- *     description: Deletes an ingredient from the user's list
+ *     summary: Deletes an ingredient from the user's list
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the ingredient to delete
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *         description: App is up and running
+ *         description: Ingredient deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MessageResponse'
  *       400:
  *         description: Bad request
+ *       404:
+ *         description: Ingredient not found
+ *       500:
+ *         description: Internal server error
  */
+
 export const deleteIngredient = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     const id = req.params.id;
 
@@ -97,7 +142,10 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while deleting your ingredient'));
+        next(new HttpError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'An error accrued while deleting your ingredient'
+        ));
     }
 };
 
@@ -107,13 +155,30 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
  *  get:
  *     tags:
  *     - Ingredients
- *     description: queries the ingredients collection for a specific category
+ *     summary: Retrieves ingredient suggestions based on the specified category
+ *     parameters:
+ *       - in: path
+ *         name: category
+ *         required: true
+ *         description: The category of ingredients to query
+ *         schema:
+ *           type: string
+ *           enum: [common, vegetables, dairy, spices, carbs, meat]
  *     responses:
  *       200:
- *         description: App is up and running
+ *         description: Successfully retrieved ingredients for the specified category
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ingredient'
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
+
 export const ingredientSuggestionsSchema = z.object({
     params: z.object({
         category: z.enum(['common', 'vegetables', 'dairy', 'spices', 'carbs', 'meat']),
@@ -131,9 +196,42 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while fetching ingredients'));
+        next(new HttpError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'An error accrued while fetching ingredients'
+        ));
     }
 }
+
+/**
+ * @openapi
+ * /api/ingredients/search:
+ *  get:
+ *     tags:
+ *     - Ingredients
+ *     summary: Queries ingredients by substring
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: The substring to search for in ingredient names
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved matching ingredients
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ingredient'
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+
 
 export const searchIngredientsSchema = z.object({
     query: z.object({
@@ -141,19 +239,6 @@ export const searchIngredientsSchema = z.object({
     })
 });
 
-/**
- * @openapi
- * api/ingredients/search:
- *  get:
- *     tags:
- *     - Ingredients
- *     description: queries the ingredients by substring
- *     responses:
- *       200:
- *         description: App is up and running
- *       400:
- *         description: Bad request
- */
 const searchIngredients = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction) => {
     const { query } = req.query;
 
@@ -165,12 +250,14 @@ const searchIngredients = async (req: CustomRequest, res: Response<IngredientDoc
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while searching ingredients'));
+        next(new HttpError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'An error accrued while searching ingredients'
+        ));
     }
 
 };
 
 export default searchIngredients;
-
 
 export { doSomethingByIdSchema }

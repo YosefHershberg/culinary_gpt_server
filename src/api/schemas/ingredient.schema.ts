@@ -6,26 +6,29 @@ import { TypeOf, z } from "zod";
  *   schemas:
  *     Ingredient:
  *       type: object
+ *       required:
+ *         - category
+ *         - name
+ *         - id
  *       properties:
  *         category:
  *           type: array
  *           items:
  *             type: string
+ *             default: 'Vegetables'
  *         name:
  *           type: string
+ *           default: 'Tomato'
  *         id:
  *           type: string
- *       required:
- *         - category
- *         - name
- *         - id
+ *           default: '123'
  */
 
 
 export const ingredientSchema = z.object({
     category: z.array(z.string()),
     name: z.string(),
-    id: z.string().optional(),
+    id: z.string(),
 })
 
 export type Ingredient = TypeOf<typeof ingredientSchema>;

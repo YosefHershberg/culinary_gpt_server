@@ -23,7 +23,7 @@ This is a Node.js Express server application built with TypeScript that generate
 │   │   ├── models
 │   │   ├── routes
 │   │   ├── services
-│   │   ├── validations
+│   │   ├── schemas
 │   │   └── webhooks
 │   ├── interfaces
 │   ├── lib

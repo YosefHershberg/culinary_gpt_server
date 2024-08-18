@@ -10,7 +10,8 @@ import CustomRequest from '../../interfaces/CustomRequest';
 import { RecipeWithImage } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
-import { doSomethingByIdSchema, recipeSchema } from '../validations';
+import { doSomethingByIdSchema } from '../schemas';
+import { recipeSchema } from '../schemas/recipe.schema';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 
