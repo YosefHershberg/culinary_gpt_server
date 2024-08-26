@@ -4,7 +4,7 @@
  */
 
 import express, { NextFunction, Response } from 'express';
-import api from '../../api';
+import api from '../../api/routes';
 import CustomRequest from '../../interfaces/CustomRequest';
 
 // Mock userId
@@ -17,7 +17,7 @@ app.use(express.json());
 /**
  * Middleware to add userId to request object
  */
-app.use('/api', (req: CustomRequest, res: Response, next: NextFunction) => {
+app.use('/api', (req: CustomRequest, _res: Response, next: NextFunction) => {
     req.userId = userId;
     next();
 }, api)

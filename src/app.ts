@@ -5,7 +5,7 @@ import cors from 'cors';
 import bodyParser from "body-parser";
 
 import * as middlewares from './middlewares';
-import api from './api';
+import api from './api/routes';
 import clerkWebhook from './api/webhooks/clerkWebhook';
 
 import rateLimiter from './config/rateLimit';

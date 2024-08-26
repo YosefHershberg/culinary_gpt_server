@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import env from './env';
 import logger from './logger';
 
-const connectToDatabase = async (): Promise<void> => {
+export const connectToDatabase = async (): Promise<void> => {
     try {
         await mongoose.connect(env.MONGODB_URI);
         logger.info('Connected to the database');
@@ -11,7 +11,7 @@ const connectToDatabase = async (): Promise<void> => {
     }
 };
 
-const disconnectFromDatabase = async (): Promise<void> => {
+export const disconnectFromDatabase = async (): Promise<void> => {
     try {
         await mongoose.disconnect();
         logger.info('Disconnected from the database');
@@ -19,5 +19,3 @@ const disconnectFromDatabase = async (): Promise<void> => {
         logger.error('Failed to disconnect from the database:', error);
     }
 };
-
-export { connectToDatabase, disconnectFromDatabase };

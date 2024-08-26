@@ -6,14 +6,14 @@
 
 import express from 'express';
 
-import { validate } from '../middlewares';
+import { validate } from '../../middlewares';
 
-import ingredientRoutes from './routes/ingredients.routes';
-import kitchenUtilsRoutes from './routes/kitchenUtils.routes';
-import recipesRoutes from './routes/recipes.routes';
+import ingredientRoutes from './ingredients.routes';
+import kitchenUtilsRoutes from './kitchenUtils.routes';
+import recipesRoutes from './recipes.routes';
 
-import { ingredientSuggestions, ingredientSuggestionsSchema } from './controllers/ingredients.controller';
-import searchIngredients, { searchIngredientsSchema } from './controllers/ingredients.controller';
+import { ingredientSuggestions, ingredientSuggestionsSchema } from '../controllers/ingredients.controller';
+import searchIngredients, { searchIngredientsSchema } from '../controllers/ingredients.controller';
 
 const router = express.Router();
 

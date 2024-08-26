@@ -1,4 +1,6 @@
-export const kitchenUtils: { [key: string]: boolean } = {
+import { KitchenUtils } from "../interfaces";
+
+export const kitchenUtils: KitchenUtils = {
     "Stove Top": true,
     "Oven": true,
     "Microwave": false,

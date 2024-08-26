@@ -7,12 +7,15 @@ export const swaggerOptions: swaggerJsdoc.Options = {
         info: {
             title: 'CulinaryGPT',
             version,
-            description: 'This is a REST API server for CulinaryGPT, a recipe generation application',
+            description: 'This is a Node.js Express server application built with TypeScript that generates recipes using the OpenAI API. It uses MongoDB as the main database, firebase for image storage, zod for validation and Clerk for authentication.',
         },
         servers: [
             {
                 url: 'http://localhost:3000',
             },
+            {
+                url: 'https://culinarygptserver-production.up.railway.app',
+            }
         ],
     },
     apis: ['src/api/**/*.ts'],

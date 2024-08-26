@@ -1,6 +1,6 @@
 import { CreateUserDBProps } from "../../api/data-access/user.da";
 import { UserDocument } from "../../api/models/user.model";
-import { RecipeWithImage } from "../../interfaces";
+import { KitchenUtils, RecipeWithImage } from "../../interfaces";
 
 export const mockRecipe: RecipeWithImage = {
     image_url: "https://example.com/recipe-image.jpg",
@@ -56,3 +56,15 @@ export const mockUserDoc = {
         "Grill": false,
     },
 } as UserDocument; //Typed like this because UserDocument extends mongoose.Document
+
+export const mockKitchenUtils: KitchenUtils = {
+    "Stove Top": true,
+    "Oven": true,
+    "Microwave": false,
+    "Air Fryer": false,
+    "Blender": false,
+    "Food Processor": false,
+    "Slow Cooker": false,
+    "BBQ": true,
+    "Grill": false,
+}
