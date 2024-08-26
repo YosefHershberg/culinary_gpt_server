@@ -1,23 +1,21 @@
 import sharp from "sharp";
 import crypto from "crypto";
 
-export const mongooseVirtuals = (): Object => {
-  return {
-    toJSON: {
-      virtuals: true,
-      versionKey: false,
-      transform: (_doc: any, ret: any) => {
-        ret.id = ret._id;
-        delete ret._id;
-      }
-    },
-    toObject: {
-      virtuals: true,
-      versionKey: false,
-      transform: (_doc: any, ret: any) => {
-        ret.id = ret._id;
-        delete ret._id;
-      }
+export const mongooseVirtuals = {
+  toJSON: {
+    virtuals: true,
+    versionKey: false,
+    transform: (_doc: any, ret: any) => {
+      ret.id = ret._id;
+      delete ret._id;
+    }
+  },
+  toObject: {
+    virtuals: true,
+    versionKey: false,
+    transform: (_doc: any, ret: any) => {
+      ret.id = ret._id;
+      delete ret._id;
     }
   }
 }

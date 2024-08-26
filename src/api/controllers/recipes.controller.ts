@@ -61,7 +61,7 @@ export const addRecipeSchema = z.object({
     })
 });
 
-export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>, next: NextFunction) => {
+export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument>, next: NextFunction) => {
     const recipe = req.body;
 
     try {
@@ -89,7 +89,7 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
  *       400:
  *         description: Bad request
  */
-export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument | MessageResponse>, next: NextFunction) => {
+export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument>, next: NextFunction) => {
     const id = req.params.id;
 
     try {

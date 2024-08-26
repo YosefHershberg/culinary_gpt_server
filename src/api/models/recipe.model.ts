@@ -59,7 +59,7 @@ const recipeSchema = new mongoose.Schema<RecipeDocument>({
         type: Date,
         default: Date.now,
     }
-}, mongooseVirtuals());
+}, mongooseVirtuals);
 
 // recipeSchema.pre<Recipe>('save', async function(next) {
 //     const user = await User.findById(this.userId);

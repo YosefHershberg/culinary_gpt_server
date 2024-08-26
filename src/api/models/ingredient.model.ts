@@ -17,7 +17,7 @@ const ingredientSchema = new mongoose.Schema<IngredientDocument>({
         enum: ['common', 'dairy', 'vegetables', 'spices', 'carbs', 'meat'],
         required: true,
     },
-}, mongooseVirtuals());
+}, mongooseVirtuals);
 
 const Ingredient = mongoose.model<IngredientDocument>('Ingredient', ingredientSchema);
 

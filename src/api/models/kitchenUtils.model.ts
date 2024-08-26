@@ -56,7 +56,7 @@ const kitchenUtilsSchema = new mongoose.Schema<IKitchenUtils>({
     ref: 'User',
     required: true
   }
-}, mongooseVirtuals());
+}, mongooseVirtuals);
 
 const KitchenUtils = mongoose.model<IKitchenUtils>('KitchenUtils', kitchenUtilsSchema);
 

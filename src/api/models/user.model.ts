@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema<UserDocument>({
         "BBQ": Boolean,
         "Grill": Boolean,
     },
-}, mongooseVirtuals());
+}, mongooseVirtuals);
 
 // userSchema.path('recipes').select(false)
 

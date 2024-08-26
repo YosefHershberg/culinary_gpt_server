@@ -4,6 +4,7 @@ import { firebaseStorageOperations } from "./firebase.service";
 import MessageResponse from "../../interfaces/MessageResponse";
 import * as recipeOperationsDB from "../data-access/recipe.da";
 import { RecipeDocument } from "../models/recipe.model";
+import { RecipeWithImage } from "../../interfaces";
 
 /**
  * @module recipes.service
@@ -18,12 +19,7 @@ export const recipeOperations = {
         return recipes
     },
 
-    /**
-     * 
-     * @param recipe 
-     * @returns {RecipeDocument}
-     */
-    addRecipe: async (recipe: RecipeDocument): Promise<RecipeDocument> => {
+    addRecipe: async (recipe: RecipeWithImage): Promise<RecipeDocument> => {
         // Extract the base64 part
         const base64Image = recipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, '');
 
@@ -42,10 +38,6 @@ export const recipeOperations = {
 
         if (!recipe) {
             throw new Error('Recipe not found')
-        }
-
-        if (recipe.userId !== userId) {
-            throw new Error('You are not authorized to delete this recipe')
         }
 
         await Promise.all([
