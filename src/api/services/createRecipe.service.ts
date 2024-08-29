@@ -40,10 +40,13 @@ export const createRecipeOperations = {
         kitchenUtils = user.kitchenUtils;
         userIngredients = ingredients.map((ingredient: UserIngredient) => ingredient.name);
 
+        // Create a recipe using OpenAI API
         const recipe = await createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils);
 
+        // Create an image using OpenAI API
         const imageUrl = await createRecipeOperations.createImageOpenAI(recipe.title)
 
+        // Compress the image
         const base64Image = await compressBase64Image(imageUrl as string, 60); //30 KB
 
         // for an image tag
