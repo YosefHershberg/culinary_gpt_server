@@ -1,7 +1,7 @@
 {
-  "name": "express-api-starter-ts",
+  "name": "culinary-gpt-server",
   "version": "1.2.0",
-  "description": " A basic starter for an express.js API with Typescript",
+  "description": "A RESTful API server for Culinary GPT",
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
