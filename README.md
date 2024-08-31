@@ -15,11 +15,14 @@ This is a Node.js Express server application built with TypeScript that generate
 
 ## Documentation
 
-JSDoc and SwaggerUI is available inn this application.
+JSDoc is shown in various functions ans services and SwaggerUI is available for this application.
 to create the swagger HTML file enter this command - 
+
 ```console
 npm run docs
 ```
+
+The Swagger UI will be available at http://localhost:5000/docs
 
 ## Project Structure
 
