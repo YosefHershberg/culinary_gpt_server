@@ -4,7 +4,6 @@ import { firebaseStorageOperations } from '../firebase.service';
 import { RecipeDocument } from '../../models/recipe.model';
 import { mockRecipe } from '../../../lib/mock/mockData';
 import { base64ToArrayBuffer, hashString } from '../../../utils/helperFunctions';
-import { mock } from 'node:test';
 import MessageResponse from '../../../interfaces/MessageResponse';
 
 jest.mock('../../data-access/recipe.da');
