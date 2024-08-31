@@ -16,6 +16,7 @@ import logger from '../../config/logger';
  *     tags:
  *     - User Kitchen Utils
  *     summary: Gets all user kitchen utils
+ *     description: Fetches a list of kitchen utilities that belong to the currently authenticated user.
  * 
  *     responses:
  *       200:
@@ -47,6 +48,7 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenU
  *     tags:
  *       - User Kitchen Utils
  *     summary: Update a user's kitchen utility
+ *     description: Updates the status of a kitchen utility that belongs to the currently authenticated user.
  *     requestBody:
  *       description: Information needed to update the kitchen utility
  *       required: true

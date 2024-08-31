@@ -22,6 +22,7 @@ import logger from '../../config/logger';
  *     tags:
  *     - User Ingredients
  *     summary: Retrieves all ingredients for the user
+ *     description: Fetches a list of ingredients that belong to the currently authenticated user.
  *     responses:
  *       200:
  *         description: Successfully retrieved all user ingredients
@@ -60,6 +61,7 @@ export const getIngredients = async (req: CustomRequest, res: Response<UserIngre
  *     tags:
  *     - User Ingredients
  *     summary: Adds a new ingredient to the user's list
+ *     description: Adds a new ingredient to the user's list
  *     requestBody:
  *        required: true
  *        content:
@@ -109,6 +111,7 @@ export const addIngredient = async (req: CustomRequest, res: Response<UserIngred
  *     tags:
  *     - User Ingredients
  *     summary: Deletes an ingredient from the user's list
+ *     description: Deletes an ingredient from the user's list
  *     parameters:
  *       - in: path
  *         name: id
@@ -156,6 +159,7 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
  *     tags:
  *     - Ingredients
  *     summary: Retrieves ingredient suggestions based on the specified category
+ *     description: Fetches a list of ingredients that belong to the specified category.
  *     parameters:
  *       - in: path
  *         name: category
@@ -210,6 +214,7 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
  *     tags:
  *     - Ingredients
  *     summary: Queries ingredients by substring
+ *     description: Fetches a list of ingredients that contain the specified substring in their name.
  *     parameters:
  *       - in: query
  *         name: query

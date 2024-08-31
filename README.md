@@ -13,6 +13,14 @@ This is a Node.js Express server application built with TypeScript that generate
 - Image storage with firebase
 - Structured and scalable codebase
 
+## Documentation
+
+JSDoc and SwaggerUI is available inn this application.
+to create the swagger HTML file enter this command - 
+```console
+npm run docs
+```
+
 ## Project Structure
 
 ```plaintext
