@@ -20,6 +20,11 @@ router.post<{}, UserIngredient | MessageResponse>(
 );
 
 router.delete<{ id: string }, MessageResponse>(
+    '/all',
+    ingredientControllers.deleteAllIngredients
+);
+
+router.delete<{ id: string }, MessageResponse>(
     '/:id',
     validate(ingredientControllers.doSomethingByIdSchema),
     ingredientControllers.deleteIngredient

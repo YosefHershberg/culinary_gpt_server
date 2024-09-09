@@ -38,5 +38,6 @@ export const getUserIngredients = async (userId: string): Promise<IngredientInte
 }
 
 export const deleteAllUserIngredients = async (userId: string): Promise<DeleteResult> => {
+    console.log('hereeeeeee', userId)
     return await UserIngredient.deleteMany({ userId })
 }

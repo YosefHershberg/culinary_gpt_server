@@ -56,29 +56,30 @@ export const getIngredients = async (req: CustomRequest, res: Response<UserIngre
 
 /**
  * @openapi
- * /api/user/ingredients:
- *  post:
- *     tags:
- *     - User Ingredients
- *     summary: Adds a new ingredient to the user's list
- *     description: Adds a new ingredient to the user's list
- *     requestBody:
- *        required: true
- *        content:
- *           application/json:
- *              schema:
- *                $ref: '#/components/schemas/Ingredient'
- *     responses:
- *       200:
- *         description: Ingredient deleted successfully
+ * paths:
+ *   /api/user/ingredients:
+ *     post:
+ *       tags:
+ *         - User Ingredients
+ *       summary: Adds a new ingredient to the user's list
+ *       description: Adds a new ingredient to the user's list
+ *       requestBody:
+ *         required: true
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Ingredient'
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal server error
+ *       responses:
+ *         '200':
+ *           description: Ingredient added successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/Ingredient'
+ *         '400':
+ *           description: Bad request
+ *         '500':
+ *           description: Internal server error
  */
 
 export const addIngredientSchema = z.object({
@@ -151,6 +152,44 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
         ));
     }
 };
+
+/**
+ * @openapi
+ * /api/user/ingredients/all:
+ *   delete:
+ *     tags:
+ *       - User Ingredients
+ *     summary: Deletes all ingredients from the user's list
+ *     description: Deletes all ingredients from the user's list
+ *     responses:
+ *       200:
+ *         description: All ingredients deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MessageResponse'
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+
+
+export const deleteAllIngredients = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
+    try {
+        const message = await userIngredientOperations.deleteAll(req.userId as string);
+
+        return res.json(message);
+    } catch (error) {
+        if (error instanceof Error) {
+            logger.error(error.message);
+        }
+        next(new HttpError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'An error accrued while deleting your ingredients'
+        ));
+    }
+}
 
 /**
  * @openapi
@@ -236,7 +275,6 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
  *       500:
  *         description: Internal server error
  */
-
 
 export const searchIngredientsSchema = z.object({
     query: z.object({

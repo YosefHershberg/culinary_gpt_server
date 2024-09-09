@@ -1,6 +1,13 @@
 import { KitchenUtils } from "../../interfaces";
 import { getUserDB } from "../data-access/user.da";
 
+/**
+ * @module kitchenUtils.service
+ * 
+ * @description This module provides operations for managing user kitchen utilities
+ * @exports kitchenUtilsOperations
+ */
+
 export const kitchenUtilsOperations = {
     get: async (userId: string): Promise<KitchenUtils> => {
         const user = await getUserDB(userId)

@@ -37,6 +37,11 @@ export const createRecipeOperations = {
             getUserDB(userId)
         ]);
 
+        // Check if there are enough ingredients to create a recipe
+        if (ingredients.length < 4) {
+            throw new Error('Not enough ingredients to create a recipe');
+        }
+
         kitchenUtils = user.kitchenUtils;
         userIngredients = ingredients.map((ingredient: UserIngredient) => ingredient.name);
 

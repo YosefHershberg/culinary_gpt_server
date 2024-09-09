@@ -15,6 +15,7 @@ jest.mock('../../services/ingredients.service', () => ({
         getAll: jest.fn(),
         addIngredient: jest.fn(),
         deleteIngredient: jest.fn(),
+        deleteAll: jest.fn(),
     },
     ingredientOperations: {
         getByCategory: jest.fn(),
@@ -61,6 +62,18 @@ describe('Ingredients API', () => {
             expect(res.status).toBe(StatusCodes.OK);
             expect(res.body).toEqual(mockMessageResponse);
             expect(userIngredientOperations.deleteIngredient).toHaveBeenCalledWith(userId, mockIngredient.id);
+        });
+    });
+
+    describe('DELETE /api/user/ingredients/all', () => {
+        it('should delete an ingredient', async () => {
+            (userIngredientOperations.deleteAll as jest.Mock).mockResolvedValue(mockMessageResponse);
+
+            const res = await request(app)
+                .delete('/api/user/ingredients/all')
+
+            expect(res.status).toBe(StatusCodes.OK);
+            expect(userIngredientOperations.deleteAll).toHaveBeenCalledWith(userId);
         });
     });
 

@@ -36,6 +36,7 @@ The Swagger UI will be available at http://localhost:5000/docs
 │   │   ├── services
 │   │   ├── schemas
 │   │   └── webhooks
+│   ├── config
 │   ├── interfaces
 │   ├── lib
 │   ├── utils
@@ -45,4 +46,6 @@ The Swagger UI will be available at http://localhost:5000/docs
 ├── .env
 ├── package.json
 ├── tsconfig.json
+├── jest.config.json
+├── jsdoc.json
 └── README.md

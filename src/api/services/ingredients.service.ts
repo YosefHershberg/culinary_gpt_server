@@ -8,6 +8,13 @@ import { addUserIngredient, deleteAllUserIngredients, deleteUserIngredient, getU
 import { UserIngredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 
+/**
+ * @module ingredients.service
+ * 
+ * @description This module provides operations for managing user ingredients
+ * @exports userIngredientOperations
+ */
+
 export const userIngredientOperations = {
     getAll: async (userId: string): Promise<UserIngredient[]> => {
         const ingredients = await getUserIngredients(userId);
