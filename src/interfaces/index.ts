@@ -1,6 +1,7 @@
 
 export interface UserIngredient {
-    category?: string[]
+    category?: string[];
+    popularity?: number;
     name: string;
     id: string;
 }

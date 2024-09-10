@@ -4,6 +4,7 @@ import { mongooseVirtuals } from '../../utils/helperFunctions';
 export interface IngredientDocument extends Document {
     name: string;
     category: string[];
+    popularity: number;
 };
 
 const ingredientSchema = new mongoose.Schema<IngredientDocument>({
@@ -15,6 +16,10 @@ const ingredientSchema = new mongoose.Schema<IngredientDocument>({
     category: {
         type: [String],
         enum: ['common', 'dairy', 'vegetables', 'spices', 'carbs', 'meat'],
+        required: true,
+    },
+    popularity: {
+        type: Number,
         required: true,
     },
 }, mongooseVirtuals);
