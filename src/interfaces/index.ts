@@ -2,6 +2,7 @@
 export interface UserIngredient {
     category?: string[];
     popularity?: number;
+    type?: IngredientType[];        
     name: string;
     id: string;
 }
@@ -36,3 +37,5 @@ export interface Recipe {
     time: string;
     level: string;
 }
+
+export type IngredientType = "food" | "drink";

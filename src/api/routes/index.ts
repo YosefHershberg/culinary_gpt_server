@@ -13,7 +13,7 @@ import kitchenUtilsRoutes from './kitchenUtils.routes';
 import recipesRoutes from './recipes.routes';
 
 import { ingredientSuggestions, ingredientSuggestionsSchema } from '../controllers/ingredients.controller';
-import searchIngredients, { searchIngredientsSchema } from '../controllers/ingredients.controller';
+import { searchIngredients, searchIngredientsSchema } from '../controllers/ingredients.controller';
 
 const router = express.Router();
 

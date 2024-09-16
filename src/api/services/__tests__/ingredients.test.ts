@@ -79,13 +79,14 @@ describe('ingredient services', () => {
     describe('ingredientOperations.search', () => {
         it('should return ingredients matching the query successfully', async () => {
             const query = { name: /Carrot/i };
+            const type = 'food';
             const mockIngredients: IngredientDocument[] = [{ name: 'Carrot', category: ['Vegetables'] } as unknown as IngredientDocument];
 
-            (ingredientOperationsDB.search as jest.Mock).mockResolvedValue(mockIngredients);
+            (ingredientOperationsDB.searchByQueryAndIngredientType as jest.Mock).mockResolvedValue(mockIngredients);
 
-            const result = await ingredientOperations.search(query);
+            const result = await ingredientOperations.search(query, type);
 
-            expect(ingredientOperationsDB.search).toHaveBeenCalledWith(query);
+            expect(ingredientOperationsDB.searchByQueryAndIngredientType).toHaveBeenCalledWith(query, type);
             expect(result).toEqual(mockIngredients);
         });
     });

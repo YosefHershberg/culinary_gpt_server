@@ -1,18 +1,32 @@
 import { DeleteResult } from "mongodb"
-import { UserIngredient as IngredientInterface } from "../../interfaces"
+import { UserIngredient as IngredientInterface, IngredientType } from "../../interfaces"
 import Ingredient, { IngredientDocument } from "../models/ingredient.model"
 import UserIngredient from "../models/UserIngredients.model"
 import { FilterQuery } from "mongoose"
 
 export const getByCategory = async (category: string): Promise<IngredientInterface[]> => {
-    const ingredients = await Ingredient.find({ category })
+    const ingredients = await Ingredient.find({ category }).exec()
+
+    if (!ingredients) {
+        throw new Error('Ingredients not found')
+    }
+
     return ingredients as IngredientInterface[]
 }
 
-export const search = async (
-    query: FilterQuery<IngredientDocument>
+export const searchByQueryAndIngredientType = async (
+    query: FilterQuery<IngredientDocument>,
+    type: IngredientType
 ): Promise<IngredientInterface[]> => {
-    const ingredients = await Ingredient.find({ name: { $regex: query, $options: 'i' } })
+    const ingredients = await Ingredient.find({
+        name: { $regex: query, $options: 'i' },
+        type: { $all: [type] },
+    }).exec()
+
+    if (!ingredients) {
+        throw new Error('Ingredients not found')
+    }
+
     return ingredients as IngredientInterface[]
 }
 
@@ -28,16 +42,25 @@ export const addUserIngredient =
     }
 
 export const deleteUserIngredient = async (userId: string, ingredientId: string): Promise<IngredientInterface> => {
-    const ingredient = await UserIngredient.findOneAndDelete({ userId, ingredientId })
+    const ingredient = await UserIngredient.findOneAndDelete({ userId, ingredientId }).exec()
+
+    if (!ingredient) {
+        throw new Error('Ingredient not found')
+    }
+
     return ingredient as IngredientInterface
 }
 
 export const getUserIngredients = async (userId: string): Promise<IngredientInterface[]> => {
-    const ingredients = await UserIngredient.find({ userId })
+    const ingredients = await UserIngredient.find({ userId }).exec()
+
+    if (!ingredients) {
+        throw new Error('Ingredients not found')
+    }
+
     return ingredients as IngredientInterface[]
 }
 
 export const deleteAllUserIngredients = async (userId: string): Promise<DeleteResult> => {
-    console.log('hereeeeeee', userId)
-    return await UserIngredient.deleteMany({ userId })
+    return await UserIngredient.deleteMany({ userId }).exec()
 }

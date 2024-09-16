@@ -5,7 +5,7 @@ import { IngredientDocument } from "../models/ingredient.model";
 import * as ingredientOperationsDB from "../data-access/ingredient.da";
 import { addUserIngredient, deleteAllUserIngredients, deleteUserIngredient, getUserIngredients } from "../data-access/ingredient.da";
 
-import { UserIngredient } from "../../interfaces";
+import { IngredientType, UserIngredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 
 /**
@@ -13,6 +13,7 @@ import MessageResponse from "../../interfaces/MessageResponse";
  * 
  * @description This module provides operations for managing user ingredients
  * @exports userIngredientOperations
+ * @exports ingredientOperations
  */
 
 export const userIngredientOperations = {
@@ -43,9 +44,10 @@ export const ingredientOperations = {
         return ingredients as IngredientDocument[]
     },
     search: async (
-        query: FilterQuery<IngredientDocument>
+        query: FilterQuery<IngredientDocument>,
+        type: IngredientType
     ): Promise<IngredientDocument[]> => {
-        const ingredients = await ingredientOperationsDB.search(query)
+        const ingredients = await ingredientOperationsDB.searchByQueryAndIngredientType(query, type)
         return ingredients as IngredientDocument[]
-    }
+    },
 }

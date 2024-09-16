@@ -1,8 +1,8 @@
-import { kitchenUtils } from "../../data/kitchenUtils";
+import { kitchenUtils } from "../../lib/data/kitchenUtils";
 import User, { UserDocument } from "../models/user.model";
 
 export const getUserDB = async (userId: string): Promise<UserDocument> => {
-    const user = await User.findOne({ clerkId: userId });
+    const user = await User.findOne({ clerkId: userId }).exec();
 
     if (!user) {
         throw new Error('User not found');
@@ -29,7 +29,7 @@ export const createUserDB = async (userData: CreateUserDBProps): Promise<UserDoc
 }
 
 export const deleteUserDB = async (userId: string): Promise<UserDocument> => {
-    const user = await User.findOneAndDelete({ clerkId: userId });
+    const user = await User.findOneAndDelete({ clerkId: userId }).exec();
 
     if (!user) {
         throw new Error('User not found');
@@ -50,7 +50,7 @@ export const updateUserDB = async (userId: string, update: UpdateUserDBProps): P
         { clerkId: userId },
         update,
         { new: true, runValidators: true }
-    );
+    ).exec();
 
     if (!updatedUser) {
         throw new Error('User not found');

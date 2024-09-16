@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { UserIngredient } from '../../interfaces';
+import { IngredientType, UserIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
@@ -173,7 +173,6 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
  *         description: Internal server error
  */
 
-
 export const deleteAllIngredients = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     try {
         const message = await userIngredientOperations.deleteAll(req.userId as string);
@@ -223,7 +222,7 @@ export const deleteAllIngredients = async (req: CustomRequest, res: Response<Mes
 
 export const ingredientSuggestionsSchema = z.object({
     params: z.object({
-        category: z.enum(['common', 'vegetables', 'dairy', 'spices', 'carbs', 'meat']),
+        category: z.enum(['common', 'vegetables', 'dairy', 'spices', 'carbs', 'meat', 'spirits', 'liqueurs', 'bitters', 'mixers', 'syrups', 'fruits', 'herbs']),
     }),
 });
 
@@ -260,6 +259,15 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
  *         description: The substring to search for in ingredient names
  *         schema:
  *           type: string
+ *       - in: query
+ *         name: type
+ *         required: true
+ *         description: The type of ingredient (food or drink)
+ *         schema:
+ *           type: string
+ *           enum: 
+ *             - food
+ *             - drink
  *     responses:
  *       200:
  *         description: Successfully retrieved matching ingredients
@@ -278,14 +286,18 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
 export const searchIngredientsSchema = z.object({
     query: z.object({
         query: z.string(),
+        type: z.enum(['food', 'drink']),
     })
 });
 
-const searchIngredients = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction) => {
-    const { query } = req.query;
+export const searchIngredients = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction) => {
+    const { query, type } = req.query;
 
     try {
-        const ingredients = await ingredientOperations.search(query as FilterQuery<IngredientDocument>);
+        const ingredients = await ingredientOperations.search(
+            query as FilterQuery<IngredientDocument>,
+            type as IngredientType
+        );
 
         return res.json(ingredients);
     } catch (error) {
@@ -297,9 +309,4 @@ const searchIngredients = async (req: CustomRequest, res: Response<IngredientDoc
             'An error accrued while searching ingredients'
         ));
     }
-
 };
-
-export default searchIngredients;
-
-export { doSomethingByIdSchema }

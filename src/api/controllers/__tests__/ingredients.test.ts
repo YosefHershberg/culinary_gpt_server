@@ -94,15 +94,16 @@ describe('Ingredients API', () => {
     describe('GET /ingredients/search', () => {
         it('should search ingredients', async () => {
             const query = 'Tomato';
+            const type = 'food';
             (ingredientOperations.search as jest.Mock).mockResolvedValue(mockIngredients);
 
             const res = await request(app)
                 .get('/api/ingredients/search')
-                .query({ query });
+                .query({ query, type });
 
             expect(res.status).toBe(StatusCodes.OK);
             expect(res.body).toEqual(mockIngredients);
-            expect(ingredientOperations.search).toHaveBeenCalledWith(query);
+            expect(ingredientOperations.search).toHaveBeenCalledWith(query, type);
         });
     });
 });

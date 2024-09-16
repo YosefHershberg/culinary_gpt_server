@@ -5,6 +5,7 @@ import { validate } from '../../middlewares';
 import * as ingredientControllers from '../controllers/ingredients.controller';
 import { UserIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
+import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();
 
@@ -26,7 +27,7 @@ router.delete<{ id: string }, MessageResponse>(
 
 router.delete<{ id: string }, MessageResponse>(
     '/:id',
-    validate(ingredientControllers.doSomethingByIdSchema),
+    validate(doSomethingByIdSchema),
     ingredientControllers.deleteIngredient
 );
 

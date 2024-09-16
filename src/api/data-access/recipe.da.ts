@@ -2,7 +2,11 @@ import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { DeleteResult } from "mongodb";
 
 export const getRecipes = async (userId: string): Promise<RecipeDocument[]> => {
-    const recipes = await Recipe.find({ userId })
+    const recipes = await Recipe.find({ userId }).exec()
+
+    if (!recipes) {
+        throw new Error('Recipes not found');
+    }
 
     return recipes;
 }
@@ -14,7 +18,7 @@ export const addRecipe = async (recipe: RecipeDocument): Promise<RecipeDocument>
 }
 
 export const getRecipe = async (recipeId: string): Promise<RecipeDocument> => {
-    const recipe = await Recipe.findById(recipeId);
+    const recipe = await Recipe.findById(recipeId).exec();
 
     if (!recipe) {
         throw new Error('Recipe not found');
@@ -24,7 +28,7 @@ export const getRecipe = async (recipeId: string): Promise<RecipeDocument> => {
 }
 
 export const deleteRecipe = async (recipeId: string): Promise<RecipeDocument> => {
-    const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
+    const deletedRecipe = await Recipe.findByIdAndDelete(recipeId).exec();
 
     if (!deletedRecipe) {
         throw new Error('Recipe not found');
@@ -34,6 +38,6 @@ export const deleteRecipe = async (recipeId: string): Promise<RecipeDocument> =>
 }
 
 export const deleteUserRecipes = async (userId: string): Promise<DeleteResult> => {
-    const deletedRecipes = await Recipe.deleteMany({ userId });
+    const deletedRecipes = await Recipe.deleteMany({ userId }).exec();
     return deletedRecipes;
 }

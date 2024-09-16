@@ -1,10 +1,12 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
+import { IngredientType } from '../../interfaces';
 
 export interface IngredientDocument extends Document {
     name: string;
     category: string[];
     popularity: number;
+    type: IngredientType[];
 };
 
 const ingredientSchema = new mongoose.Schema<IngredientDocument>({
@@ -22,6 +24,11 @@ const ingredientSchema = new mongoose.Schema<IngredientDocument>({
         type: Number,
         required: true,
     },
+    type: {
+        type: [String],
+        enum: ['food', 'drink'],
+        required: true,
+    }
 }, mongooseVirtuals);
 
 const Ingredient = mongoose.model<IngredientDocument>('Ingredient', ingredientSchema);
