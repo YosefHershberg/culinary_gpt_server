@@ -1,12 +1,11 @@
 import request from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import { UserIngredient } from '../../../interfaces';
 import { ingredientOperations, userIngredientOperations } from '../../services/ingredients.service';
 import app, { userId } from '../../../lib/mock/mockApp';
 
 // Mock data
-const mockIngredient: UserIngredient = { id: '1', name: 'Bread', category: ['carbs'] };
-const mockIngredients: UserIngredient[] = [mockIngredient];
+const mockIngredient = { id: '1', name: 'Bread', category: ['carbs'], type: ['food'] };
+const mockIngredients = [mockIngredient];
 const mockMessageResponse = { message: 'Ingredient deleted successfully' };
 
 // Mock the services
@@ -24,7 +23,7 @@ jest.mock('../../services/ingredients.service', () => ({
 }));
 
 describe('Ingredients API', () => {
-    
+
     describe('GET /api/user/ingredients', () => {
         it('should return all ingredients for a user', async () => {
             (userIngredientOperations.getAll as jest.Mock).mockResolvedValue(mockIngredients);
@@ -48,7 +47,12 @@ describe('Ingredients API', () => {
 
             expect(res.status).toBe(StatusCodes.OK);
             expect(res.body).toEqual(mockIngredient);
-            expect(userIngredientOperations.addIngredient).toHaveBeenCalledWith(userId, mockIngredient.id, mockIngredient.name);
+            expect(userIngredientOperations.addIngredient).toHaveBeenCalledWith({
+                userId,
+                ingredientId: mockIngredient.id,
+                type: mockIngredient.type,
+                name: mockIngredient.name,
+            });
         });
     });
 

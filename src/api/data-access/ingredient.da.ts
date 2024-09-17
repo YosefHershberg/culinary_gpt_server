@@ -1,7 +1,7 @@
 import { DeleteResult } from "mongodb"
-import { UserIngredient as IngredientInterface, IngredientType } from "../../interfaces"
+import { UserIngredientResponse as IngredientInterface, IngredientType } from "../../interfaces"
 import Ingredient, { IngredientDocument } from "../models/ingredient.model"
-import UserIngredient from "../models/UserIngredients.model"
+import UserIngredient, { UserIngredientInterface } from "../models/UserIngredients.model"
 import { FilterQuery } from "mongoose"
 
 export const getByCategory = async (category: string): Promise<IngredientInterface[]> => {
@@ -31,12 +31,8 @@ export const searchByQueryAndIngredientType = async (
 }
 
 export const addUserIngredient =
-    async (userId: string, ingredientId: string, name: string): Promise<IngredientInterface> => {
-        const ingredient = new UserIngredient({
-            userId,
-            ingredientId,
-            name
-        })
+    async (userIngredient: UserIngredientInterface): Promise<IngredientInterface> => {
+        const ingredient = new UserIngredient(userIngredient)
         const newIngredient = await ingredient.save()
         return newIngredient as IngredientInterface
     }
@@ -53,6 +49,16 @@ export const deleteUserIngredient = async (userId: string, ingredientId: string)
 
 export const getUserIngredients = async (userId: string): Promise<IngredientInterface[]> => {
     const ingredients = await UserIngredient.find({ userId }).exec()
+
+    if (!ingredients) {
+        throw new Error('Ingredients not found')
+    }
+
+    return ingredients as IngredientInterface[]
+}
+
+export const getUserIngredientsByType = async (userId: string, type: IngredientType): Promise<IngredientInterface[]> => {
+    const ingredients = await UserIngredient.find({ userId, type }).exec()
 
     if (!ingredients) {
         throw new Error('Ingredients not found')

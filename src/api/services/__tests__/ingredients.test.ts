@@ -2,7 +2,7 @@ import { getUserIngredients, addUserIngredient, deleteUserIngredient, deleteAllU
 import * as ingredientOperationsDB from "../../data-access/ingredient.da";
 import { userIngredientOperations, ingredientOperations } from "../ingredients.service";
 import { IngredientDocument } from "../../models/ingredient.model";
-import { UserIngredient } from "../../../interfaces";
+import { IngredientType, UserIngredientResponse } from "../../../interfaces";
 
 jest.mock('../../data-access/ingredient.da');
 
@@ -10,10 +10,11 @@ describe('ingredient services', () => {
     const userId = 'testUserId';
     const ingredientId = 'ingredientId';
     const category = ['Vegetables'];
+    const type: IngredientType[] = ['food'];
 
     describe('userIngredientOperations.getAll', () => {
         it('should return all user ingredients', async () => {
-            const mockIngredients: UserIngredient[] = [{ id: ingredientId, name: 'testIngredient', category }];
+            const mockIngredients: UserIngredientResponse[] = [{ id: ingredientId, name: 'testIngredient', category, type }];
 
             (getUserIngredients as jest.Mock).mockResolvedValue(mockIngredients);
 
@@ -27,13 +28,19 @@ describe('ingredient services', () => {
     describe('userIngredientOperations.addIngredient', () => {
         it('should add a new ingredient successfully', async () => {
             const name = 'testIngredient';
-            const mockNewIngredient: UserIngredient = { id: ingredientId, name };
+            const type: IngredientType[] = ['food'];
+            const mockNewIngredient: UserIngredientResponse = { id: ingredientId, name, type: type };
 
             (addUserIngredient as jest.Mock).mockResolvedValue(mockNewIngredient);
 
-            const result = await userIngredientOperations.addIngredient(userId, ingredientId, name);
+            const result = await userIngredientOperations.addIngredient({
+                userId,
+                ingredientId,
+                name,
+                type
+            });
 
-            expect(addUserIngredient).toHaveBeenCalledWith(userId, ingredientId, name);
+            expect(addUserIngredient).toHaveBeenCalledWith({ userId, ingredientId, name, type });
             expect(result).toEqual(mockNewIngredient);
         });
     });

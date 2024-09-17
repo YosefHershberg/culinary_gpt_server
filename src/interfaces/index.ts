@@ -1,8 +1,8 @@
 
-export interface UserIngredient {
+export interface UserIngredientResponse {
     category?: string[];
     popularity?: number;
-    type?: IngredientType[];        
+    type: IngredientType[];        
     name: string;
     id: string;
 }

@@ -1,8 +1,8 @@
 import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON } from "../../utils/helperFunctions";
 
-import { UserIngredient, KitchenUtils, Recipe, RecipeWithImage } from "../../interfaces";
-import { getUserIngredients } from "../data-access/ingredient.da";
+import { UserIngredientResponse, KitchenUtils, Recipe, RecipeWithImage } from "../../interfaces";
+import { getUserIngredientsByType } from "../data-access/ingredient.da";
 import { getUserDB } from "../data-access/user.da";
 import logger from '../../config/logger';
 
@@ -13,7 +13,7 @@ import logger from '../../config/logger';
  * @exports createRecipeOperations
  */
 
-interface CreateRecipeInput {
+interface CreateRecipeProps {
     mealSelected: string;
     selectedTime: number;
     prompt: string;
@@ -25,15 +25,15 @@ export const createRecipeOperations = {
     /**
      * @description This function creates a recipe using OpenAI API and returns a valid JSON
      * @param {string} userId
-     * @param {CreateRecipeInput} recipeInput
+     * @param {CreateRecipeProps} recipeInput
      * @returns {RecipeWithImage}
      */
-    createRecipe: async (userId: string, recipeInput: CreateRecipeInput): Promise<RecipeWithImage> => {
+    createRecipe: async (userId: string, recipeInput: CreateRecipeProps): Promise<RecipeWithImage> => {
         let kitchenUtils;
         let userIngredients: string[];
 
         const [ingredients, user] = await Promise.all([
-            getUserIngredients(userId),
+            getUserIngredientsByType(userId, 'food'),
             getUserDB(userId)
         ]);
 
@@ -43,7 +43,7 @@ export const createRecipeOperations = {
         }
 
         kitchenUtils = user.kitchenUtils;
-        userIngredients = ingredients.map((ingredient: UserIngredient) => ingredient.name);
+        userIngredients = ingredients.map((ingredient: UserIngredientResponse) => ingredient.name);
 
         // Create a recipe using OpenAI API
         const recipe = await createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils);
@@ -62,13 +62,13 @@ export const createRecipeOperations = {
 
     /**
      * @description This function creates a recipe using OpenAI API and returns a valid JSON
-     * @param {CreateRecipeInput} recipeInput 
+     * @param {CreateRecipeProps} recipeInput 
      * @param {string[]} userIngredients 
      * @param {KitchenUtils} kitchenUtils 
      * @returns {Recipe} recipe
      */
     createRecipeOpenAI:
-        async (recipeInput: CreateRecipeInput, userIngredients: string[], kitchenUtils: KitchenUtils): Promise<Recipe> => {
+        async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils): Promise<Recipe> => {
             const { mealSelected, selectedTime, prompt, numOfPeople } = recipeInput;
 
             const maxRetries = 3;

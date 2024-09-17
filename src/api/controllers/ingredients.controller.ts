@@ -4,13 +4,12 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { IngredientType, UserIngredient } from '../../interfaces';
+import { IngredientType, UserIngredientResponse } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
 import { IngredientDocument } from '../models/ingredient.model';
 import { HttpError } from '../../lib/HttpError';
-import { doSomethingByIdSchema } from '../schemas';
 import { ingredientSchema } from '../schemas/ingredient.schema';
 import logger from '../../config/logger';
 
@@ -37,7 +36,7 @@ import logger from '../../config/logger';
  *         description: Internal server error
  */
 
-export const getIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
+export const getIngredients = async (req: CustomRequest, res: Response<UserIngredientResponse[]>, next: NextFunction) => {
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
 
@@ -85,12 +84,17 @@ export const addIngredientSchema = z.object({
     body: ingredientSchema
 });
 
-export const addIngredient = async (req: CustomRequest, res: Response<UserIngredient>, next: NextFunction) => {
+export const addIngredient = async (req: CustomRequest, res: Response<UserIngredientResponse>, next: NextFunction) => {
     const ingredient = req.body;
 
     try {
         const newIngredient =
-            await userIngredientOperations.addIngredient(req.userId as string, ingredient.id, ingredient.name);
+            await userIngredientOperations.addIngredient({
+                userId: req.userId as string,
+                ingredientId: ingredient.id,
+                name: ingredient.name,
+                type: ingredient.type,
+            });
 
         return res.json(newIngredient);
     } catch (error) {

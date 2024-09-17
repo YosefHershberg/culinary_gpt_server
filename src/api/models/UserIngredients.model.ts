@@ -1,10 +1,18 @@
 import mongoose, { Document } from 'mongoose';
+import { IngredientType } from '../../interfaces';
 
-export interface UserIngredientDocument extends Document {
+
+export interface UserIngredientInterface {
     userId: string;
     ingredientId: string;
     name: string;
+    type: IngredientType[];
 }
+
+export interface UserIngredientDocument extends UserIngredientInterface, Document {
+    id: string;
+}
+
 // NOTE: This model does not return json in this format ^^^
 // it is reconstructed to { id, name } in the toJSON and toObject methods
 
@@ -21,6 +29,11 @@ const userIngredientSchema = new mongoose.Schema<UserIngredientDocument>({
         type: String,
         required: true,
     },
+    type: {
+        type: [String],
+        enum: ['food', 'drink'],
+        required: true,
+    }
 }, {
     toJSON: {
         virtuals: true,
