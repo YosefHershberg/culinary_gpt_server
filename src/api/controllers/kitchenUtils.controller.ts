@@ -28,6 +28,7 @@ import logger from '../../config/logger';
  *       400:
  *         description: Bad request
  */
+
 export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
     try {
         const kitchenUtils = await kitchenUtilsOperations.get(req.userId as string);

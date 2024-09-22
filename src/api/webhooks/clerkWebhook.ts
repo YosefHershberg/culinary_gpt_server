@@ -3,8 +3,9 @@ import { Request, Response, NextFunction } from "express";
 import userOperations from "../services/user.service";
 import varifyCvixHeaders from "../../lib/varifyCvixHeaders";
 import logger from "../../config/logger";
+import { HttpError } from "../../lib/HttpError";
 
-const clerkWebhook = async function (req: Request, res: Response, next: NextFunction) {
+const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => {
 
     let evt: WebhookEvent;
     let message: string = '';
@@ -15,7 +16,7 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
         if (error instanceof Error) {
             logger.error(error.message)
         }
-        return next(error)
+        return next(new HttpError(400, 'Invalid webhook event'))
     }
 
     switch (evt.type) {
@@ -34,7 +35,7 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
                 if (error instanceof Error) {
                     logger.error(error.message)
                 }
-                return next(error)
+                return next(new HttpError(500, 'An error accrued while creating a user'))
             }
             break;
 
@@ -49,7 +50,7 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
                 if (error instanceof Error) {
                     logger.error(error.message)
                 }
-                return next(error)
+                return next(new HttpError(500, 'An error accrued while deleting a user'))
             }
             break;
 
@@ -68,7 +69,7 @@ const clerkWebhook = async function (req: Request, res: Response, next: NextFunc
                 if (error instanceof Error) {
                     logger.error(error.message)
                 }
-                return next(error)
+                return next(new HttpError(500, 'An error accrued while updating a user'))
             }
             break;
         default:

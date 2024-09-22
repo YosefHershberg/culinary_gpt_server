@@ -10,10 +10,10 @@ import CustomRequest from '../../interfaces/CustomRequest';
 import { RecipeWithImage } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
-import { doSomethingByIdSchema } from '../schemas';
 import { recipeSchema } from '../schemas/recipe.schema';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
+import { createCocktailOperations } from '../services/createCocktail.service';
 
 /**
  * @openapi
@@ -38,6 +38,7 @@ import logger from '../../config/logger';
  *       500:
  *         description: An error occurred while fetching recipes
  */
+
 export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
     try {
         const recipes = await recipeOperations.getUserRecipes(req.userId as string);
@@ -86,6 +87,7 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocumen
  *       500:
  *         description: An error occurred while adding the recipe
  */
+
 export const addRecipeSchema = z.object({
     body: z.object({
         recipe: recipeSchema,
@@ -139,6 +141,7 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
  *       500:
  *         description: An error occurred while fetching the recipe
  */
+
 export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument>, next: NextFunction) => {
     const id = req.params.id;
 
@@ -185,6 +188,7 @@ export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument
  *       500:
  *         description: An error occurred while fetching the recipe
  */
+
 export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     const id = req.params.id;
 
@@ -272,7 +276,6 @@ export const createRecipeSchema = z.object({
 });
 
 export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
-
     try {
         const recipe = await createRecipeOperations.createRecipe(req.userId as string, req.body);
 
@@ -285,4 +288,66 @@ export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithI
     }
 }
 
-export { doSomethingByIdSchema }
+/**
+ * @openapi
+ * /api/user/recipes/create-cocktail:
+ *   post:
+ *     summary: Create a new cocktail recipe
+ *     description: Generate a new cocktail recipe based on user input using OpenAI API.
+ *     tags:
+ *       - User Recipes
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               prompt:
+ *                 type: string
+ *                 example: 'Create a quick and easy chicken dinner recipe'
+ *                 description: "The prompt describing the desired recipe."
+ *     responses:
+ *       200:
+ *         description: Recipe successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 recipe:
+ *                   $ref: '#/components/schemas/Recipe'
+ *                 image_url:
+ *                   type: string
+ *                   example: "https://example.com/image.jpg"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: "Error message"
+ *                   example: 'An error occurred while creating your recipe'
+ */
+
+export const createCocktailSchema = z.object({
+    body: z.object({
+        prompt: z.string(),
+    }),
+});
+
+export const createCocktail = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
+    try {
+        const recipe = await createCocktailOperations.createCocktail(req.userId as string, req.body);
+
+        return res.json(recipe);
+    } catch (error) {
+        if (error instanceof Error) {
+            logger.error(error.message);
+        }
+        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while creating your cocktail'));
+    }
+}

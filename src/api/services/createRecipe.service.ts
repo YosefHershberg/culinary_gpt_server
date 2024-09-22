@@ -24,7 +24,7 @@ export const createRecipeOperations = {
 
     /**
      * @description This function creates a recipe using OpenAI API and returns a valid JSON
-     * @note We create the title first and the recipe and image simultaneously. This way is faster.
+     * @note We create the title first and then the recipe and image simultaneously. This way is faster.
      * @param {string} userId
      * @param {CreateRecipeProps} recipeInput
      * @returns {RecipeWithImage}
@@ -32,6 +32,8 @@ export const createRecipeOperations = {
     createRecipe: async (userId: string, recipeInput: CreateRecipeProps): Promise<RecipeWithImage> => {
         let kitchenUtils;
         let userIngredients: string[];
+
+        const start = performance.now();
 
         const [ingredients, user] = await Promise.all([
             getUserIngredientsByType(userId, 'food'),
@@ -60,6 +62,10 @@ export const createRecipeOperations = {
 
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
+
+        const end = performance.now(); // End time in milliseconds
+        const durationInSeconds = (end - start) / 1000; // Convert to seconds
+        console.log(`Execution time: ${durationInSeconds} seconds`);
 
         return { recipe, image_url: base64DataUrl };
     },
@@ -150,6 +156,8 @@ export const createRecipeOperations = {
             prompt: `A realistic photo of ${recipeTitle} recipe with ingredients: ${userIngredients.join(', ')}`,
             n: 1,
             size: "1024x1024",
+            quality: 'standard',
+            style: 'vivid',
             response_format: 'b64_json',
         });
 
@@ -209,5 +217,4 @@ export const createRecipeOperations = {
 
         return recipeTitle;
     }
-
 }
