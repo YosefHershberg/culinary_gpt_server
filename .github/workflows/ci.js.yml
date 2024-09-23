@@ -9,6 +9,22 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  CLERK_SECRET_KEY: 
+  CLERK_PUBLISHABLE_KEY: pk_test_d29ydGh5LWVhcqdwdwday5hY2NvdW50cy5kZXYk
+  MONGODB_URI: mongodb+srv://yosefhershberg:NDy4vPjfRNnc1LXH@cluster0.a5vlftt.mongodb.net/development
+  WEBHOOK_SECRET: whsewrfwrfrwYzxC3mZaC4JDXQ6yUBw
+  OPENAI_API_KEY: sk-WKYZxAprH4twrfwrfwrYQvqDlKeH5XiYxWE7Px
+  CORS_ORIGIN: https://culinary-gpt.vercel.app
+
+  FIREBASE_API_KEY: AIzaSyAowrfwrfrVt-WJXuq_yCVS34
+  FIREBASE_AUTH_DOMAIN: culinawrfwrfd6.firebaseapp.com
+  FIREBASE_PROJECT_ID: culwrfwrfwr36d6
+  FIREBASE_STORAGE_BUCKET: culinarwrfwrfwrppspot.com
+  FIREBASE_MESSAGING_SENDER_ID: 350341343
+  FIREBASE_APP_ID: 1:35021341348307:web:d6438534x1434ee5f3cc8ed6
+  FIREBASE_MEASUREMENT_ID: G-0234002300
+
 jobs:
   build:
 
