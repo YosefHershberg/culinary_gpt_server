@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const envSchema = z.object({
-    PORT: z.string(),
+    PORT: z.string().optional(),
     CLERK_SECRET_KEY: z.string(),
     CLERK_PUBLISHABLE_KEY: z.string(),
     MONGODB_URI: z.string(),
