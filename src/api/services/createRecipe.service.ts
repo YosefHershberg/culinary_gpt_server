@@ -33,39 +33,34 @@ export const createRecipeOperations = {
         let kitchenUtils;
         let userIngredients: string[];
 
-        const start = performance.now();
-
         const [ingredients, user] = await Promise.all([
             getUserIngredientsByType(userId, 'food'),
             getUserDB(userId)
         ]);
-
+        
         // Check if there are enough ingredients to create a recipe
         if (ingredients.length < 4) {
             throw new Error('Not enough ingredients to create a recipe');
         }
-
+        
         kitchenUtils = user.kitchenUtils;
         userIngredients = ingredients.map((ingredient: UserIngredientResponse) => ingredient.name);
 
         // Create a recipe title using OpenAI API
         const title = await createRecipeOperations.createRecipeTitle(recipeInput, userIngredients, kitchenUtils);
-        
+
         // Create the recipe & the recipe image using OpenAI API
         const [recipe, imageUrl] = await Promise.all([
             createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils, title),
             createRecipeOperations.createImageOpenAI(title, userIngredients)
         ]);
-                
+       
         // Compress the image
         const base64Image = await compressBase64Image(imageUrl as string, 60); //30 KB
 
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
 
-        const end = performance.now(); // End time in milliseconds
-        const durationInSeconds = (end - start) / 1000; // Convert to seconds
-        console.log(`Execution time: ${durationInSeconds} seconds`);
 
         return { recipe, image_url: base64DataUrl };
     },
@@ -149,8 +144,6 @@ export const createRecipeOperations = {
      * @returns {string} valid base64 image
      */
     createImageOpenAI: async (recipeTitle: string, userIngredients: string[]): Promise<string> => {
-        let imageUrl: string
-
         const response = await openai.images.generate({
             model: "dall-e-3",
             prompt: `A realistic photo of ${recipeTitle} recipe with ingredients: ${userIngredients.join(', ')}`,
@@ -161,11 +154,18 @@ export const createRecipeOperations = {
             response_format: 'b64_json',
         });
 
-        imageUrl = response.data[0].b64_json as string;
+        const imageUrl = response.data[0].b64_json as string;
 
         return imageUrl;
     },
 
+    /**
+     * @description This function creates a recipe title using OpenAI API
+     * @param recipeInput 
+     * @param userIngredients 
+     * @param kitchenUtils 
+     * @returns {string}
+     */
     createRecipeTitle: async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils): Promise<string> => {
         const { mealSelected, selectedTime, prompt } = recipeInput;
 
