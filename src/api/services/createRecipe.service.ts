@@ -33,8 +33,6 @@ export const createRecipeOperations = {
         let kitchenUtils;
         let userIngredients: string[];
 
-        const start = performance.now();
-
         const [ingredients, user] = await Promise.all([
             getUserIngredientsByType(userId, 'food'),
             getUserDB(userId)
@@ -50,22 +48,19 @@ export const createRecipeOperations = {
 
         // Create a recipe title using OpenAI API
         const title = await createRecipeOperations.createRecipeTitle(recipeInput, userIngredients, kitchenUtils);
-        
+
         // Create the recipe & the recipe image using OpenAI API
         const [recipe, imageUrl] = await Promise.all([
             createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils, title),
             createRecipeOperations.createImageOpenAI(title, userIngredients)
         ]);
-                
+
         // Compress the image
         const base64Image = await compressBase64Image(imageUrl as string, 60); //30 KB
 
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
 
-        const end = performance.now(); // End time in milliseconds
-        const durationInSeconds = (end - start) / 1000; // Convert to seconds
-        console.log(`Execution time: ${durationInSeconds} seconds`);
 
         return { recipe, image_url: base64DataUrl };
     },
@@ -90,10 +85,9 @@ export const createRecipeOperations = {
             while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
                 try {
                     const completion = await openai.chat.completions.create({
-                        messages: [
-                            {
-                                role: "user",
-                                content: `
+                        messages: [{
+                            role: "user",
+                            content: `
                                 create a ${title} recipe for ${mealSelected} that takes ${selectedTime} minutes
                                 the following ingredients are available: ${userIngredients?.join(', ')}
                                 with the following kitchen utilities: ${kitchenUtils}
@@ -116,10 +110,8 @@ export const createRecipeOperations = {
                                     "time": "total time to complete the recipe",
                                     "level": "difficulty level of the recipe (easy, medium, hard)",
                                 }
-                                NOTE: the json i want you to generate must be a valid json object and without the backticks
-                            `
-                            }
-                        ],
+                                NOTE: the json i want you to generate must be a valid json object and without the backticks`
+                        }],
                         model: "gpt-3.5-turbo",
                     });
 
@@ -149,11 +141,12 @@ export const createRecipeOperations = {
      * @returns {string} valid base64 image
      */
     createImageOpenAI: async (recipeTitle: string, userIngredients: string[]): Promise<string> => {
-        let imageUrl: string
-
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of ${recipeTitle} recipe with ingredients: ${userIngredients.join(', ')}`,
+            prompt: `A realistic photo of ${recipeTitle} recipe that is made with these ingredients: ${userIngredients.join(', ')}.
+                make the image vivid and colorful.
+                IMPORTANT: Don't show all the ingredients in the image. Show only a picture of the dish.
+                `,
             n: 1,
             size: "1024x1024",
             quality: 'standard',
@@ -161,11 +154,18 @@ export const createRecipeOperations = {
             response_format: 'b64_json',
         });
 
-        imageUrl = response.data[0].b64_json as string;
+        const imageBase64Url = response.data[0].b64_json as string;
 
-        return imageUrl;
+        return imageBase64Url;
     },
 
+    /**
+     * @description This function creates a recipe title using OpenAI API
+     * @param recipeInput 
+     * @param userIngredients 
+     * @param kitchenUtils 
+     * @returns {string}
+     */
     createRecipeTitle: async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils): Promise<string> => {
         const { mealSelected, selectedTime, prompt } = recipeInput;
 
@@ -178,10 +178,9 @@ export const createRecipeOperations = {
         while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
-                    messages: [
-                        {
-                            role: "user",
-                            content: `
+                    messages: [{
+                        role: "user",
+                        content: `
                             create a title for a recipe recipe for ${mealSelected} that takes ${selectedTime} minutes
                             the following ingredients are available: ${userIngredients?.join(', ')}
                             with the following kitchen utilities: ${kitchenUtils}
@@ -191,10 +190,8 @@ export const createRecipeOperations = {
                             {
                                 "title": "Recipe title",
                             }
-                            NOTE: the json i want you to generate must be a valid json object and without the backticks
-                        `
-                        }
-                    ],
+                            NOTE: the json i want you to generate must be a valid json object and without the backticks`
+                    }],
                     model: "gpt-3.5-turbo",
                 });
 

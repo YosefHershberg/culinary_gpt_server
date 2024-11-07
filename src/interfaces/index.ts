@@ -1,4 +1,9 @@
+/**
+ * @fileoverview Interfaces for the application
+ */
 
+
+//some properties are optional because they are used in different contexts
 export interface UserIngredientResponse {
     category?: string[];
     popularity?: number;
