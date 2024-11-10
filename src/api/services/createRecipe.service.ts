@@ -1,15 +1,17 @@
 import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON } from "../../utils/helperFunctions";
 
-import { UserIngredientResponse, KitchenUtils, Recipe, RecipeWithImage } from "../../interfaces";
+import { UserIngredientResponse, KitchenUtils } from "../../interfaces";
 import { getUserIngredientsByType } from "../data-access/ingredient.da";
 import { getUserDB } from "../data-access/user.da";
 import logger from '../../config/logger';
+import { Response } from 'express';
 
 /**
  * @module createRecipe.service
  * 
  * @description This module provides operations for creating a recipe
+ * @note this service uses server sent events to stream data to the client. therefore, the response object is passed to the functions
  * @exports createRecipeOperations
  */
 
@@ -29,7 +31,7 @@ export const createRecipeOperations = {
      * @param {CreateRecipeProps} recipeInput
      * @returns {RecipeWithImage}
      */
-    createRecipe: async (userId: string, recipeInput: CreateRecipeProps): Promise<RecipeWithImage> => {
+    createRecipe: async (userId: string, recipeInput: CreateRecipeProps, res: Response): Promise<void> => {
         let kitchenUtils;
         let userIngredients: string[];
 
@@ -51,7 +53,7 @@ export const createRecipeOperations = {
 
         // Create the recipe & the recipe image using OpenAI API
         const [recipe, imageUrl] = await Promise.all([
-            createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils, title),
+            createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils, title, res),
             createRecipeOperations.createImageOpenAI(title, userIngredients)
         ]);
 
@@ -61,8 +63,7 @@ export const createRecipeOperations = {
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
 
-
-        return { recipe, image_url: base64DataUrl };
+        return returnStreamData({ event: 'image', data: base64DataUrl }, res);
     },
 
     /**
@@ -73,7 +74,7 @@ export const createRecipeOperations = {
      * @returns {Recipe} recipe
      */
     createRecipeOpenAI:
-        async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils, title: string): Promise<Recipe> => {
+        async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils, title: string, res: Response): Promise<void> => {
             const { mealSelected, selectedTime, prompt, numOfPeople } = recipeInput;
 
             const maxRetries = 3;
@@ -132,7 +133,7 @@ export const createRecipeOperations = {
                 throw new Error('No valid JSON response generated');
             }
 
-            return recipe;
+            return returnStreamData({ event: 'recipe', data: recipe }, res);
         },
 
     /**
@@ -144,9 +145,7 @@ export const createRecipeOperations = {
         const response = await openai.images.generate({
             model: "dall-e-3",
             prompt: `A realistic photo of ${recipeTitle} recipe that is made with these ingredients: ${userIngredients.join(', ')}.
-                make the image vivid and colorful.
-                IMPORTANT: Don't show all the ingredients in the image. Show only a picture of the dish.
-                `,
+                IMPORTANT: Don't show the ingredients in the image. Show only a picture of the dish.`,
             n: 1,
             size: "1024x1024",
             quality: 'standard',
@@ -185,6 +184,7 @@ export const createRecipeOperations = {
                             the following ingredients are available: ${userIngredients?.join(', ')}
                             with the following kitchen utilities: ${kitchenUtils}
                             add also keep in mind this - ${prompt}.
+                            have the title be of a dish or similar to a dish that already exists.
                             DON'T FORGET:
                             the response that I want you to give me should be a VALID json without the backticks that looks like this:
                             {
@@ -214,4 +214,8 @@ export const createRecipeOperations = {
 
         return recipeTitle;
     }
+}
+
+const returnStreamData = (data: object, res: Response) => {
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
 }

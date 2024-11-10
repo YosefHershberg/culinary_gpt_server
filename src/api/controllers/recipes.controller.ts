@@ -14,6 +14,7 @@ import { recipeSchema } from '../schemas/recipe.schema';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 import { createCocktailOperations } from '../services/createCocktail.service';
+import { set } from 'mongoose';
 
 /**
  * @openapi
@@ -207,7 +208,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
 /**
  * @openapi
  * /api/user/recipes/create:
- *   post:
+ *   get:
  *     summary: Create a new recipe
  *     description: Generate a new recipe based on user input using OpenAI API.
  *     tags:
@@ -234,6 +235,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
  *                 type: string
  *                 example: 'Create a quick and easy chicken dinner recipe'
  *                 description: "The prompt describing the desired recipe."
+ *                 maximum: 100
  *               numOfPeople:
  *                 type: integer
  *                 minimum: 1
@@ -269,23 +271,41 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
 export const createRecipeSchema = z.object({
     body: z.object({
         mealSelected: z.enum(['breakfast', 'lunch', 'dinner', 'snack', 'dessert']),
-        selectedTime: z.number().min(5).max(180),
-        prompt: z.string(),
+        selectedTime: z.number().min(5).max(120),
+        prompt: z.string().max(100),
         numOfPeople: z.number().min(1).max(99),
     }),
 });
 
 export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
-    try {
-        const recipe = await createRecipeOperations.createRecipe(req.userId as string, req.body);
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders(); // flush the headers to establish SSE with client
 
-        return res.json(recipe);
+    const createRecipeProps = {
+        mealSelected: req.body.mealSelected,
+        selectedTime: req.body.selectedTime,
+        prompt: req.body.prompt,
+        numOfPeople: req.body.numOfPeople
+    };
+
+    try {
+        await createRecipeOperations.createRecipe(req.userId as string, createRecipeProps, res);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);
         }
+        res.end()
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while creating your recipe'));
     }
+
+    res.on('close', () => {
+        // console.log('client dropped me');
+        return res.end();
+    });
+
+    return res.end()
 }
 
 /**

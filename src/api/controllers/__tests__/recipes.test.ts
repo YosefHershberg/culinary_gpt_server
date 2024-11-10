@@ -76,20 +76,28 @@ describe('Recipe Controller', () => {
             selectedTime: 10,
             prompt: 'make it spicy & kosher',
             numOfPeople: 2,
-        }
-
+        };
+    
         const createdRecipe = { id: '3', ...mockRecipeInput, userId };
-
+    
         it('should create a recipe', async () => {
-            (createRecipeOperations.createRecipe as jest.Mock).mockResolvedValue(createdRecipe);
-
+            // Mock `res` to simulate the `Response` object
+            const resMock = {
+                setHeader: jest.fn(),
+                flushHeaders: jest.fn(),
+                on: jest.fn(),
+                end: jest.fn(),
+            };
+    
+            (createRecipeOperations.createRecipe as jest.Mock).mockResolvedValueOnce(createdRecipe);
+    
             const response = await request(app)
                 .post('/api/user/recipes/create')
-                .send(mockRecipeInput)
-
+                .send(mockRecipeInput);
+    
             expect(response.status).toBe(StatusCodes.OK);
-            expect(response.body).toEqual(createdRecipe);
-            expect(createRecipeOperations.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput);
+            expect(createRecipeOperations.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput, expect.any(Object));
         });
     });
+    
 });

@@ -52,7 +52,6 @@ export function errorHandler(err: Error, _req: Request, res: Response<ErrorRespo
 }
 
 // NOTE: This function will return a middleware function
-// TODO: fix the type of the error object & the issue object
 export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
   try {
     schema.parse({
