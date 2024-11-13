@@ -277,21 +277,14 @@ export const createRecipeSchema = z.object({
     }),
 });
 
-export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
+export const createRecipe = async (req: CustomRequest, res: Response, next: NextFunction) => {
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders(); // flush the headers to establish SSE with client
 
-    const createRecipeProps = {
-        mealSelected: req.body.mealSelected,
-        selectedTime: req.body.selectedTime,
-        prompt: req.body.prompt,
-        numOfPeople: req.body.numOfPeople
-    };
-
     try {
-        await createRecipeOperations.createRecipe(req.userId as string, createRecipeProps, res);
+        await createRecipeOperations.createRecipe(req.userId as string, req.body, res);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);
@@ -301,7 +294,6 @@ export const createRecipe = async (req: CustomRequest, res: Response<RecipeWithI
     }
 
     res.on('close', () => {
-        // console.log('client dropped me');
         return res.end();
     });
 
@@ -359,15 +351,26 @@ export const createCocktailSchema = z.object({
     }),
 });
 
-export const createCocktail = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
-    try {
-        const recipe = await createCocktailOperations.createCocktail(req.userId as string, req.body);
+export const createCocktail = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders(); // flush the headers to establish SSE with client
 
-        return res.json(recipe);
+    try {
+        await createCocktailOperations.createCocktail(req.userId as string, req.body, res);
+
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);
         }
+        res.end()
         next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while creating your cocktail'));
     }
+
+    res.on('close', () => {
+        return res.end();
+    });
+
+    return res.end()
 }

@@ -1,5 +1,5 @@
 import openai from '../../config/openai';
-import { compressBase64Image, isValidJSON } from "../../utils/helperFunctions";
+import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
 import { UserIngredientResponse, KitchenUtils } from "../../interfaces";
 import { getUserIngredientsByType } from "../data-access/ingredient.da";
@@ -12,6 +12,7 @@ import { Response } from 'express';
  * 
  * @description This module provides operations for creating a recipe
  * @note this service uses server sent events to stream data to the client. therefore, the response object is passed to the functions
+ * 
  * @exports createRecipeOperations
  */
 
@@ -214,8 +215,4 @@ export const createRecipeOperations = {
 
         return recipeTitle;
     }
-}
-
-const returnStreamData = (data: object, res: Response) => {
-    res.write(`data: ${JSON.stringify(data)}\n\n`);
 }

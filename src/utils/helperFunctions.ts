@@ -1,5 +1,10 @@
 import sharp from "sharp";
 import crypto from "crypto";
+import { Response } from "express";
+
+export const returnStreamData = (data: object, res: Response) => {
+  res.write(`data: ${JSON.stringify(data)}\n\n`);
+}
 
 export const mongooseVirtuals = {
   toJSON: {
