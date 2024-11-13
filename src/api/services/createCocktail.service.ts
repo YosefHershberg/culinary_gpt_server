@@ -82,7 +82,8 @@ export const createCocktailOperations = {
                                 "ingredients": [{"ingredient": "ingredient name and quantity"}],
                                 "steps": [{"step": "step description", "time": "time to complete"}],
                                 "level": "difficulty level",
-                                "time": "total time"
+                                "time": "total time",
+                                "type": "cocktail" (exactly like this)
                             }
                         `
                     }],

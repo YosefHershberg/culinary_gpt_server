@@ -44,6 +44,11 @@ const recipeSchema = new mongoose.Schema<RecipeDocument>({
         level: {
             type: String,
             required: true,
+        },
+        type: {
+            type: String,
+            enum: ['recipe', 'cocktail'],
+            required: true,
         }
     },
     image_url: {

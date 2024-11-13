@@ -9,8 +9,11 @@ import { TypeOf, z } from "zod";
  *       properties:
  *         title:
  *           type: string
+ *           minLength: 3
+ *           maxLength: 100
  *         description:
  *           type: string
+ *           maxLength: 500
  *         ingredients:
  *           type: array
  *           items:
@@ -18,6 +21,7 @@ import { TypeOf, z } from "zod";
  *             properties:
  *               ingredient:
  *                 type: string
+ *                 minLength: 2
  *         steps:
  *           type: array
  *           items:
@@ -27,14 +31,22 @@ import { TypeOf, z } from "zod";
  *                 type: string
  *               time:
  *                 type: string
- *               level:
- *                 type: string
+ *         time:
+ *           type: string
+ *         level:
+ *           type: string
+ *         type:
+ *           type: string
+ *           enum:
+ *             - recipe
+ *             - cocktail
  *       required:
  *         - title
  *         - ingredients
  *         - steps
  *         - time
  *         - level
+ *         - type
  */
 
 export const recipeSchema = z.object({
@@ -49,6 +61,7 @@ export const recipeSchema = z.object({
     })).min(1),
     time: z.string(),
     level: z.string(),
+    type: z.enum(['recipe', 'cocktail'])
 });
 
 export type Recipe = TypeOf<typeof recipeSchema>;

@@ -101,7 +101,7 @@ export const createRecipeOperations = {
                                 the response that I want you to give me should be a VALID json without the backticks that looks like this:
                                 {
                                     "title": "Recipe title",
-                                    "description": "Recipe description",
+                                    "description": "Recipe description" (no more than 120 characters),
                                     "ingredients": [{
                                         "ingredient": "ingredient name and quantity",
                                     }],
@@ -111,6 +111,7 @@ export const createRecipeOperations = {
                                     }],
                                     "time": "total time to complete the recipe",
                                     "level": "difficulty level of the recipe (easy, medium, hard)",
+                                    "type": "recipe" (exactly like this)
                                 }
                                 NOTE: the json i want you to generate must be a valid json object and without the backticks`
                         }],
@@ -186,6 +187,7 @@ export const createRecipeOperations = {
                             with the following kitchen utilities: ${kitchenUtils}
                             add also keep in mind this - ${prompt}.
                             have the title be of a dish or similar to a dish that already exists.
+                            have the title be no more than 43 characters.
                             DON'T FORGET:
                             the response that I want you to give me should be a VALID json without the backticks that looks like this:
                             {
