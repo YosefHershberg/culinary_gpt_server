@@ -5,12 +5,14 @@
 
 //some properties are optional because they are used in different contexts
 export interface UserIngredientResponse {
-    category?: string[];
-    popularity?: number;
+    category: string[];
+    popularity: number;
     type: IngredientType[];        
     name: string;
     id: string;
 }
+
+export type PartialUserIngredientResponse = Partial<UserIngredientResponse>
 
 export interface KitchenUtils {
     "Stove Top": boolean,
@@ -45,3 +47,5 @@ export interface Recipe {
 }
 
 export type IngredientType = "food" | "drink";
+
+

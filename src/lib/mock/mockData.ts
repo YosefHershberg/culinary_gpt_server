@@ -26,7 +26,8 @@ export const mockRecipe: RecipeWithImage = {
             { step: "Season with salt and pepper to taste, and serve immediately.", time: "2 minutes" }
         ],
         time: "20 minutes",
-        level: "Easy"
+        level: "Easy",
+        type: "recipe"
     }
 };
 

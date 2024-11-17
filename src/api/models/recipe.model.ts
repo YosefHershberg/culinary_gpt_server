@@ -66,15 +66,6 @@ const recipeSchema = new mongoose.Schema<RecipeDocument>({
     }
 }, mongooseVirtuals);
 
-// recipeSchema.pre<Recipe>('save', async function(next) {
-//     const user = await User.findById(this.userId);
-//     if (user) {
-//         user.recipes.push(this._id);
-//         await user.save();
-//     }
-//     next();
-// });
-
 const Recipe = mongoose.model<RecipeDocument>('Recipe', recipeSchema);
 
 export default Recipe;

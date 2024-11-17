@@ -2,7 +2,7 @@ import { getUserIngredients, addUserIngredient, deleteUserIngredient, deleteAllU
 import * as ingredientOperationsDB from "../../data-access/ingredient.da";
 import { userIngredientOperations, ingredientOperations } from "../ingredients.service";
 import { IngredientDocument } from "../../models/ingredient.model";
-import { IngredientType, UserIngredientResponse } from "../../../interfaces";
+import { IngredientType } from "../../../interfaces";
 
 jest.mock('../../data-access/ingredient.da');
 
@@ -14,7 +14,7 @@ describe('ingredient services', () => {
 
     describe('userIngredientOperations.getAll', () => {
         it('should return all user ingredients', async () => {
-            const mockIngredients: UserIngredientResponse[] = [{ id: ingredientId, name: 'testIngredient', category, type }];
+            const mockIngredients = [{ id: ingredientId, name: 'testIngredient', category, type }];
 
             (getUserIngredients as jest.Mock).mockResolvedValue(mockIngredients);
 
@@ -29,7 +29,7 @@ describe('ingredient services', () => {
         it('should add a new ingredient successfully', async () => {
             const name = 'testIngredient';
             const type: IngredientType[] = ['food'];
-            const mockNewIngredient: UserIngredientResponse = { id: ingredientId, name, type: type };
+            const mockNewIngredient = { id: ingredientId, name, type: type };
 
             (addUserIngredient as jest.Mock).mockResolvedValue(mockNewIngredient);
 

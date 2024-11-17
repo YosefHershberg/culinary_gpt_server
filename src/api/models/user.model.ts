@@ -90,6 +90,3 @@ userSchema.pre('save', function (next) {
 const User = mongoose.model<UserDocument>('User', userSchema);
 
 export default User;
-
-// LEARNING NOTES:
-// - anytime you talk to the db use a try catch block and log err.meesage to console

@@ -1,23 +1,23 @@
 import { DeleteResult } from "mongodb"
-import { UserIngredientResponse as IngredientInterface, IngredientType } from "../../interfaces"
+import { PartialUserIngredientResponse as PartialIngredient, IngredientType } from "../../interfaces"
 import Ingredient, { IngredientDocument } from "../models/ingredient.model"
 import UserIngredient, { UserIngredientInterface } from "../models/UserIngredients.model"
 import { FilterQuery } from "mongoose"
 
-export const getByCategory = async (category: string): Promise<IngredientInterface[]> => {
+export const getByCategory = async (category: string): Promise<IngredientDocument[]> => {
     const ingredients = await Ingredient.find({ category }).exec()
 
     if (!ingredients) {
         throw new Error('Ingredients not found')
     }
 
-    return ingredients as IngredientInterface[]
+    return ingredients
 }
 
 export const searchByQueryAndIngredientType = async (
     query: FilterQuery<IngredientDocument>,
     type: IngredientType
-): Promise<IngredientInterface[]> => {
+): Promise<IngredientDocument[]> => {
     const ingredients = await Ingredient.find({
         name: { $regex: query, $options: 'i' },
         type: { $all: [type] },
@@ -27,44 +27,44 @@ export const searchByQueryAndIngredientType = async (
         throw new Error('Ingredients not found')
     }
 
-    return ingredients as IngredientInterface[]
+    return ingredients
 }
 
 export const addUserIngredient =
-    async (userIngredient: UserIngredientInterface): Promise<IngredientInterface> => {
+    async (userIngredient: UserIngredientInterface): Promise<PartialIngredient> => {
         const ingredient = new UserIngredient(userIngredient)
         const newIngredient = await ingredient.save()
-        return newIngredient as IngredientInterface
+        return newIngredient
     }
 
-export const deleteUserIngredient = async (userId: string, ingredientId: string): Promise<IngredientInterface> => {
+export const deleteUserIngredient = async (userId: string, ingredientId: string): Promise<PartialIngredient> => {
     const ingredient = await UserIngredient.findOneAndDelete({ userId, ingredientId }).exec()
 
     if (!ingredient) {
         throw new Error('Ingredient not found')
     }
 
-    return ingredient as IngredientInterface
+    return ingredient
 }
 
-export const getUserIngredients = async (userId: string): Promise<IngredientInterface[]> => {
+export const getUserIngredients = async (userId: string): Promise<PartialIngredient[]> => {
     const ingredients = await UserIngredient.find({ userId }).exec()
 
     if (!ingredients) {
         throw new Error('Ingredients not found')
     }
 
-    return ingredients as IngredientInterface[]
+    return ingredients
 }
 
-export const getUserIngredientsByType = async (userId: string, type: IngredientType): Promise<IngredientInterface[]> => {
+export const getUserIngredientsByType = async (userId: string, type: IngredientType): Promise<PartialIngredient[]> => {
     const ingredients = await UserIngredient.find({ userId, type }).exec()
 
     if (!ingredients) {
         throw new Error('Ingredients not found')
     }
 
-    return ingredients as IngredientInterface[]
+    return ingredients
 }
 
 export const deleteAllUserIngredients = async (userId: string): Promise<DeleteResult> => {

@@ -1,7 +1,7 @@
 import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
-import { UserIngredientResponse, KitchenUtils } from "../../interfaces";
+import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils } from "../../interfaces";
 import { getUserIngredientsByType } from "../data-access/ingredient.da";
 import { getUserDB } from "../data-access/user.da";
 import logger from '../../config/logger';
@@ -33,8 +33,6 @@ export const createRecipeOperations = {
      * @returns {RecipeWithImage}
      */
     createRecipe: async (userId: string, recipeInput: CreateRecipeProps, res: Response): Promise<void> => {
-        let kitchenUtils;
-        let userIngredients: string[];
 
         const [ingredients, user] = await Promise.all([
             getUserIngredientsByType(userId, 'food'),
@@ -46,8 +44,8 @@ export const createRecipeOperations = {
             throw new Error('Not enough ingredients to create a recipe');
         }
 
-        kitchenUtils = user.kitchenUtils;
-        userIngredients = ingredients.map((ingredient: UserIngredientResponse) => ingredient.name);
+        const kitchenUtils = user.kitchenUtils;
+        const userIngredients = ingredients.map((ingredient: PartialIngredient) => ingredient.name) as string[];
 
         // Create a recipe title using OpenAI API
         const title = await createRecipeOperations.createRecipeTitle(recipeInput, userIngredients, kitchenUtils);

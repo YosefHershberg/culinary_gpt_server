@@ -5,7 +5,7 @@ import { IngredientDocument } from "../models/ingredient.model";
 import * as ingredientOperationsDB from "../data-access/ingredient.da";
 import { addUserIngredient, deleteAllUserIngredients, deleteUserIngredient, getUserIngredients } from "../data-access/ingredient.da";
 
-import { IngredientType, UserIngredientResponse } from "../../interfaces";
+import { IngredientType, PartialUserIngredientResponse as PartialIngredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 import { UserIngredientInterface } from "../models/UserIngredients.model";
 
@@ -18,12 +18,12 @@ import { UserIngredientInterface } from "../models/UserIngredients.model";
  */
 
 export const userIngredientOperations = {
-    getAll: async (userId: string): Promise<UserIngredientResponse[]> => {
+    getAll: async (userId: string): Promise<PartialIngredient[]> => {
         const ingredients = await getUserIngredients(userId);
         return ingredients;
     },
 
-    addIngredient: async (userIngredient: UserIngredientInterface): Promise<UserIngredientResponse> => {
+    addIngredient: async (userIngredient: UserIngredientInterface): Promise<PartialIngredient> => {
         const newIngredient = await addUserIngredient(userIngredient);
         return newIngredient;
     },

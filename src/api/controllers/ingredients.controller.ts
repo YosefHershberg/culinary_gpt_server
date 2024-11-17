@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { IngredientType, UserIngredientResponse } from '../../interfaces';
+import { IngredientType, PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
@@ -36,7 +36,7 @@ import logger from '../../config/logger';
  *         description: Internal server error
  */
 
-export const getIngredients = async (req: CustomRequest, res: Response<UserIngredientResponse[]>, next: NextFunction) => {
+export const getIngredients = async (req: CustomRequest, res: Response<PartialIngredient[]>, next: NextFunction) => {
     try {
         const ingredients = await userIngredientOperations.getAll(req.userId as string);
 
@@ -84,7 +84,7 @@ export const addIngredientSchema = z.object({
     body: ingredientSchema
 });
 
-export const addIngredient = async (req: CustomRequest, res: Response<UserIngredientResponse>, next: NextFunction) => {
+export const addIngredient = async (req: CustomRequest, res: Response<PartialIngredient>, next: NextFunction) => {
     const ingredient = req.body;
 
     try {

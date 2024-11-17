@@ -3,18 +3,18 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as ingredientControllers from '../controllers/ingredients.controller';
-import { UserIngredientResponse } from '../../interfaces';
+import { PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();
 
-router.get<{}, UserIngredientResponse[] | MessageResponse>(
+router.get<{}, PartialIngredient[] | MessageResponse>(
     '/',
     ingredientControllers.getIngredients
 );
 
-router.post<{}, UserIngredientResponse | MessageResponse>(
+router.post<{}, PartialIngredient | MessageResponse>(
     '/',
     validate(ingredientControllers.addIngredientSchema),
     ingredientControllers.addIngredient
