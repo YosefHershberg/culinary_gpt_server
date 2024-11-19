@@ -42,13 +42,13 @@ export const userIngredientOperations = {
 export const ingredientOperations = {
     getByCategory: async (category: string): Promise<IngredientDocument[]> => {
         const ingredients = await ingredientOperationsDB.getByCategory(category)
-        return ingredients as IngredientDocument[]
+        return ingredients
     },
     search: async (
         query: FilterQuery<IngredientDocument>,
         type: IngredientType
     ): Promise<IngredientDocument[]> => {
         const ingredients = await ingredientOperationsDB.searchByQueryAndIngredientType(query, type)
-        return ingredients as IngredientDocument[]
+        return ingredients
     },
 }

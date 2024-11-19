@@ -2,7 +2,7 @@ import sharp from "sharp";
 import crypto from "crypto";
 import { Response } from "express";
 
-export const returnStreamData = (data: object, res: Response) => {
+export const returnStreamData = (data: Record<string, unknown>, res: Response) => {
   res.write(`data: ${JSON.stringify(data)}\n\n`);
 }
 
@@ -41,7 +41,7 @@ export async function compressBase64Image(base64Image: string, quality: number):
   // Compress the image
   const compressedBuffer = await sharp(imageBuffer)
     .resize({ width: 300 })
-    .jpeg({ quality: quality }) // You can also use .png() or .webp() depending on the image type
+    .jpeg({ quality: quality })
     .toBuffer();
 
   // Re-encode the compressed image to base64

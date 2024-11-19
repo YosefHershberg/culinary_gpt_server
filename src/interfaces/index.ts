@@ -2,8 +2,6 @@
  * @fileoverview Interfaces for the application
  */
 
-
-//some properties are optional because they are used in different contexts
 export interface UserIngredientResponse {
     category: string[];
     popularity: number;
@@ -12,6 +10,9 @@ export interface UserIngredientResponse {
     id: string;
 }
 
+/**
+ * @note This is 
+ */
 export type PartialUserIngredientResponse = Partial<UserIngredientResponse>
 
 export interface KitchenUtils {
