@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import { z } from 'zod';
-import { StatusCodes } from 'http-status-codes';
+import { HttpStatusCode } from 'axios';
 
 import { RecipeDocument } from '../models/recipe.model';
 import { recipeOperations } from '../services/recipes.service';
@@ -49,7 +49,7 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocumen
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while fetching your recipes'));
+        next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while fetching your recipes'));
     }
 }
 
@@ -107,7 +107,7 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while adding your recipe'));
+        next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while adding your recipe'));
     }
 }
 
@@ -154,7 +154,7 @@ export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while fetching your recipe'));
+        next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while fetching your recipe'));
     }
 }
 
@@ -201,7 +201,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while deleting your recipe'));
+        next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while deleting your recipe'));
     }
 }
 
@@ -290,7 +290,7 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
             logger.error(error.message);
         }
         res.end()
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while creating your recipe'));
+        next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while creating your recipe'));
     }
 
     res.on('close', () => {
@@ -365,7 +365,7 @@ export const createCocktail = async (req: CustomRequest, res: Response, next: Ne
             logger.error(error.message);
         }
         res.end()
-        next(new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error accrued while creating your cocktail'));
+        next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while creating your cocktail'));
     }
 
     res.on('close', () => {

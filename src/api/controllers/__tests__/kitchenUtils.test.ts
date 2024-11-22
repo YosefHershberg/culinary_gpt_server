@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { StatusCodes } from 'http-status-codes';
+import { HttpStatusCode } from 'axios';
 import app, { userId } from '../../../lib/mock/mockApp';
 import { kitchenUtilsOperations } from '../../services/kitchenUtils.service';
 import { KitchenUtils } from '../../../interfaces';
@@ -27,7 +27,7 @@ describe('Kitchen Utils Controller', () => {
             const res = await request(app)
                 .get('/api/user/kitchen-utils');
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockKitchenUtils);
             expect(kitchenUtilsOperations.get).toHaveBeenCalledWith(userId);
         });
@@ -48,7 +48,7 @@ describe('Kitchen Utils Controller', () => {
                 .patch('/api/user/kitchen-utils')
                 .send(updatePayload);
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockMessage);
             expect(kitchenUtilsOperations.update).toHaveBeenCalledWith(userId, updatePayload.name, updatePayload.value);
         });

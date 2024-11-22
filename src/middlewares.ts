@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ZodError, ZodSchema } from 'zod';
-import { StatusCodes } from 'http-status-codes';
+import { HttpStatusCode } from 'axios';
 
 import clerkClient from './config/clerkClient';
 import { HttpError } from './lib/HttpError';
@@ -14,7 +14,7 @@ export async function authMiddleware(req: CustomRequest, res: Response, next: Ne
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    res.status(StatusCodes.UNAUTHORIZED);
+    res.status(HttpStatusCode.Unauthorized);
     next(new Error('Unauthorized. No token provided'));
   }
 
@@ -25,13 +25,13 @@ export async function authMiddleware(req: CustomRequest, res: Response, next: Ne
     next()
   } catch (error) {
     logger.error(error);
-    res.status(StatusCodes.UNAUTHORIZED);
+    res.status(HttpStatusCode.Unauthorized);
     next(new Error('Unauthorized. Invalid token'));
   }
 }
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
-  res.status(StatusCodes.NOT_FOUND);
+  res.status(HttpStatusCode.NotFound);
   const error = new Error(`🔍 - Not Found - ${req.originalUrl}`);
   next(error);
 }
@@ -43,7 +43,7 @@ export function errorHandler(err: Error, _req: Request, res: Response<ErrorRespo
   }
   
   // catching errors that are not HttpError
-  const statusCode = res.statusCode !== StatusCodes.OK ? res.statusCode : StatusCodes.OK;
+  const statusCode = res.statusCode !== HttpStatusCode.Ok ? res.statusCode : HttpStatusCode.Ok;
   res.status(statusCode);
   return res.json({
     message: err.message,
@@ -67,9 +67,9 @@ export const validate = (schema: ZodSchema<any>) => (req: Request, res: Response
       const errorMessages = error.errors.map((issue: any) => ({
         message: `${issue.path.join('.')} is ${issue.message}`,
       }))
-      return res.status(StatusCodes.BAD_REQUEST).json({ error: 'Invalid data', details: errorMessages });
+      return res.status(HttpStatusCode.BadRequest).json({ error: 'Invalid data', details: errorMessages });
     } else {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+      return res.status(HttpStatusCode.InternalServerError).json({ error: 'Internal Server Error' });
     }
 
   }

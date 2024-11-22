@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { FilterQuery } from 'mongoose';
 import { z } from 'zod';
-import { StatusCodes } from 'http-status-codes';
+import { HttpStatusCode } from 'axios';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import { IngredientType, PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
@@ -46,7 +46,7 @@ export const getIngredients = async (req: CustomRequest, res: Response<PartialIn
             logger.error(error.message);
         }
         next(new HttpError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
+            HttpStatusCode.InternalServerError,
             'An error accrued while fetching your ingredients'
         ));
     }
@@ -102,7 +102,7 @@ export const addIngredient = async (req: CustomRequest, res: Response<PartialIng
             logger.error(error.message);
         }
         next(new HttpError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
+            HttpStatusCode.InternalServerError,
             'An error accrued while adding your ingredient'
         ));
     }
@@ -150,7 +150,7 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
             logger.error(error.message);
         }
         next(new HttpError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
+            HttpStatusCode.InternalServerError,
             'An error accrued while deleting your ingredient'
         ));
     }
@@ -187,7 +187,7 @@ export const deleteAllIngredients = async (req: CustomRequest, res: Response<Mes
             logger.error(error.message);
         }
         next(new HttpError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
+            HttpStatusCode.InternalServerError,
             'An error accrued while deleting your ingredients'
         ));
     }
@@ -242,7 +242,7 @@ export const ingredientSuggestions = async (req: Request, res: Response<Ingredie
             logger.error(error.message);
         }
         next(new HttpError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
+            HttpStatusCode.InternalServerError,
             'An error accrued while fetching ingredients'
         ));
     }
@@ -309,7 +309,7 @@ export const searchIngredients = async (req: CustomRequest, res: Response<Ingred
             logger.error(error.message);
         }
         next(new HttpError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
+            HttpStatusCode.InternalServerError,
             'An error accrued while searching ingredients'
         ));
     }

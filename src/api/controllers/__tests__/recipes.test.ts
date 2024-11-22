@@ -2,7 +2,7 @@ import request from 'supertest';
 import app, { userId } from '../../../lib/mock/mockApp';
 import { recipeOperations } from '../../services/recipes.service';
 import { createRecipeOperations } from '../../services/createRecipe.service';
-import { StatusCodes } from 'http-status-codes';
+import { HttpStatusCode } from 'axios';
 import { mockRecipe } from '../../../lib/mock/mockData';
 
 jest.mock('../../services/recipes.service');
@@ -18,7 +18,7 @@ describe('Recipe Controller', () => {
             const response = await request(app)
                 .get('/api/user/recipes')
 
-            expect(response.status).toBe(StatusCodes.OK);
+            expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipes);
             expect(recipeOperations.getUserRecipes).toHaveBeenCalledWith(userId);
         });
@@ -33,7 +33,7 @@ describe('Recipe Controller', () => {
                 .post('/api/user/recipes')
                 .send(mockRecipe)
 
-            expect(response.status).toBe(StatusCodes.OK);
+            expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipe);
             expect(recipeOperations.addRecipe).toHaveBeenCalledWith({ ...mockRecipe, userId });
         });
@@ -48,7 +48,7 @@ describe('Recipe Controller', () => {
             const response = await request(app)
                 .get(`/api/user/recipes/${recipeId}`)
 
-            expect(response.status).toBe(StatusCodes.OK);
+            expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipes[0]);
             expect(recipeOperations.getRecipe).toHaveBeenCalledWith(recipeId);
         });
@@ -64,7 +64,7 @@ describe('Recipe Controller', () => {
             const response = await request(app)
                 .delete(`/api/user/recipes/${recipeId}`)
 
-            expect(response.status).toBe(StatusCodes.OK);
+            expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(deleteMessage);
             expect(recipeOperations.deleteRecipe).toHaveBeenCalledWith(userId, recipeId);
         });
@@ -95,7 +95,7 @@ describe('Recipe Controller', () => {
                 .post('/api/user/recipes/create')
                 .send(mockRecipeInput);
     
-            expect(response.status).toBe(StatusCodes.OK);
+            expect(response.status).toBe(HttpStatusCode.Ok);
             expect(createRecipeOperations.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput, expect.any(Object));
         });
     });

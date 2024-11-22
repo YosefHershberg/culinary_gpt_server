@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { StatusCodes } from 'http-status-codes';
+import { HttpStatusCode } from 'axios';
 import { ingredientOperations, userIngredientOperations } from '../../services/ingredients.service';
 import app, { userId } from '../../../lib/mock/mockApp';
 
@@ -31,7 +31,7 @@ describe('Ingredients API', () => {
             const res = await request(app)
                 .get('/api/user/ingredients')
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredients);
             expect(userIngredientOperations.getAll).toHaveBeenCalledWith(userId);
         });
@@ -45,7 +45,7 @@ describe('Ingredients API', () => {
                 .post('/api/user/ingredients')
                 .send(mockIngredient);
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredient);
             expect(userIngredientOperations.addIngredient).toHaveBeenCalledWith({
                 userId,
@@ -63,7 +63,7 @@ describe('Ingredients API', () => {
             const res = await request(app)
                 .delete(`/api/user/ingredients/${mockIngredient.id}`)
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockMessageResponse);
             expect(userIngredientOperations.deleteIngredient).toHaveBeenCalledWith(userId, mockIngredient.id);
         });
@@ -76,7 +76,7 @@ describe('Ingredients API', () => {
             const res = await request(app)
                 .delete('/api/user/ingredients/all')
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(userIngredientOperations.deleteAll).toHaveBeenCalledWith(userId);
         });
     });
@@ -89,7 +89,7 @@ describe('Ingredients API', () => {
             const res = await request(app)
                 .get(`/api/ingredients/suggestions/${category}`);
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredients);
             expect(ingredientOperations.getByCategory).toHaveBeenCalledWith(category);
         });
@@ -105,7 +105,7 @@ describe('Ingredients API', () => {
                 .get('/api/ingredients/search')
                 .query({ query, type });
 
-            expect(res.status).toBe(StatusCodes.OK);
+            expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredients);
             expect(ingredientOperations.search).toHaveBeenCalledWith(query, type);
         });
