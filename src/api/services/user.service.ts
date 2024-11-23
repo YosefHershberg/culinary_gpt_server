@@ -2,11 +2,12 @@ import { hashString } from "../../utils/helperFunctions";
 import { firebaseStorageOperations } from "./firebase.service";
 
 import { recipeOperations } from "./recipes.service";
-import { userIngredientOperations } from "./ingredients.service";
 
 import { deleteUserRecipes } from "../data-access/recipe.da";
 import { createUserDB, CreateUserDBProps, deleteUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
 import { UserDocument } from "../models/user.model";
+import { createKitchenUtilsDB, deleteKitchenUtilsDB } from "../data-access/kitchenUtils.da";
+import { deleteAllUserIngredients } from "../data-access/ingredient.da";
 
 /**
  * @module user.service
@@ -17,12 +18,15 @@ import { UserDocument } from "../models/user.model";
 
 export const userOperations = {
     createUser: async (userData: CreateUserDBProps): Promise<UserDocument> => {
-        const user = await createUserDB(userData);
+        const [user, _kitchenUtils] = await Promise.all([
+            createUserDB(userData),
+            createKitchenUtilsDB(userData.clerkId)
+        ])
         return user;
     },
 
     /**
-     * @description This function deletes a user & recipes &  recipe images from firebase storage & user ingredients
+     * @description This function deletes a user & recipes & recipe images from firebase storage & user ingredients
      * @param {string} userId 
      * @returns {UserDocument}
      */
@@ -36,8 +40,11 @@ export const userOperations = {
             //delete user recipes
             deleteUserRecipes(userId),
 
+            //delete user kitchen utilities
+            deleteKitchenUtilsDB(userId),
+
             //delete user ingredients
-            userIngredientOperations.deleteAll(userId),
+            deleteAllUserIngredients(userId),
 
             //delete recipe images from firebase storage
             recipes.map(recipe =>

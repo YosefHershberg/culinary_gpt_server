@@ -19,10 +19,7 @@ export interface CreateUserDBProps {
 }
 
 export const createUserDB = async (userData: CreateUserDBProps): Promise<UserDocument> => {
-    const user = new User({
-        ...userData,
-        kitchenUtils: kitchenUtils
-    });
+    const user = new User(userData);
     const newUser = await user.save()
 
     return newUser;
@@ -43,7 +40,6 @@ export interface UpdateUserDBProps {
     last_name: string,
     email: string,
 }
-
 
 export const updateUserDB = async (userId: string, update: UpdateUserDBProps): Promise<UserDocument> => {
     const updatedUser = await User.findOneAndUpdate(

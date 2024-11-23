@@ -37,7 +37,7 @@ export const createCocktailOperations = {
         const title = await createCocktailOperations.createCocktailTitle(prompt, userIngredients);
 
         // Create the recipe and the recipe image using OpenAI API
-        const [recipe, imageUrl] = await Promise.all([
+        const [_recipe, imageUrl] = await Promise.all([
             createCocktailOperations.createCocktailOpenAI(prompt, userIngredients, title, res),
             createCocktailOperations.createImageOpenAI(title, userIngredients)
         ]);
@@ -116,8 +116,8 @@ export const createCocktailOperations = {
     createImageOpenAI: async (cocktailTitle: string, userIngredients: string[]): Promise<string> => {
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of a ${cocktailTitle} cocktail with the following ingredients: ${userIngredients.join(', ')}
-                IMPORTANT: Don't show the ingredients in the image. Show only a picture of the cocktail.`,
+            prompt: `A realistic photo of a ${cocktailTitle} cocktail.
+                Make it visually appealing and appetizing.`,
             n: 1,
             size: "1024x1024",
             quality: 'standard',

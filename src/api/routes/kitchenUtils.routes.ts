@@ -15,8 +15,8 @@ router.get<{}, KitchenUtils | MessageResponse>(
 
 router.patch<{}, KitchenUtils | MessageResponse>(
     '/',
-    validate(kitchenUtilsController.updateKitchenUtilsSchema),
-    kitchenUtilsController.updateKitchenUtils
+    validate(kitchenUtilsController.toggleKitchenUtilsSchema),
+    kitchenUtilsController.toggleKitchenUtils
 );
 
 export default router;

@@ -36,13 +36,12 @@ describe('Kitchen Utils Controller', () => {
     describe('PATCH /api/user/kitchen-utils', () => {
         const updatePayload = {
             name: 'Oven',
-            value: true
         };
 
         it('should update kitchen utils for a user', async () => {
             const mockMessage = { message: 'Kitchen utils updated successfully' };
 
-            (kitchenUtilsOperations.update as jest.Mock).mockResolvedValue(mockMessage);
+            (kitchenUtilsOperations.toggle as jest.Mock).mockResolvedValue(mockMessage);
 
             const res = await request(app)
                 .patch('/api/user/kitchen-utils')
@@ -50,7 +49,7 @@ describe('Kitchen Utils Controller', () => {
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockMessage);
-            expect(kitchenUtilsOperations.update).toHaveBeenCalledWith(userId, updatePayload.name, updatePayload.value);
+            expect(kitchenUtilsOperations.toggle).toHaveBeenCalledWith(userId, updatePayload.name);
         });
     });
 

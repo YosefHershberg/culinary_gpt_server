@@ -45,17 +45,6 @@ export const mockUserDoc = {
     email: 'john.doe@example.com',
     createdAt: new Date('2023-01-01T00:00:00Z'),
     updatedAt: new Date('2023-01-02T00:00:00Z'),
-    kitchenUtils: {
-        "Stove Top": true,
-        "Oven": true,
-        "Microwave": true,
-        "Air Fryer": false,
-        "Blender": true,
-        "Food Processor": false,
-        "Slow Cooker": false,
-        "BBQ": false,
-        "Grill": false,
-    },
 } as UserDocument; //Typed like this because UserDocument extends mongoose.Document
 
 export const mockKitchenUtils: KitchenUtils = {

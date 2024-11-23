@@ -3,9 +3,9 @@ import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/
 
 import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils } from "../../interfaces";
 import { getUserIngredientsByType } from "../data-access/ingredient.da";
-import { getUserDB } from "../data-access/user.da";
 import logger from '../../config/logger';
 import { Response } from 'express';
+import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
 /**
  * @module createRecipe.service
@@ -34,9 +34,9 @@ export const createRecipeOperations = {
      */
     createRecipe: async (userId: string, recipeInput: CreateRecipeProps, res: Response): Promise<void> => {
 
-        const [ingredients, user] = await Promise.all([
+        const [ingredients, kitchenUtils] = await Promise.all([
             getUserIngredientsByType(userId, 'food'),
-            getUserDB(userId)
+            getKitchenUtilsDB(userId)
         ]);
 
         // Check if there are enough ingredients to create a recipe
@@ -44,14 +44,13 @@ export const createRecipeOperations = {
             throw new Error('Not enough ingredients to create a recipe');
         }
 
-        const kitchenUtils = user.kitchenUtils;
         const userIngredients = ingredients.map((ingredient: PartialIngredient) => ingredient.name) as string[];
 
         // Create a recipe title using OpenAI API
         const title = await createRecipeOperations.createRecipeTitle(recipeInput, userIngredients, kitchenUtils);
 
         // Create the recipe & the recipe image using OpenAI API
-        const [recipe, imageUrl] = await Promise.all([
+        const [_recipe, imageUrl] = await Promise.all([
             createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils, title, res),
             createRecipeOperations.createImageOpenAI(title, userIngredients)
         ]);
@@ -144,8 +143,8 @@ export const createRecipeOperations = {
     createImageOpenAI: async (recipeTitle: string, userIngredients: string[]): Promise<string> => {
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of ${recipeTitle} recipe that is made with these ingredients: ${userIngredients.join(', ')}.
-                IMPORTANT: Don't show the ingredients in the image. Show only a picture of the dish.`,
+            prompt: `A realistic photo of ${recipeTitle} recipe.
+                make it visually appealing and appetizing.`,
             n: 1,
             size: "1024x1024",
             quality: 'standard',

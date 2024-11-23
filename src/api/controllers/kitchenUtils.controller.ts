@@ -83,19 +83,18 @@ export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenU
  *         description: Internal server error
  */
 
-export const updateKitchenUtilsSchema = z.object({
+export const toggleKitchenUtilsSchema = z.object({
     body: z.object({
         name: z.enum(['Stove Top', 'Oven', 'Microwave', 'Air Fryer', 'Blender', 'Food Processor', 'Slow Cooker', 'BBQ', 'Grill']),
-        value: z.boolean()
     })
 });
 
-export const updateKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
-    const { name, value } = req.body;
+export const toggleKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
+    const { name } = req.body;
 
     try {
         const message =
-            await kitchenUtilsOperations.update(req.userId as string, name, value);
+            await kitchenUtilsOperations.toggle(req.userId as string, name);
 
         return res.json(message);
     } catch (error) {

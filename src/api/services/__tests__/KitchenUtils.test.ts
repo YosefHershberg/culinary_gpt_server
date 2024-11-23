@@ -2,8 +2,10 @@ import { kitchenUtilsOperations } from '../../services/kitchenUtils.service';
 import { getUserDB } from '../../data-access/user.da';
 import {  userId } from '../../../lib/mock/mockApp';
 import {  mockKitchenUtils } from '../../../lib/mock/mockData';
+import { getKitchenUtilsDB, toggleKitchenUtilDB } from '../../data-access/kitchenUtils.da';
 
 jest.mock('../../data-access/user.da');
+jest.mock('../../data-access/kitchenUtils.da');
 
 describe('kitchenUtilsOperations', () => {
     beforeEach(() => {
@@ -13,31 +15,30 @@ describe('kitchenUtilsOperations', () => {
     describe('get', () => {
         it('should return the kitchen utilities for the user', async () => {
             
-            const mockUser = { kitchenUtils: mockKitchenUtils };
-            (getUserDB as jest.Mock).mockResolvedValue(mockUser);
+            (getKitchenUtilsDB as jest.Mock).mockResolvedValue(mockKitchenUtils);
 
             const result = await kitchenUtilsOperations.get(userId);
 
-            expect(getUserDB).toHaveBeenCalledWith(userId);
+            expect(getKitchenUtilsDB).toHaveBeenCalledWith(userId);
             expect(result).toEqual(mockKitchenUtils);
         });
     });
 
-    describe('update', () => {
+    describe('toggle', () => {
         it('should update the kitchen utility and return the updated kitchen utilities', async () => {
+            const updatedKitchenUtils = { ...mockKitchenUtils, Microwave: true }; // Expected result after toggle
+    
+            const mockResponse = { kitchenUtils: updatedKitchenUtils };
             
-            const mockUser = { kitchenUtils: { ...mockKitchenUtils }, save: jest.fn() };
-            (getUserDB as jest.Mock).mockResolvedValue(mockUser);
-
-            const updatedValue = true;
+            // Mock the toggleKitchenUtilDB function
+            (toggleKitchenUtilDB as jest.Mock).mockResolvedValue(mockResponse);
+            
             const utilityName = 'Microwave';
-
-            const result = await kitchenUtilsOperations.update(userId, utilityName, updatedValue);
-
-            expect(getUserDB).toHaveBeenCalledWith(userId);
-            expect(mockUser.kitchenUtils[utilityName]).toBe(updatedValue);
-            expect(mockUser.save).toHaveBeenCalled();
-            expect(result).toEqual(mockUser.kitchenUtils);
+    
+            const result = await kitchenUtilsOperations.toggle(userId, utilityName);
+    
+            expect(toggleKitchenUtilDB).toHaveBeenCalledWith(userId, utilityName);
+            expect(result).toEqual(updatedKitchenUtils);
         });
     });
 });

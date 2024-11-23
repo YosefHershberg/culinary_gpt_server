@@ -1,6 +1,5 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { KitchenUtils } from '../../interfaces';
 
 export interface UserDocument extends Document {
     first_name: string;
@@ -9,7 +8,6 @@ export interface UserDocument extends Document {
     email: string;
     createdAt: Date;
     updatedAt: Date;
-    kitchenUtils: KitchenUtils;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>({
@@ -42,17 +40,6 @@ const userSchema = new mongoose.Schema<UserDocument>({
     updatedAt: {
         type: Date,
         default: Date.now,
-    },
-    kitchenUtils: {
-        "Stove Top": Boolean,
-        "Oven": Boolean,
-        "Microwave": Boolean,
-        "Air Fryer": Boolean,
-        "Blender": Boolean,
-        "Food Processor": Boolean,
-        "Slow Cooker": Boolean,
-        "BBQ": Boolean,
-        "Grill": Boolean,
     },
 }, mongooseVirtuals);
 

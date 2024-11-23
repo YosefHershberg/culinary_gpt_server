@@ -1,25 +1,24 @@
 import { KitchenUtils } from "../../interfaces";
-import { getUserDB } from "../data-access/user.da";
+import { getKitchenUtilsDB, toggleKitchenUtilDB } from "../data-access/kitchenUtils.da";
 
 /**
  * @module kitchenUtils.service
  * 
- * @description This module provides operations for managing user kitchen utilities
+ * @description This module provides operations for managing user kitchen utensils
  * @exports kitchenUtilsOperations
  */
 
 export const kitchenUtilsOperations = {
+
     get: async (userId: string): Promise<KitchenUtils> => {
-        const user = await getUserDB(userId)
-        return user.kitchenUtils
+        const kitchenUtils = await getKitchenUtilsDB(userId);
+
+        return kitchenUtils;
     },
 
-    update: async (userId: string, name: string, value: boolean): Promise<KitchenUtils> => {
-        const user = await getUserDB(userId)
+    toggle: async (userId: string, name: string): Promise<KitchenUtils> => {
+        const kitchenUtils = await toggleKitchenUtilDB(userId, name);
 
-        //@ts-expect-error
-        user.kitchenUtils[name] = value;
-        await user.save();
-        return user.kitchenUtils
+        return kitchenUtils.kitchenUtils;
     }
 }
