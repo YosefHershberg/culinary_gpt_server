@@ -143,7 +143,8 @@ export const createRecipeOperations = {
     createImageOpenAI: async (recipeTitle: string, userIngredients: string[]): Promise<string> => {
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of ${recipeTitle} recipe.
+            prompt: `A realistic photo of ${recipeTitle} recipe. made with these ingredients: ${userIngredients?.join(', ')}.
+                Don't show the ingredients in the image. just the dish!
                 make it visually appealing and appetizing.`,
             n: 1,
             size: "1024x1024",

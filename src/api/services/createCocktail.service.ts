@@ -116,7 +116,8 @@ export const createCocktailOperations = {
     createImageOpenAI: async (cocktailTitle: string, userIngredients: string[]): Promise<string> => {
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of a ${cocktailTitle} cocktail.
+            prompt: `A realistic photo of a ${cocktailTitle} cocktail. the ingredients are: ${userIngredients?.join(', ')}.
+                Don't show the ingredients in the image. just the cocktail!
                 Make it visually appealing and appetizing.`,
             n: 1,
             size: "1024x1024",

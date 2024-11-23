@@ -40,7 +40,7 @@ export async function compressBase64Image(base64Image: string, quality: number):
 
   // Compress the image
   const compressedBuffer = await sharp(imageBuffer)
-    .resize({ width: 300 })
+    .resize({ width: 600 })
     .jpeg({ quality: quality })
     .toBuffer();
 
