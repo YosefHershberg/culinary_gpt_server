@@ -7,14 +7,13 @@ import { recipeOperations } from '../services/recipes.service';
 import { createRecipeOperations } from '../services/createRecipe.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { RecipeWithImage } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 
 import { recipeSchema } from '../schemas/recipe.schema';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 import { createCocktailOperations } from '../services/createCocktail.service';
-import { set } from 'mongoose';
+import { returnStreamData } from '../../utils/helperFunctions';
 
 /**
  * @openapi
@@ -288,7 +287,11 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);
-        }
+        }        
+        returnStreamData(res, {
+            event: 'error',
+            error
+        });
         res.end()
         next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while creating your recipe'));
     }
@@ -364,6 +367,10 @@ export const createCocktail = async (req: CustomRequest, res: Response, next: Ne
         if (error instanceof Error) {
             logger.error(error.message);
         }
+        returnStreamData(res, {
+            event: 'error',
+            error
+        });
         res.end()
         next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while creating your cocktail'));
     }

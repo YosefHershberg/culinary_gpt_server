@@ -1,3 +1,4 @@
+import fs from 'fs';
 import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
@@ -61,7 +62,7 @@ export const createRecipeOperations = {
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
 
-        return returnStreamData({ event: 'image', data: base64DataUrl }, res);
+        return returnStreamData(res, { event: 'image', data: base64DataUrl });
     },
 
     /**
@@ -132,7 +133,7 @@ export const createRecipeOperations = {
                 throw new Error('No valid JSON response generated');
             }
 
-            return returnStreamData({ event: 'recipe', data: recipe }, res);
+            return returnStreamData(res, { event: 'recipe', data: recipe });
         },
 
     /**
@@ -143,9 +144,14 @@ export const createRecipeOperations = {
     createImageOpenAI: async (recipeTitle: string, userIngredients: string[]): Promise<string> => {
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of ${recipeTitle} recipe. made with these ingredients: ${userIngredients?.join(', ')}.
+            prompt: `A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}. 
+                made with these ingredients: ${userIngredients?.join(', ')}.
                 Don't show the ingredients in the image. just the dish!
-                make it visually appealing and appetizing.`,
+                The dish should look professionally plated and served in an elegant yet simple style. 
+                Use natural lighting with soft shadows to bring out the textures and vibrant colors of the food.
+                The background should be subtly blurred and complement the dish, like a clean, modern kitchen or rustic wooden table. 
+                Do not display raw ingredients—focus only on the final plated dish, making it look appetizing and fresh, 
+                as if captured by a professional food photographer.`,
             n: 1,
             size: "1024x1024",
             quality: 'standard',
@@ -153,7 +159,7 @@ export const createRecipeOperations = {
             response_format: 'b64_json',
         });
 
-        const imageBase64Url = response.data[0].b64_json as string;
+        const imageBase64Url = response?.data[0].b64_json as string;
 
         return imageBase64Url;
     },

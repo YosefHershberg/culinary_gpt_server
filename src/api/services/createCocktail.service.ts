@@ -49,7 +49,7 @@ export const createCocktailOperations = {
         const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
 
         // Stream the image
-        return returnStreamData({ event: 'image', data: base64DataUrl }, res);
+        return returnStreamData(res, { event: 'image', data: base64DataUrl });
     },
 
     /**
@@ -104,7 +104,7 @@ export const createCocktailOperations = {
             throw new Error('No valid JSON response generated');
         }
 
-        return returnStreamData({ event: 'recipe', data: recipe }, res);
+        return returnStreamData(res, { event: 'recipe', data: recipe });
     },
 
     /**
@@ -116,9 +116,16 @@ export const createCocktailOperations = {
     createImageOpenAI: async (cocktailTitle: string, userIngredients: string[]): Promise<string> => {
         const response = await openai.images.generate({
             model: "dall-e-3",
-            prompt: `A realistic photo of a ${cocktailTitle} cocktail. the ingredients are: ${userIngredients?.join(', ')}.
+            prompt: `A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail.
+                the ingredients are: ${userIngredients?.join(', ')}.
                 Don't show the ingredients in the image. just the cocktail!
-                Make it visually appealing and appetizing.`,
+                The drink should appear professionally crafted and served in a fitting glass, 
+                with vibrant, natural colors and subtle reflections to make it look freshly prepared.
+                Include visually stunning lighting, such as soft natural or studio lighting, 
+                to enhance the textures and depth. The background should complement the drink 
+                with a modern or elegant bar setting, but remain blurred to maintain focus 
+                on the cocktail. Exclude any visible ingredients or text—just the cocktail itself, 
+                as if photographed by a professional food photographer.`,
             n: 1,
             size: "1024x1024",
             quality: 'standard',
