@@ -25,7 +25,7 @@ export const mongooseVirtuals = {
   }
 }
 
-export function isValidJSON(str: string): boolean {
+export const isValidJSON = (str: string): boolean => {
   try {
     JSON.parse(str);
     return true;
@@ -34,7 +34,7 @@ export function isValidJSON(str: string): boolean {
   }
 }
 
-export async function compressBase64Image(base64Image: string, quality: number): Promise<string> {
+export const compressBase64Image = async (base64Image: string, quality: number): Promise<string> => {
   // Decode base64 image to a buffer
   const imageBuffer = Buffer.from(base64Image, 'base64');
 

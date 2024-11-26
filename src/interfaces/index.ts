@@ -10,9 +10,6 @@ export interface UserIngredientResponse {
     id: string;
 }
 
-/**
- * @note This is 
- */
 export type PartialUserIngredientResponse = Partial<UserIngredientResponse>
 
 export interface KitchenUtils {

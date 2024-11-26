@@ -2,11 +2,14 @@ import fs from 'fs';
 import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
-import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils } from "../../interfaces";
+import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, RecipeWithImage, Recipe } from "../../interfaces";
 import { getUserIngredientsByType } from "../data-access/ingredient.da";
 import logger from '../../config/logger';
 import { Response } from 'express';
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
+import axios, { AxiosError } from 'axios';
+import env from '../../config/env';
+import { createRecipeImagePrompt } from '../../utils/prompts';
 
 /**
  * @module createRecipe.service
@@ -17,8 +20,8 @@ import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
  * @exports createRecipeOperations
  */
 
-interface CreateRecipeProps {
-    mealSelected: string;
+export interface CreateRecipeProps {
+    mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
     selectedTime: number;
     prompt: string;
     numOfPeople: number;
@@ -48,19 +51,16 @@ export const createRecipeOperations = {
         const userIngredients = ingredients.map((ingredient: PartialIngredient) => ingredient.name) as string[];
 
         // Create a recipe title using OpenAI API
-        const title = await createRecipeOperations.createRecipeTitle(recipeInput, userIngredients, kitchenUtils);
+        const recipe = await createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils, res);
 
-        // Create the recipe & the recipe image using OpenAI API
-        const [_recipe, imageUrl] = await Promise.all([
-            createRecipeOperations.createRecipeOpenAI(recipeInput, userIngredients, kitchenUtils, title, res),
-            createRecipeOperations.createImageOpenAI(title, userIngredients)
-        ]);
+        // Create the recipe image using GetimgAI API
+        const base64image = await createRecipeOperations.createImageGetimgAI(recipe.title, userIngredients);
 
         // Compress the image
-        const base64Image = await compressBase64Image(imageUrl as string, 60); //30 KB
+        const compressedBase64Image = await compressBase64Image(base64image as string, 60); //30 KB
 
         // for an image tag
-        const base64DataUrl = `data:image/jpeg;base64,${base64Image}`;
+        const base64DataUrl = `data:image/jpeg;base64,${compressedBase64Image}`;
 
         return returnStreamData(res, { event: 'image', data: base64DataUrl });
     },
@@ -73,7 +73,7 @@ export const createRecipeOperations = {
      * @returns {Recipe} recipe
      */
     createRecipeOpenAI:
-        async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils, title: string, res: Response): Promise<void> => {
+        async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils, res: Response): Promise<Recipe> => {
             const { mealSelected, selectedTime, prompt, numOfPeople } = recipeInput;
 
             const maxRetries = 3;
@@ -88,7 +88,7 @@ export const createRecipeOperations = {
                         messages: [{
                             role: "user",
                             content: `
-                                create a ${title} recipe for ${mealSelected} that takes ${selectedTime} minutes
+                                create a recipe for ${mealSelected} that takes ${selectedTime} minutes
                                 the following ingredients are available: ${userIngredients?.join(', ')}
                                 with the following kitchen utilities: ${kitchenUtils}
                                 the recipe should serve ${numOfPeople} people.
@@ -133,7 +133,8 @@ export const createRecipeOperations = {
                 throw new Error('No valid JSON response generated');
             }
 
-            return returnStreamData(res, { event: 'recipe', data: recipe });
+            returnStreamData(res, { event: 'recipe', data: recipe });
+            return recipe
         },
 
     /**
@@ -165,60 +166,22 @@ export const createRecipeOperations = {
     },
 
     /**
-     * @description This function creates a recipe title using OpenAI API
-     * @param recipeInput 
+     * @description This function creates an image using GetimgAI API
+     * @param recipeTitle 
      * @param userIngredients 
-     * @param kitchenUtils 
-     * @returns {string}
+     * @returns 
      */
-    createRecipeTitle: async (recipeInput: CreateRecipeProps, userIngredients: string[], kitchenUtils: KitchenUtils): Promise<string> => {
-        const { mealSelected, selectedTime, prompt } = recipeInput;
+    createImageGetimgAI: async (recipeTitle: string, userIngredients: string[]): Promise<string> => {
+        const url = 'https://api.getimg.ai/v1/flux-schnell/text-to-image';
+        const headers = {
+            Authorization: `Bearer ${env.GETIMGAI_API_KEY}`,
+        };
 
-        const maxRetries = 3;
-        let attempts = 0;
-        let isValidJson = false;
+        const { data } = await axios.post(url, {
+            prompt: createRecipeImagePrompt(recipeTitle, userIngredients),
+        }, { headers });
 
-        let recipeTitle = null;
 
-        while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
-            try {
-                const completion = await openai.chat.completions.create({
-                    messages: [{
-                        role: "user",
-                        content: `
-                            create a title for a recipe recipe for ${mealSelected} that takes ${selectedTime} minutes
-                            the following ingredients are available: ${userIngredients?.join(', ')}
-                            with the following kitchen utilities: ${kitchenUtils}
-                            add also keep in mind this - ${prompt}.
-                            have the title be of a dish or similar to a dish that already exists.
-                            have the title be no more than 43 characters.
-                            DON'T FORGET:
-                            the response that I want you to give me should be a VALID json without the backticks that looks like this:
-                            {
-                                "title": "Recipe title",
-                            }
-                            NOTE: the json i want you to generate must be a valid json object and without the backticks`
-                    }],
-                    model: "gpt-3.5-turbo",
-                });
-
-                const response = completion.choices[0].message.content as string;
-
-                isValidJson = isValidJSON(response);
-
-                if (isValidJson) {
-                    recipeTitle = JSON.parse(response).title;
-                }
-            } catch (error: any) {
-                logger.error(error.message);
-                attempts++;
-            }
-        }
-
-        if (!isValidJson) {
-            throw new Error('No valid JSON response generated');
-        }
-
-        return recipeTitle;
-    }
+        return data.image
+    },
 }
