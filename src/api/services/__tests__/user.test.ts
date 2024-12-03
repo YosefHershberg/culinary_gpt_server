@@ -1,22 +1,16 @@
 
-import { createUserDB, deleteUserDB, updateUserDB, UpdateUserDBProps } from "../../data-access/user.da";
-import { deleteUserRecipes } from "../../data-access/recipe.da";
+import { createUserDB, updateUserDB, UpdateUserDBProps } from "../../data-access/user.da";
 
 import userOperations from "../user.service";
-import { recipeOperations } from "../recipes.service";
-import { userIngredientOperations } from "../ingredients.service";
-import { firebaseStorageOperations } from "../firebase.service";
 
 import { mockUser } from "../../../lib/mock/mockData";
-import { userId } from "../../../lib/mock/mockApp";
-import { deleteKitchenUtilsDB } from "../../data-access/kitchenUtils.da";
 
 jest.mock('../../data-access/user.da');
 jest.mock('../recipes.service');
 jest.mock('../ingredients.service');
 jest.mock('../firebase.service');
 jest.mock('../../data-access/recipe.da');
-jest.mock('../../data-access/KitchenUtils.da');
+jest.mock('../../data-access/kitchenUtils.da');
 
 describe('user services', () => {
 
