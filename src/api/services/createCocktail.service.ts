@@ -5,7 +5,6 @@ import { PartialUserIngredientResponse as PartialIngredient, Recipe } from "../.
 import { getUserIngredientsByType } from "../data-access/ingredient.da";
 import logger from '../../config/logger';
 import { Response } from 'express';
-import { create } from 'domain';
 import env from '../../config/env';
 import axios from 'axios';
 import { createCocktailImagePrompt, createCocktailPrompt } from '../../utils/prompts';

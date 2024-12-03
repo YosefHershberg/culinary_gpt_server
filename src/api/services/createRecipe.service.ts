@@ -1,13 +1,12 @@
-import fs from 'fs';
 import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
-import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, RecipeWithImage, Recipe } from "../../interfaces";
+import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, Recipe } from "../../interfaces";
 import { getUserIngredientsByType } from "../data-access/ingredient.da";
 import logger from '../../config/logger';
 import { Response } from 'express';
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import env from '../../config/env';
 import { createRecipeImagePrompt } from '../../utils/prompts';
 

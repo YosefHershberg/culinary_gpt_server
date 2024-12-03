@@ -15,6 +15,7 @@ env:
   MONGODB_URI: "${{ secrets.MONGODB_URI }}"
   WEBHOOK_SECRET: "${{ secrets.WEBHOOK_SECRET }}"
   OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+  GETIMGAI_API_KEY: "${{ secrets.GETIMGAI_API_KEY }}"
   CORS_ORIGIN: "${{ secrets.CORS_ORIGIN }}"
   FIREBASE_API_KEY: "${{ secrets.FIREBASE_API_KEY }}"
   FIREBASE_AUTH_DOMAIN: "${{ secrets.FIREBASE_AUTH_DOMAIN }}"

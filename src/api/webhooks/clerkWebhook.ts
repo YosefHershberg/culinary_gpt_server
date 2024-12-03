@@ -35,7 +35,7 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
                 if (error instanceof Error) {
                     logger.error(error.message)
                 }
-                return next(new HttpError(500, 'An error accrued while creating a user'))
+                next(new HttpError(500, 'An error accrued while creating a user'))
             }
             break;
 
@@ -50,7 +50,7 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
                 if (error instanceof Error) {
                     logger.error(error.message)
                 }
-                return next(new HttpError(500, 'An error accrued while deleting a user'))
+                next(new HttpError(500, 'An error accrued while deleting a user'))
             }
             break;
 
@@ -69,7 +69,7 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
                 if (error instanceof Error) {
                     logger.error(error.message)
                 }
-                return next(new HttpError(500, 'An error accrued while updating a user'))
+                next(new HttpError(500, 'An error accrued while updating a user'))
             }
             break;
         default:
