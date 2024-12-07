@@ -2,7 +2,9 @@
 
 ## Description
 
-This is a Node.js Express server application built with TypeScript that generates recipes using the OpenAI API. It uses MongoDB as the main database, firebase for image storage, zod for validation and Clerk for authentication.
+This is a Node.js Express server application that generates recipes using the OpenAI API. It uses MongoDB as the main database, firebase for image storage, zod for validation and Clerk for authentication. 
+This application is build in a layered and clean architecture to allow easy maintainability, scalability, team-work etc.
+This application is deployed on AWS with a CI/CD pipeline with Github Actions and tested with jest (controllers & services).
 
 ## Features
 
@@ -23,6 +25,26 @@ npm run docs
 ```
 
 The Swagger UI will be available at http://localhost:5000/docs
+
+## Get Started
+
+To install the dependencies run - 
+
+```console
+npm install
+```
+
+To start the server run - 
+
+```console
+npm start
+```
+
+To run development server -
+
+```console
+npm run dev
+```
 
 ## Project Structure
 
