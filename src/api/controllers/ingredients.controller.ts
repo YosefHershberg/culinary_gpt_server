@@ -113,7 +113,7 @@ export const addMultipleIngredientsSchema = z.object({
 });
 
 export const addMultipleIngredients = async (req: CustomRequest, res: Response<PartialIngredient[]>, next: NextFunction) => {
-    const ingredients = req.body;
+    const ingredients: IngredientDocument[] = req.body;
 
     try {
         const newIngredients = await userIngredientOperations.addMultiple(

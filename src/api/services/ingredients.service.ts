@@ -3,7 +3,7 @@ import { FilterQuery } from "mongoose";
 import { IngredientDocument } from "../models/ingredient.model";
 
 import * as ingredientOperationsDB from "../data-access/ingredient.da";
-import { addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/ingredient.da";
+import { addMultipleIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/ingredient.da";
 
 import { IngredientType, PartialUserIngredientResponse as PartialIngredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
@@ -33,10 +33,16 @@ export const userIngredientOperations = {
         return { message: "Ingredient deleted successfully" };
     },
 
-    addMultiple: async (userId: string, userIngredients: UserIngredientInterface[]): Promise<PartialIngredient[]> => {
-        // const newIngredients = await addMultipleIngredientsDB(userIngredients);
-        // return newIngredients;
-        return []
+    addMultiple: async (userId: string, userIngredients: IngredientDocument[]): Promise<PartialIngredient[]> => {
+        const userIngredientDocs: UserIngredientInterface[] = userIngredients.map((ingredient) => ({
+            userId,
+            ingredientId: ingredient.id,
+            name: ingredient.name,
+            type: ingredient.type,
+        }));
+
+        const newIngredients = await addMultipleIngredientsDB(userIngredientDocs);
+        return newIngredients;
     },
 
     deleteAll: async (userId: string): Promise<MessageResponse> => {
@@ -50,6 +56,7 @@ export const ingredientOperations = {
         const ingredients = await ingredientOperationsDB.getIngredientsByCategoryDB(category)
         return ingredients
     },
+    
     search: async (
         query: FilterQuery<IngredientDocument>,
         type: IngredientType

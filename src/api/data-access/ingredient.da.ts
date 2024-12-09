@@ -30,12 +30,17 @@ export const searchIngredientsByQueryAndTypeDB = async (
     return ingredients
 }
 
-export const addUserIngredientDB =
-    async (userIngredient: UserIngredientInterface): Promise<PartialIngredient> => {
-        const ingredient = new UserIngredient(userIngredient)
-        const newIngredient = await ingredient.save()
-        return newIngredient
-    }
+export const addUserIngredientDB = async (userIngredient: UserIngredientInterface): Promise<PartialIngredient> => {
+    const ingredient = new UserIngredient(userIngredient)
+    const newIngredient = await ingredient.save()
+    return newIngredient
+}
+
+export const addMultipleIngredientsDB = async (userIngredientDocs: UserIngredientInterface[]): Promise<PartialIngredient[]> => {
+    const createdUserIngredients = await UserIngredient.insertMany(userIngredientDocs);
+
+    return createdUserIngredients;
+}
 
 export const deleteUserIngredientDB = async (userId: string, ingredientId: string): Promise<PartialIngredient> => {
     const ingredient = await UserIngredient.findOneAndDelete({ userId, ingredientId }).exec()

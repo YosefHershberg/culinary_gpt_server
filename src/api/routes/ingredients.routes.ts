@@ -21,7 +21,7 @@ router.post<{}, PartialIngredient | MessageResponse>(
 );
 
 router.post<{}, PartialIngredient[] | MessageResponse>(
-    '/add-multiple',
+    '/multiple',
     validate(ingredientControllers.addMultipleIngredientsSchema),
     ingredientControllers.addMultipleIngredients
 );
