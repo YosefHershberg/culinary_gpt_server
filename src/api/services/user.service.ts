@@ -1,12 +1,13 @@
 import { hashString } from "../../utils/helperFunctions";
 import firebaseStorageOperations from "./firebase.service";
+
 import recipeOperations from "./recipes.service";
 
-import { deleteUserRecipes } from "../data-access/recipe.da";
 import { createUserDB, CreateUserDBProps, deleteUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
 import { UserDocument } from "../models/user.model";
 import { createKitchenUtilsDB, deleteKitchenUtilsDB } from "../data-access/kitchenUtils.da";
-import { deleteAllUserIngredients } from "../data-access/ingredient.da";
+import { deleteUserRecipesDB } from "../data-access/recipe.da";
+import { deleteAllUserIngredientsDB } from "../data-access/ingredient.da";
 
 /**
  * @module user.service
@@ -37,13 +38,13 @@ const userOperations = {
             deleteUserDB(userId),
 
             //delete user recipes
-            deleteUserRecipes(userId),
+            deleteUserRecipesDB(userId),
 
             //delete user kitchen utilities
             deleteKitchenUtilsDB(userId),
 
             //delete user ingredients
-            deleteAllUserIngredients(userId),
+            deleteAllUserIngredientsDB(userId),
 
             //delete recipe images from firebase storage
             recipes.map(recipe =>

@@ -1,7 +1,7 @@
 import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { DeleteResult } from "mongodb";
 
-export const getRecipes = async (userId: string): Promise<RecipeDocument[]> => {
+export const getRecipesDB = async (userId: string): Promise<RecipeDocument[]> => {
     const recipes = await Recipe.find({ userId }).exec()
 
     if (!recipes) {
@@ -11,13 +11,13 @@ export const getRecipes = async (userId: string): Promise<RecipeDocument[]> => {
     return recipes;
 }
 
-export const addRecipe = async (recipe: RecipeDocument): Promise<RecipeDocument> => {
+export const addRecipeDB = async (recipe: RecipeDocument): Promise<RecipeDocument> => {
     const newRecipe = new Recipe(recipe);
     const savedRecipe = await newRecipe.save();
     return savedRecipe;
 }
 
-export const getRecipe = async (recipeId: string): Promise<RecipeDocument> => {
+export const getRecipeDB = async (recipeId: string): Promise<RecipeDocument> => {
     const recipe = await Recipe.findById(recipeId).exec();
 
     if (!recipe) {
@@ -27,7 +27,7 @@ export const getRecipe = async (recipeId: string): Promise<RecipeDocument> => {
     return recipe;
 }
 
-export const deleteRecipe = async (recipeId: string): Promise<RecipeDocument> => {
+export const deleteRecipeDB = async (recipeId: string): Promise<RecipeDocument> => {
     const deletedRecipe = await Recipe.findByIdAndDelete(recipeId).exec();
 
     if (!deletedRecipe) {
@@ -37,7 +37,7 @@ export const deleteRecipe = async (recipeId: string): Promise<RecipeDocument> =>
     return deletedRecipe;
 }
 
-export const deleteUserRecipes = async (userId: string): Promise<DeleteResult> => {
+export const deleteUserRecipesDB = async (userId: string): Promise<DeleteResult> => {
     const deletedRecipes = await Recipe.deleteMany({ userId }).exec();
     return deletedRecipes;
 }

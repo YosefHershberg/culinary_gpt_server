@@ -2,7 +2,7 @@ import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
 import { PartialUserIngredientResponse as PartialIngredient, Recipe } from "../../interfaces";
-import { getUserIngredientsByType } from "../data-access/ingredient.da";
+import { getUserIngredientsByTypeDB } from "../data-access/ingredient.da";
 import logger from '../../config/logger';
 import { Response } from 'express';
 import env from '../../config/env';
@@ -27,7 +27,7 @@ const createCocktailOperations = {
      * @returns {RecipeWithImage}
      */
     createCocktail: async (userId: string, prompt: string, res: Response): Promise<void> => {
-        const ingredients = await getUserIngredientsByType(userId, 'drink');
+        const ingredients = await getUserIngredientsByTypeDB(userId, 'drink');
 
         // Check if there are enough ingredients to create a recipe
         if (ingredients.length < 4) {

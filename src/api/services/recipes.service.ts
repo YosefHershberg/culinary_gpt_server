@@ -2,9 +2,9 @@ import { base64ToArrayBuffer, hashString } from "../../utils/helperFunctions";
 import firebaseStorageOperations from "./firebase.service";
 
 import MessageResponse from "../../interfaces/MessageResponse";
-import * as recipeOperationsDB from "../data-access/recipe.da";
 import { RecipeDocument } from "../models/recipe.model";
 import { RecipeWithImage } from "../../interfaces";
+import { addRecipeDB, deleteRecipeDB, getRecipeDB, getRecipesDB } from "../data-access/recipe.da";
 
 /**
  * @module recipes.service
@@ -15,7 +15,7 @@ import { RecipeWithImage } from "../../interfaces";
 
 const recipeOperations = {
     getUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
-        const recipes = await recipeOperationsDB.getRecipes(userId)
+        const recipes = await getRecipesDB(userId)
         return recipes
     },
 
@@ -28,13 +28,13 @@ const recipeOperations = {
 
         const image_url = await firebaseStorageOperations.uploadImage(imageBuffer, hashString(recipe.recipe.description))
 
-        const newRecipe = await recipeOperationsDB.addRecipe({...recipe, image_url} as RecipeDocument)
+        const newRecipe = await addRecipeDB({...recipe, image_url} as RecipeDocument)
 
         return newRecipe
     },
 
     deleteRecipe: async (userId: string, recipeId: string): Promise<MessageResponse> => {
-        const recipe = await recipeOperationsDB.getRecipe(recipeId)
+        const recipe = await getRecipeDB(recipeId)
 
         if (!recipe) {
             throw new Error('Recipe not found')
@@ -42,14 +42,14 @@ const recipeOperations = {
 
         await Promise.all([
             firebaseStorageOperations.deleteImage(hashString(recipe.recipe.description)),
-            recipeOperationsDB.deleteRecipe(recipeId)
+            deleteRecipeDB(recipeId)
         ]);
 
         return { message: 'Recipe deleted successfully' }
     },
 
     getRecipe: async (recipeId: string): Promise<RecipeDocument> => {
-        const recipe = await recipeOperationsDB.getRecipe(recipeId)
+        const recipe = await getRecipeDB(recipeId)
 
         if (!recipe) {
             throw new Error('Recipe not found')

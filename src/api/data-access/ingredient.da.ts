@@ -4,7 +4,7 @@ import Ingredient, { IngredientDocument } from "../models/ingredient.model"
 import UserIngredient, { UserIngredientInterface } from "../models/UserIngredients.model"
 import { FilterQuery } from "mongoose"
 
-export const getByCategory = async (category: string): Promise<IngredientDocument[]> => {
+export const getIngredientsByCategoryDB = async (category: string): Promise<IngredientDocument[]> => {
     const ingredients = await Ingredient.find({ category }).exec()
 
     if (!ingredients) {
@@ -14,7 +14,7 @@ export const getByCategory = async (category: string): Promise<IngredientDocumen
     return ingredients
 }
 
-export const searchByQueryAndIngredientType = async (
+export const searchIngredientsByQueryAndTypeDB = async (
     query: FilterQuery<IngredientDocument>,
     type: IngredientType
 ): Promise<IngredientDocument[]> => {
@@ -30,14 +30,14 @@ export const searchByQueryAndIngredientType = async (
     return ingredients
 }
 
-export const addUserIngredient =
+export const addUserIngredientDB =
     async (userIngredient: UserIngredientInterface): Promise<PartialIngredient> => {
         const ingredient = new UserIngredient(userIngredient)
         const newIngredient = await ingredient.save()
         return newIngredient
     }
 
-export const deleteUserIngredient = async (userId: string, ingredientId: string): Promise<PartialIngredient> => {
+export const deleteUserIngredientDB = async (userId: string, ingredientId: string): Promise<PartialIngredient> => {
     const ingredient = await UserIngredient.findOneAndDelete({ userId, ingredientId }).exec()
 
     if (!ingredient) {
@@ -47,7 +47,7 @@ export const deleteUserIngredient = async (userId: string, ingredientId: string)
     return ingredient
 }
 
-export const getUserIngredients = async (userId: string): Promise<PartialIngredient[]> => {
+export const getUserIngredientsDB = async (userId: string): Promise<PartialIngredient[]> => {
     const ingredients = await UserIngredient.find({ userId }).exec()
 
     if (!ingredients) {
@@ -57,7 +57,7 @@ export const getUserIngredients = async (userId: string): Promise<PartialIngredi
     return ingredients
 }
 
-export const getUserIngredientsByType = async (userId: string, type: IngredientType): Promise<PartialIngredient[]> => {
+export const getUserIngredientsByTypeDB = async (userId: string, type: IngredientType): Promise<PartialIngredient[]> => {
     const ingredients = await UserIngredient.find({ userId, type }).exec()
 
     if (!ingredients) {
@@ -67,6 +67,6 @@ export const getUserIngredientsByType = async (userId: string, type: IngredientT
     return ingredients
 }
 
-export const deleteAllUserIngredients = async (userId: string): Promise<DeleteResult> => {
+export const deleteAllUserIngredientsDB = async (userId: string): Promise<DeleteResult> => {
     return await UserIngredient.deleteMany({ userId }).exec()
 }

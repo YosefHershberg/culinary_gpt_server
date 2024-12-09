@@ -2,7 +2,7 @@ import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
 import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, Recipe } from "../../interfaces";
-import { getUserIngredientsByType } from "../data-access/ingredient.da";
+import { getUserIngredientsByTypeDB } from "../data-access/ingredient.da";
 import logger from '../../config/logger';
 import { Response } from 'express';
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
@@ -38,7 +38,7 @@ const createRecipeOperations = {
     createRecipe: async (userId: string, recipeInput: CreateRecipeProps, res: Response): Promise<void> => {
 
         const [ingredients, kitchenUtils] = await Promise.all([
-            getUserIngredientsByType(userId, 'food'),
+            getUserIngredientsByTypeDB(userId, 'food'),
             getKitchenUtilsDB(userId)
         ]);
 

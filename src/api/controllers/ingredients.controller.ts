@@ -108,6 +108,31 @@ export const addIngredient = async (req: CustomRequest, res: Response<PartialIng
     }
 };
 
+export const addMultipleIngredientsSchema = z.object({
+    body: z.array(ingredientSchema)
+});
+
+export const addMultipleIngredients = async (req: CustomRequest, res: Response<PartialIngredient[]>, next: NextFunction) => {
+    const ingredients = req.body;
+
+    try {
+        const newIngredients = await userIngredientOperations.addMultiple(
+            req.userId as string,
+            ingredients
+        );
+
+        return res.json(newIngredients);
+    } catch (error) {
+        if (error instanceof Error) {
+            logger.error(error.message);
+        }
+        next(new HttpError(
+            HttpStatusCode.InternalServerError,
+            'An error accrued while adding your ingredients'
+        ));
+    }
+}
+
 /**
  * @openapi
  * /api/user/ingredients/{id}:

@@ -1,4 +1,3 @@
-import { kitchenUtils } from "../../lib/data/kitchenUtils";
 import User, { UserDocument } from "../models/user.model";
 
 export const getUserDB = async (userId: string): Promise<UserDocument> => {

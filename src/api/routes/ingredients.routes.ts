@@ -20,6 +20,12 @@ router.post<{}, PartialIngredient | MessageResponse>(
     ingredientControllers.addIngredient
 );
 
+router.post<{}, PartialIngredient[] | MessageResponse>(
+    '/add-multiple',
+    validate(ingredientControllers.addMultipleIngredientsSchema),
+    ingredientControllers.addMultipleIngredients
+);
+
 router.delete<{ id: string }, MessageResponse>(
     '/all',
     ingredientControllers.deleteAllIngredients
