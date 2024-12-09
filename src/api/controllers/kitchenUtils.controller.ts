@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import { kitchenUtilsOperations } from '../services/kitchenUtils.service';
+import kitchenUtilsOperations from '../services/kitchenUtils.service';
 import { KitchenUtils } from '../../interfaces';
 import CustomRequest from '../../interfaces/CustomRequest';
 

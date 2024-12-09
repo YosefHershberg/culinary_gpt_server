@@ -14,6 +14,10 @@ import recipesRoutes from './recipes.routes';
 
 import { ingredientSuggestions, ingredientSuggestionsSchema } from '../controllers/ingredients.controller';
 import { searchIngredients, searchIngredientsSchema } from '../controllers/ingredients.controller';
+import { imageIngredientDetector, imageIngredientDetectorSchema } from '../controllers/image.controller';
+
+import { PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
+import MessageResponse from '../../interfaces/MessageResponse';
 
 const router = express.Router();
 
@@ -32,17 +36,23 @@ router.use(
     recipesRoutes
 )
 
-router.get(
+router.get<{}, PartialIngredient[] | MessageResponse>(
     '/ingredients/suggestions/:category',
     validate(ingredientSuggestionsSchema),
     ingredientSuggestions
 );
 
 
-router.get(
+router.get<{}, PartialIngredient[] | MessageResponse>(
     '/ingredients/search',
     validate(searchIngredientsSchema),
     searchIngredients
 );
+
+router.post<{}, PartialIngredient[] | MessageResponse>(
+    '/image-ingredient-detector',
+    validate(imageIngredientDetectorSchema),
+    imageIngredientDetector
+)
 
 export default router;

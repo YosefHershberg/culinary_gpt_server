@@ -19,6 +19,8 @@ const envSchema = z.object({
     FIREBASE_MESSAGING_SENDER_ID: z.string(),
     FIREBASE_APP_ID: z.string(),
     FIREBASE_MEASUREMENT_ID: z.string(),
+    GOOGLE_VISION_PRIVATE_KEY: z.string(),
+    GOOGLE_VISION_CLIENT_EMAIL: z.string(),
 });
 
 const parsedResults = envSchema.safeParse(process.env);

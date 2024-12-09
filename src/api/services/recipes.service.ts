@@ -1,5 +1,5 @@
 import { base64ToArrayBuffer, hashString } from "../../utils/helperFunctions";
-import { firebaseStorageOperations } from "./firebase.service";
+import firebaseStorageOperations from "./firebase.service";
 
 import MessageResponse from "../../interfaces/MessageResponse";
 import * as recipeOperationsDB from "../data-access/recipe.da";
@@ -13,7 +13,7 @@ import { RecipeWithImage } from "../../interfaces";
  * @exports recipeOperations
  */
 
-export const recipeOperations = {
+const recipeOperations = {
     getUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
         const recipes = await recipeOperationsDB.getRecipes(userId)
         return recipes
@@ -58,3 +58,5 @@ export const recipeOperations = {
         return recipe
     },
 }
+
+export default recipeOperations

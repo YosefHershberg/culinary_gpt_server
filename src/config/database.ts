@@ -8,6 +8,7 @@ export const connectToDatabase = async (): Promise<void> => {
         logger.info('Connected to the database');
     } catch (error) {
         logger.error('Failed to connect to the database:', error);
+        throw error;
     }
 };
 
@@ -17,5 +18,6 @@ export const disconnectFromDatabase = async (): Promise<void> => {
         logger.info('Disconnected from the database');
     } catch (error) {
         logger.error('Failed to disconnect from the database:', error);
+        throw error;
     }
 };

@@ -8,7 +8,7 @@ import firebaseApp from "../../config/firebase";
  * @exports firebaseStorageOperations
  */
 
-export const firebaseStorageOperations = {
+const firebaseStorageOperations = {
 
     /**
      * @description This function uploads an image to Firebase Storage
@@ -46,3 +46,5 @@ export const firebaseStorageOperations = {
         return await deleteObject(storageRef);
     }
 }
+
+export default firebaseStorageOperations

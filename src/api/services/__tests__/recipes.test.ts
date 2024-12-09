@@ -1,6 +1,6 @@
-import { recipeOperations } from '../../services/recipes.service';
+import recipeOperations from '../../services/recipes.service';
 import * as recipeOperationsDB from '../../data-access/recipe.da';
-import { firebaseStorageOperations } from '../firebase.service';
+import firebaseStorageOperations from '../firebase.service';
 import { RecipeDocument } from '../../models/recipe.model';
 import { mockRecipe } from '../../../lib/mock/mockData';
 import { base64ToArrayBuffer, hashString } from '../../../utils/helperFunctions';

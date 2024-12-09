@@ -4,7 +4,7 @@ import env from "./env";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-const firebaseConfig = {
+const FIREBASE_CONFIG = {
     apiKey: env.FIREBASE_API_KEY,
     authDomain: env.FIREBASE_AUTH_DOMAIN,
     projectId: env.FIREBASE_PROJECT_ID,
@@ -13,6 +13,6 @@ const firebaseConfig = {
     appId: env.FIREBASE_APP_ID
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(FIREBASE_CONFIG);
 
 export default firebaseApp;

@@ -8,7 +8,7 @@ import { getKitchenUtilsDB, toggleKitchenUtilDB } from "../data-access/kitchenUt
  * @exports kitchenUtilsOperations
  */
 
-export const kitchenUtilsOperations = {
+const kitchenUtilsOperations = {
 
     get: async (userId: string): Promise<KitchenUtils> => {
         const kitchenUtils = await getKitchenUtilsDB(userId);
@@ -22,3 +22,5 @@ export const kitchenUtilsOperations = {
         return kitchenUtils.kitchenUtils;
     }
 }
+
+export default kitchenUtilsOperations

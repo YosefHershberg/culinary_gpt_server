@@ -26,7 +26,7 @@ export interface CreateRecipeProps {
     numOfPeople: number;
 }
 
-export const createRecipeOperations = {
+const createRecipeOperations = {
 
     /**
      * @description This function creates a recipe using OpenAI API and returns a valid JSON
@@ -184,3 +184,5 @@ export const createRecipeOperations = {
         return data.image
     },
 }
+
+export default createRecipeOperations

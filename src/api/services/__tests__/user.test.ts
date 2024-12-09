@@ -1,8 +1,5 @@
-
 import { createUserDB, updateUserDB, UpdateUserDBProps } from "../../data-access/user.da";
-
 import userOperations from "../user.service";
-
 import { mockUser } from "../../../lib/mock/mockData";
 
 jest.mock('../../data-access/user.da');

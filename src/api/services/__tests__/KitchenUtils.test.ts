@@ -1,4 +1,4 @@
-import { kitchenUtilsOperations } from '../../services/kitchenUtils.service';
+import kitchenUtilsOperations from '../../services/kitchenUtils.service';
 import {  userId } from '../../../lib/mock/mockApp';
 import {  mockKitchenUtils } from '../../../lib/mock/mockData';
 import { getKitchenUtilsDB, toggleKitchenUtilDB } from '../../data-access/kitchenUtils.da';

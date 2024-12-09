@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
 import { RecipeDocument } from '../models/recipe.model';
-import { recipeOperations } from '../services/recipes.service';
-import { createRecipeOperations } from '../services/createRecipe.service';
+import recipeOperations from '../services/recipes.service';
+import createRecipeOperations from '../services/createRecipe.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import MessageResponse from '../../interfaces/MessageResponse';
@@ -12,7 +12,7 @@ import MessageResponse from '../../interfaces/MessageResponse';
 import { recipeSchema } from '../schemas/recipe.schema';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
-import { createCocktailOperations } from '../services/createCocktail.service';
+import createCocktailOperations from '../services/createCocktail.service';
 import { returnStreamData } from '../../utils/helperFunctions';
 
 /**

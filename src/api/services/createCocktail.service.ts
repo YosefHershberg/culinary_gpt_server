@@ -18,7 +18,7 @@ import { createCocktailImagePrompt, createCocktailPrompt } from '../../utils/pro
  * @exports createCocktailOperations
  */
 
-export const createCocktailOperations = {
+const createCocktailOperations = {
 
     /**
      * @description This function creates a cocktail recipe using OpenAI API and returns a valid JSON with image.
@@ -133,3 +133,5 @@ export const createCocktailOperations = {
         return data.image
     }
 };
+
+export default createCocktailOperations

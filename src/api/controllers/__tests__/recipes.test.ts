@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app, { userId } from '../../../lib/mock/mockApp';
-import { recipeOperations } from '../../services/recipes.service';
-import { createRecipeOperations } from '../../services/createRecipe.service';
+import recipeOperations from '../../services/recipes.service';
+import createRecipeOperations from '../../services/createRecipe.service';
 import { HttpStatusCode } from 'axios';
 import { mockRecipe } from '../../../lib/mock/mockData';
 

@@ -10,7 +10,7 @@ import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';
 import logger from './config/logger';
 
-export async function authMiddleware(req: CustomRequest, res: Response, next: NextFunction) {
+export const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
@@ -30,7 +30,7 @@ export async function authMiddleware(req: CustomRequest, res: Response, next: Ne
   }
 }
 
-export function notFound(req: Request, res: Response, next: NextFunction) {
+export const notFound = (req: Request, res: Response, next: NextFunction) => {
   res.status(HttpStatusCode.NotFound);
   const error = new Error(`🔍 - Not Found - ${req.originalUrl}`);
   next(error);
