@@ -66,7 +66,7 @@ describe('Recipe Controller', () => {
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(deleteMessage);
-            expect(recipeOperations.deleteRecipe).toHaveBeenCalledWith(userId, recipeId);
+            expect(recipeOperations.deleteRecipe).toHaveBeenCalledWith(recipeId);
         });
     });
 

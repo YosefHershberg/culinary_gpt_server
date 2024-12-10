@@ -108,6 +108,38 @@ export const addIngredient = async (req: CustomRequest, res: Response<PartialIng
     }
 };
 
+/**
+ * @openapi
+ * paths:
+ *   /api/user/ingredients/multiple:
+ *     post:
+ *       tags:
+ *         - User Ingredients
+ *       summary: Adds multiple ingredients to the user's list
+ *       description: Adds an array of ingredients to the user's list
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ingredient'
+ *       responses:
+ *         '200':
+ *           description: Ingredients added successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Ingredient'
+ *         '400':
+ *           description: Bad request
+ *         '500':
+ *           description: Internal server error
+ */
+
 export const addMultipleIngredientsSchema = z.object({
     body: z.array(ingredientSchema)
 });

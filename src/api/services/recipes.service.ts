@@ -19,6 +19,11 @@ const recipeOperations = {
         return recipes
     },
 
+    /**
+     * @description Converts the base64 image to an ArrayBuffer and uploads it to Firebase Storage and saves the link to it in the recipe to the DB
+     * @param recipe 
+     * @returns {RecipeDocument}
+     */
     addRecipe: async (recipe: RecipeWithImage): Promise<RecipeDocument> => {
         // Extract the base64 part
         const base64Image = recipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, '');
@@ -33,7 +38,7 @@ const recipeOperations = {
         return newRecipe
     },
 
-    deleteRecipe: async (userId: string, recipeId: string): Promise<MessageResponse> => {
+    deleteRecipe: async (recipeId: string): Promise<MessageResponse> => {
         const recipe = await getRecipeDB(recipeId)
 
         if (!recipe) {

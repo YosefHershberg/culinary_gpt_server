@@ -1,4 +1,5 @@
 import { CreateUserDBProps } from "../../api/data-access/user.da";
+import { IngredientDocument } from "../../api/models/ingredient.model";
 import { UserDocument } from "../../api/models/user.model";
 import { KitchenUtils, RecipeWithImage } from "../../interfaces";
 
@@ -58,3 +59,15 @@ export const mockKitchenUtils: KitchenUtils = {
     "BBQ": true,
     "Grill": false,
 }
+
+export const mockIngredient = {
+    id: '2',
+    name: 'Salt',
+    category: ['spice'],
+    type: ['food'],
+} as IngredientDocument; //Typed like this because IngredientDocument extends mongoose.Document
+
+export const mockIngredients = [mockIngredient];
+
+export const mockMessageResponse = { message: 'Ingredient deleted successfully' };
+

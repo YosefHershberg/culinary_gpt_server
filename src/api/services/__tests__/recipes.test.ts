@@ -53,7 +53,7 @@ describe('recipeOperations', () => {
             (firebaseStorageOperations.deleteImage as jest.Mock).mockResolvedValue(undefined);
             (deleteRecipeDB as jest.Mock).mockResolvedValue(undefined);
 
-            const result: MessageResponse = await recipeOperations.deleteRecipe('userId', 'recipeId');
+            const result: MessageResponse = await recipeOperations.deleteRecipe('recipeId');
 
             expect(result).toEqual({ message: 'Recipe deleted successfully' });
             expect(getRecipeDB).toHaveBeenCalledWith('recipeId');

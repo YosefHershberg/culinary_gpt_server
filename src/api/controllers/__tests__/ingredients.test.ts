@@ -2,11 +2,7 @@ import request from 'supertest';
 import { HttpStatusCode } from 'axios';
 import { ingredientOperations, userIngredientOperations } from '../../services/ingredients.service';
 import app, { userId } from '../../../lib/mock/mockApp';
-
-// Mock data
-const mockIngredient = { id: '1', name: 'Bread', category: ['carbs'], type: ['food'] };
-const mockIngredients = [mockIngredient];
-const mockMessageResponse = { message: 'Ingredient deleted successfully' };
+import { mockIngredient, mockIngredients, mockMessageResponse } from '../../../lib/mock/mockData';
 
 // Mock the services
 jest.mock('../../services/ingredients.service', () => ({
@@ -15,6 +11,7 @@ jest.mock('../../services/ingredients.service', () => ({
         addIngredient: jest.fn(),
         deleteIngredient: jest.fn(),
         deleteAll: jest.fn(),
+        addMultiple: jest.fn(),
     },
     ingredientOperations: {
         getByCategory: jest.fn(),
@@ -37,24 +34,26 @@ describe('Ingredients API', () => {
         });
     });
 
-    describe('POST /api/user/ingredients', () => {
-        it('should add a new ingredient', async () => {
-            (userIngredientOperations.addIngredient as jest.Mock).mockResolvedValue(mockIngredient);
+    describe('POST /api/user/ingredients/multiple', () => {
+        it('should add multiple ingredients', async () => {
+
+            // Mock the addMultiple function
+            (userIngredientOperations.addMultiple as jest.Mock).mockResolvedValue(mockIngredients);
 
             const res = await request(app)
-                .post('/api/user/ingredients')
-                .send(mockIngredient);
+                .post('/api/user/ingredients/multiple')
+                .send(mockIngredients)
 
             expect(res.status).toBe(HttpStatusCode.Ok);
-            expect(res.body).toEqual(mockIngredient);
-            expect(userIngredientOperations.addIngredient).toHaveBeenCalledWith({
+            expect(res.body).toEqual(mockIngredients);
+            expect(userIngredientOperations.addMultiple).toHaveBeenCalledWith(
                 userId,
-                ingredientId: mockIngredient.id,
-                type: mockIngredient.type,
-                name: mockIngredient.name,
-            });
+                mockIngredients
+            );
         });
     });
+
+
 
     describe('DELETE /api/user/ingredients/:id', () => {
         it('should delete an ingredient', async () => {

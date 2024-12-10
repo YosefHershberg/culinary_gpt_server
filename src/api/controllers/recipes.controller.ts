@@ -190,10 +190,10 @@ export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument
  */
 
 export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
-    const id = req.params.id;
+    const recipeId = req.params.id;
 
     try {
-        const message = await recipeOperations.deleteRecipe(req.userId as string, id);
+        const message = await recipeOperations.deleteRecipe(recipeId);
 
         return res.json(message);
     } catch (error) {

@@ -1,7 +1,8 @@
-import { getUserIngredientsDB, addUserIngredientDB, deleteUserIngredientDB, deleteAllUserIngredientsDB, getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../../data-access/ingredient.da";
+import { getUserIngredientsDB, addUserIngredientDB, deleteUserIngredientDB, deleteAllUserIngredientsDB, getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB, addMultipleIngredientsDB } from "../../data-access/ingredient.da";
 import { userIngredientOperations, ingredientOperations } from "../ingredients.service";
 import { IngredientDocument } from "../../models/ingredient.model";
 import { IngredientType } from "../../../interfaces";
+import { mockIngredients } from "../../../lib/mock/mockData";
 
 jest.mock('../../data-access/ingredient.da');
 
@@ -43,6 +44,32 @@ describe('ingredient services', () => {
             expect(result).toEqual(mockNewIngredient);
         });
     });
+
+    describe('userIngredientOperations.addMultiple', () => {
+        it('should add multiple ingredients successfully', async () => {
+            
+            const mockUserIngredientDocs = mockIngredients.map((ingredient) => ({
+                userId,
+                ingredientId: ingredient.id,
+                name: ingredient.name,
+                type: ingredient.type,
+            }));
+    
+            const mockNewIngredients = mockIngredients.map((ingredient) => ({
+                id: ingredient.id,
+                name: ingredient.name,
+                type: ingredient.type,
+            }));
+    
+            (addMultipleIngredientsDB as jest.Mock).mockResolvedValue(mockNewIngredients);
+    
+            const result = await userIngredientOperations.addMultiple(userId, mockIngredients);
+    
+            expect(addMultipleIngredientsDB).toHaveBeenCalledWith(mockUserIngredientDocs);
+            expect(result).toEqual(mockNewIngredients);
+        });
+    });
+    
 
     describe('userIngredientOperations.deleteIngredient', () => {
         it('should delete the specified ingredient successfully', async () => {
