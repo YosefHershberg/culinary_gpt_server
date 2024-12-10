@@ -1,40 +1,28 @@
 import express from 'express';
-
-import { validate } from '../../middlewares';
-
-import * as ingredientControllers from '../controllers/ingredients.controller';
 import { PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
-import { doSomethingByIdSchema } from '../schemas';
+import { imageIngredientDetector, imageIngredientDetectorSchema, ingredientSuggestions, ingredientSuggestionsSchema, searchIngredients, searchIngredientsSchema } from '../controllers/ingredients.controller';
+import { validate } from '../../middlewares';
 
 const router = express.Router();
 
 router.get<{}, PartialIngredient[] | MessageResponse>(
-    '/',
-    ingredientControllers.getIngredients
+    '/suggestions/:category',
+    validate(ingredientSuggestionsSchema),
+    ingredientSuggestions
 );
 
-router.post<{}, PartialIngredient | MessageResponse>(
-    '/',
-    validate(ingredientControllers.addIngredientSchema),
-    ingredientControllers.addIngredient
+
+router.get<{}, PartialIngredient[] | MessageResponse>(
+    '/search',
+    validate(searchIngredientsSchema),
+    searchIngredients
 );
 
 router.post<{}, PartialIngredient[] | MessageResponse>(
-    '/multiple',
-    validate(ingredientControllers.addMultipleIngredientsSchema),
-    ingredientControllers.addMultipleIngredients
-);
-
-router.delete<{ id: string }, MessageResponse>(
-    '/all',
-    ingredientControllers.deleteAllIngredients
-);
-
-router.delete<{ id: string }, MessageResponse>(
-    '/:id',
-    validate(doSomethingByIdSchema),
-    ingredientControllers.deleteIngredient
-);
+    '/image-ingredient-detector',
+    validate(imageIngredientDetectorSchema),
+    imageIngredientDetector
+)
 
 export default router;

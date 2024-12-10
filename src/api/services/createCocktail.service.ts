@@ -2,7 +2,7 @@ import openai from '../../config/openai';
 import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
 import { PartialUserIngredientResponse as PartialIngredient, Recipe } from "../../interfaces";
-import { getUserIngredientsByTypeDB } from "../data-access/ingredient.da";
+import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import logger from '../../config/logger';
 import { Response } from 'express';
 import env from '../../config/env';

@@ -7,7 +7,7 @@ import { createUserDB, CreateUserDBProps, deleteUserDB, updateUserDB, UpdateUser
 import { UserDocument } from "../models/user.model";
 import { createKitchenUtilsDB, deleteKitchenUtilsDB } from "../data-access/kitchenUtils.da";
 import { deleteUserRecipesDB } from "../data-access/recipe.da";
-import { deleteAllUserIngredientsDB } from "../data-access/ingredient.da";
+import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
 
 /**
  * @module user.service

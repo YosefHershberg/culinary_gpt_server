@@ -1,4 +1,4 @@
-import { getUserIngredientsDB, addUserIngredientDB, deleteUserIngredientDB, deleteAllUserIngredientsDB, getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB, addMultipleIngredientsDB } from "../../data-access/ingredient.da";
+import { getUserIngredientsDB, addUserIngredientDB, deleteUserIngredientDB, deleteAllUserIngredientsDB, getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB, addMultipleUserIngredientsDB } from "../../data-access/ingredient.da";
 import { userIngredientOperations, ingredientOperations } from "../ingredients.service";
 import { IngredientDocument } from "../../models/ingredient.model";
 import { IngredientType } from "../../../interfaces";
@@ -61,11 +61,11 @@ describe('ingredient services', () => {
                 type: ingredient.type,
             }));
     
-            (addMultipleIngredientsDB as jest.Mock).mockResolvedValue(mockNewIngredients);
+            (addMultipleUserIngredientsDB as jest.Mock).mockResolvedValue(mockNewIngredients);
     
             const result = await userIngredientOperations.addMultiple(userId, mockIngredients);
     
-            expect(addMultipleIngredientsDB).toHaveBeenCalledWith(mockUserIngredientDocs);
+            expect(addMultipleUserIngredientsDB).toHaveBeenCalledWith(mockUserIngredientDocs);
             expect(result).toEqual(mockNewIngredients);
         });
     });

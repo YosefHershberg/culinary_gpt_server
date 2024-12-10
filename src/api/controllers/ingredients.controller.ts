@@ -4,251 +4,13 @@ import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
 import CustomRequest from '../../interfaces/CustomRequest';
-import { IngredientType, PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
-import MessageResponse from '../../interfaces/MessageResponse';
+import { IngredientType } from '../../interfaces';
 
-import { ingredientOperations, userIngredientOperations } from '../services/ingredients.service';
+import { ingredientOperations } from '../services/ingredients.service';
 import { IngredientDocument } from '../models/ingredient.model';
 import { HttpError } from '../../lib/HttpError';
-import { ingredientSchema } from '../schemas/ingredient.schema';
 import logger from '../../config/logger';
-
-/**
- * @openapi
- * /api/user/ingredients:
- *  get:
- *     tags:
- *     - User Ingredients
- *     summary: Retrieves all ingredients for the user
- *     description: Fetches a list of ingredients that belong to the currently authenticated user.
- *     responses:
- *       200:
- *         description: Successfully retrieved all user ingredients
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Ingredient'
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal server error
- */
-
-export const getIngredients = async (req: CustomRequest, res: Response<PartialIngredient[]>, next: NextFunction) => {
-    try {
-        const ingredients = await userIngredientOperations.getAll(req.userId as string);
-
-        return res.json(ingredients);
-    } catch (error) {
-        if (error instanceof Error) {
-            logger.error(error.message);
-        }
-        next(new HttpError(
-            HttpStatusCode.InternalServerError,
-            'An error accrued while fetching your ingredients'
-        ));
-    }
-};
-
-/**
- * @openapi
- * paths:
- *   /api/user/ingredients:
- *     post:
- *       tags:
- *         - User Ingredients
- *       summary: Adds a new ingredient to the user's list
- *       description: Adds a new ingredient to the user's list
- *       requestBody:
- *         required: true
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Ingredient'
- *       responses:
- *         '200':
- *           description: Ingredient added successfully
- *           content:
- *             application/json:
- *               schema:
- *                 $ref: '#/components/schemas/Ingredient'
- *         '400':
- *           description: Bad request
- *         '500':
- *           description: Internal server error
- */
-
-export const addIngredientSchema = z.object({
-    body: ingredientSchema
-});
-
-export const addIngredient = async (req: CustomRequest, res: Response<PartialIngredient>, next: NextFunction) => {
-    const ingredient = req.body;
-
-    try {
-        const newIngredient =
-            await userIngredientOperations.addIngredient({
-                userId: req.userId as string,
-                ingredientId: ingredient.id,
-                name: ingredient.name,
-                type: ingredient.type,
-            });
-
-        return res.json(newIngredient);
-    } catch (error) {
-        if (error instanceof Error) {
-            logger.error(error.message);
-        }
-        next(new HttpError(
-            HttpStatusCode.InternalServerError,
-            'An error accrued while adding your ingredient'
-        ));
-    }
-};
-
-/**
- * @openapi
- * paths:
- *   /api/user/ingredients/multiple:
- *     post:
- *       tags:
- *         - User Ingredients
- *       summary: Adds multiple ingredients to the user's list
- *       description: Adds an array of ingredients to the user's list
- *       requestBody:
- *         required: true
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Ingredient'
- *       responses:
- *         '200':
- *           description: Ingredients added successfully
- *           content:
- *             application/json:
- *               schema:
- *                 type: array
- *                 items:
- *                   $ref: '#/components/schemas/Ingredient'
- *         '400':
- *           description: Bad request
- *         '500':
- *           description: Internal server error
- */
-
-export const addMultipleIngredientsSchema = z.object({
-    body: z.array(ingredientSchema)
-});
-
-export const addMultipleIngredients = async (req: CustomRequest, res: Response<PartialIngredient[]>, next: NextFunction) => {
-    const ingredients: IngredientDocument[] = req.body;
-
-    try {
-        const newIngredients = await userIngredientOperations.addMultiple(
-            req.userId as string,
-            ingredients
-        );
-
-        return res.json(newIngredients);
-    } catch (error) {
-        if (error instanceof Error) {
-            logger.error(error.message);
-        }
-        next(new HttpError(
-            HttpStatusCode.InternalServerError,
-            'An error accrued while adding your ingredients'
-        ));
-    }
-}
-
-/**
- * @openapi
- * /api/user/ingredients/{id}:
- *  delete:
- *     tags:
- *     - User Ingredients
- *     summary: Deletes an ingredient from the user's list
- *     description: Deletes an ingredient from the user's list
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the ingredient to delete
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Ingredient deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/MessageResponse'
- *       400:
- *         description: Bad request
- *       404:
- *         description: Ingredient not found
- *       500:
- *         description: Internal server error
- */
-
-export const deleteIngredient = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
-    const id = req.params.id;
-
-    try {
-        const message = await userIngredientOperations.deleteIngredient(req.userId as string, id);
-
-        return res.json(message);
-    } catch (error) {
-        if (error instanceof Error) {
-            logger.error(error.message);
-        }
-        next(new HttpError(
-            HttpStatusCode.InternalServerError,
-            'An error accrued while deleting your ingredient'
-        ));
-    }
-};
-
-/**
- * @openapi
- * /api/user/ingredients/all:
- *   delete:
- *     tags:
- *       - User Ingredients
- *     summary: Deletes all ingredients from the user's list
- *     description: Deletes all ingredients from the user's list
- *     responses:
- *       200:
- *         description: All ingredients deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/MessageResponse'
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal server error
- */
-
-export const deleteAllIngredients = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
-    try {
-        const message = await userIngredientOperations.deleteAll(req.userId as string);
-
-        return res.json(message);
-    } catch (error) {
-        if (error instanceof Error) {
-            logger.error(error.message);
-        }
-        next(new HttpError(
-            HttpStatusCode.InternalServerError,
-            'An error accrued while deleting your ingredients'
-        ));
-    }
-}
+import imageDetectionOperations from '../services/imageDetection.service';
 
 /**
  * @openapi
@@ -369,5 +131,22 @@ export const searchIngredients = async (req: CustomRequest, res: Response<Ingred
             HttpStatusCode.InternalServerError,
             'An error accrued while searching ingredients'
         ));
+    }
+};
+
+export const imageIngredientDetectorSchema = z.object({
+    imageUrl: z.string()
+});
+
+export const imageIngredientDetector = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction): Promise<void> => {
+    try {
+        const imageUrl = req.body;
+
+        const ingredients = await imageDetectionOperations.getIngredientsFromImage(imageUrl);
+
+        res.status(HttpStatusCode.Ok).json(ingredients);
+    } catch (error) {
+        logger.error(error);
+        next(new HttpError(HttpStatusCode.InternalServerError, 'Failed to analyze image'));
     }
 };
