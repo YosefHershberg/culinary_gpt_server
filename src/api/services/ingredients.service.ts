@@ -3,11 +3,8 @@ import { FilterQuery } from "mongoose";
 import { IngredientDocument } from "../models/ingredient.model";
 
 import * as ingredientOperationsDB from "../data-access/ingredient.da";
-import { addMultipleUserIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/userIngredient.da";
 
-import { IngredientType, PartialUserIngredientResponse as PartialIngredient } from "../../interfaces";
-import MessageResponse from "../../interfaces/MessageResponse";
-import { UserIngredientInterface } from "../models/UserIngredients.model";
+import { IngredientType } from "../../interfaces";
 
 /**
  * @module ingredients.service
@@ -16,8 +13,7 @@ import { UserIngredientInterface } from "../models/UserIngredients.model";
  * @exports ingredientOperations
  */
 
-
-export const ingredientOperations = {
+const ingredientOperations = {
     getByCategory: async (category: string): Promise<IngredientDocument[]> => {
         const ingredients = await ingredientOperationsDB.getIngredientsByCategoryDB(category)
         return ingredients
@@ -31,3 +27,5 @@ export const ingredientOperations = {
         return ingredients
     },
 }
+
+export default ingredientOperations

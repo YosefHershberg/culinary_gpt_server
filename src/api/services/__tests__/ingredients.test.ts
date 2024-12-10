@@ -1,10 +1,13 @@
-import { getUserIngredientsDB, addUserIngredientDB, deleteUserIngredientDB, deleteAllUserIngredientsDB, getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB, addMultipleUserIngredientsDB } from "../../data-access/ingredient.da";
-import { userIngredientOperations, ingredientOperations } from "../ingredients.service";
 import { IngredientDocument } from "../../models/ingredient.model";
 import { IngredientType } from "../../../interfaces";
 import { mockIngredients } from "../../../lib/mock/mockData";
+import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../../data-access/ingredient.da";
+import { getUserIngredientsDB, addUserIngredientDB, addMultipleUserIngredientsDB, deleteUserIngredientDB, deleteAllUserIngredientsDB } from "../../data-access/userIngredient.da";
+import ingredientOperations from "../ingredients.service";
+import userIngredientOperations from "../userIngredients.service";
 
 jest.mock('../../data-access/ingredient.da');
+jest.mock('../../data-access/userIngredient.da');
 
 describe('ingredient services', () => {
     const userId = 'testUserId';

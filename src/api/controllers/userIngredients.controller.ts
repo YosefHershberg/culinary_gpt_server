@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { Response, NextFunction } from "express";
 import logger from "../../config/logger";
 
-import { userIngredientOperations } from "../services/userIngredients.service";
+import userIngredientOperations from "../services/userIngredients.service";
 
 import CustomRequest from "../../interfaces/CustomRequest";
 import { PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';

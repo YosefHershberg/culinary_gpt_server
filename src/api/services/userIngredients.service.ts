@@ -13,7 +13,7 @@ import { UserIngredientInterface } from "../models/UserIngredients.model";
  * @exports userIngredientOperations
  */
 
-export const userIngredientOperations = {
+const userIngredientOperations = {
     getAll: async (userId: string): Promise<PartialIngredient[]> => {
         const ingredients = await getUserIngredientsDB(userId);
         return ingredients;
@@ -46,3 +46,5 @@ export const userIngredientOperations = {
         return { message: "All ingredients deleted successfully" };
     },
 }
+
+export default userIngredientOperations

@@ -6,7 +6,7 @@ import { HttpStatusCode } from 'axios';
 import CustomRequest from '../../interfaces/CustomRequest';
 import { IngredientType } from '../../interfaces';
 
-import { ingredientOperations } from '../services/ingredients.service';
+import ingredientOperations from '../services/ingredients.service';
 import { IngredientDocument } from '../models/ingredient.model';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';

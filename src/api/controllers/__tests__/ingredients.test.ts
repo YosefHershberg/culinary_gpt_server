@@ -1,22 +1,21 @@
 import request from 'supertest';
 import { HttpStatusCode } from 'axios';
-import { ingredientOperations, userIngredientOperations } from '../../services/ingredients.service';
+import ingredientOperations from '../../services/ingredients.service';
+import userIngredientOperations from '../../services/userIngredients.service';
 import app, { userId } from '../../../lib/mock/mockApp';
 import { mockIngredient, mockIngredients, mockMessageResponse } from '../../../lib/mock/mockData';
 
 // Mock the services
 jest.mock('../../services/ingredients.service', () => ({
-    userIngredientOperations: {
+    getByCategory: jest.fn(),
+    search: jest.fn(),
+}));
+jest.mock('../../services/userIngredients.service', () => ({
         getAll: jest.fn(),
         addIngredient: jest.fn(),
         deleteIngredient: jest.fn(),
         deleteAll: jest.fn(),
         addMultiple: jest.fn(),
-    },
-    ingredientOperations: {
-        getByCategory: jest.fn(),
-        search: jest.fn(),
-    },
 }));
 
 describe('Ingredients API', () => {
