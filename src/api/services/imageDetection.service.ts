@@ -1,5 +1,6 @@
 import logger from "../../config/logger";
 import visionClient from "../../config/vision";
+import { compressBase64string, getStringSizeInKB } from "../../utils/helperFunctions";
 import Ingredient, { IngredientDocument } from "../models/ingredient.model";
 
 /**
@@ -10,15 +11,16 @@ import Ingredient, { IngredientDocument } from "../models/ingredient.model";
  */
 
 const imageDetectionOperations = {
-    
+
     /**
      * @description This function gets the ingredients from the image and return the ones that are DB
-     * @param imageURL 
+     * @param base64image 
      * @returns {IngredientDocument[]}
      */
-    getIngredientsFromImage: async (imageURL: string): Promise<IngredientDocument[]> => {
-        
-        const labels = await imageDetectionOperations.detectLabels(imageURL);
+    getIngredientsFromImage: async (base64image: string): Promise<IngredientDocument[]> => {
+        const pureBase64 = base64image.replace('data:image/jpeg;base64,', '');
+
+        const labels = await imageDetectionOperations.detectLabels(pureBase64);
 
         if (labels.length === 0) return [];
 
@@ -31,20 +33,21 @@ const imageDetectionOperations = {
 
     /**
      * @description This function detects labels in an image
-     * @param {string} imageURL 
+     * @param {string} pureBase64 
      * @returns {string}
      */
-    detectLabels: async (imageURL: string): Promise<string[]> => {
+    detectLabels: async (pureBase64: string): Promise<string[]> => {
         let res;
+
         try {
-            const [result] = await visionClient.labelDetection(imageURL);
+            const [result] = await visionClient.labelDetection({ image: { content: pureBase64 } });
             res = result;
         } catch (error) {
-            logger.error(error);
+            logger.error('errorrr', error);
         }
         const labels = res?.labelAnnotations;
         return labels?.map(label => label.description) as string[];
-    }, 
+    },
 
     /**
      * @description This function gets the ingredients from the labels
@@ -52,7 +55,13 @@ const imageDetectionOperations = {
      * @returns {IngredientDocument[]}
      */
     getIngredientsFromLabels: async (labels: string[]): Promise<IngredientDocument[]> => {
-        const ingredients = await Ingredient.find({ name: { $in: labels } });
+        const formattedLabels = labels.map(label =>
+            label.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ')
+        );
+        const ingredients = await Ingredient.find({ name: { $in: formattedLabels } });
+
         return ingredients;
     }
 }

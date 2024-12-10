@@ -20,7 +20,7 @@ router.get<{}, PartialIngredient[] | MessageResponse>(
 );
 
 router.post<{}, PartialIngredient[] | MessageResponse>(
-    '/image-ingredient-detector',
+    '/image-detect',
     validate(imageIngredientDetectorSchema),
     imageIngredientDetector
 )

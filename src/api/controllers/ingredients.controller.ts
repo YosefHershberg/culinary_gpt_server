@@ -135,12 +135,14 @@ export const searchIngredients = async (req: CustomRequest, res: Response<Ingred
 };
 
 export const imageIngredientDetectorSchema = z.object({
-    imageUrl: z.string()
+    body: z.object({
+        imageUrl: z.string()
+    })
 });
 
 export const imageIngredientDetector = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction): Promise<void> => {
     try {
-        const imageUrl = req.body;
+        const { imageUrl } = req.body;
 
         const ingredients = await imageDetectionOperations.getIngredientsFromImage(imageUrl);
 

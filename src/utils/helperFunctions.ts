@@ -34,7 +34,7 @@ export const isValidJSON = (str: string): boolean => {
   }
 }
 
-export const compressBase64Image = async (base64Image: string, quality: number): Promise<string> => {
+export const compressBase64string = async (base64Image: string, quality: number): Promise<string> => {
   // Decode base64 image to a buffer
   const imageBuffer = Buffer.from(base64Image, 'base64');
 
@@ -68,4 +68,17 @@ export const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
 
 export const hashString = (str: string): string => {
   return crypto.createHash('sha256').update(str).digest('hex')
+}
+
+export const getStringSizeInKB = (str: string): number => {
+  // Convert the string to a byte array
+  const bytes = new TextEncoder().encode(str);
+  
+  // Get the size in bytes
+  const sizeInBytes = bytes.length;
+  
+  // Convert bytes to kilobytes (1 KB = 1024 bytes)
+  const sizeInKB = sizeInBytes / 1024;
+
+  return sizeInKB;
 }

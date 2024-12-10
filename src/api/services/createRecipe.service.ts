@@ -1,5 +1,5 @@
 import openai from '../../config/openai';
-import { compressBase64Image, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
+import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 
 import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, Recipe } from "../../interfaces";
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
@@ -56,7 +56,7 @@ const createRecipeOperations = {
         const base64image = await createRecipeOperations.createImageGetimgAI(recipe.title, userIngredients);
 
         // Compress the image
-        const compressedBase64Image = await compressBase64Image(base64image as string, 60); //30 KB
+        const compressedBase64Image = await compressBase64string(base64image as string, 60); //30 KB
 
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${compressedBase64Image}`;
