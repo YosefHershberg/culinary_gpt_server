@@ -43,7 +43,8 @@ const imageDetectionOperations = {
             const [result] = await visionClient.labelDetection({ image: { content: pureBase64 } });
             res = result;
         } catch (error) {
-            logger.error('errorrr', error);
+            logger.error(error);
+            console.log(error);
         }
         const labels = res?.labelAnnotations;
         return labels?.map(label => label.description) as string[];
