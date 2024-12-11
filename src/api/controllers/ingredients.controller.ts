@@ -134,6 +134,40 @@ export const searchIngredients = async (req: CustomRequest, res: Response<Ingred
     }
 };
 
+/**
+ * @openapi
+ * /api/ingredients/image-detect:
+ *   post:
+ *     tags:
+ *       - Ingredients
+ *     summary: Detects ingredients from an image
+ *     description: Analyzes the provided image URL to detect and return a list of ingredients.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               imageUrl:
+ *                 type: string
+ *                 description: The URL of the image to analyze
+ *                 example: "https://example.com/image.jpg"
+ *     responses:
+ *       200:
+ *         description: Successfully detected ingredients from the image
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ingredient'
+ *       400:
+ *         description: Bad request, such as missing or invalid image URL
+ *       500:
+ *         description: Internal server error
+ */
+
 export const imageIngredientDetectorSchema = z.object({
     body: z.object({
         imageUrl: z.string()
