@@ -18,6 +18,7 @@ const CREDENTIALS = {
 
 const visionClient = new vision.ImageAnnotatorClient({
     credentials: CREDENTIALS,
+    fallback: true, // Use HTTP/REST instead of gRPC
 });
 
 export default visionClient;
