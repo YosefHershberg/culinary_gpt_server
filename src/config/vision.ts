@@ -6,7 +6,7 @@ const CREDENTIALS = {
     type: "service_account",
     project_id: "culinarygpt",
     private_key_id: "96cdb4693cd2581d489c99e1975fa1d0a6d1b210",
-    private_key: env.GOOGLE_VISION_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    private_key: env.GOOGLE_VISION_PRIVATE_KEY,
     client_email: env.GOOGLE_VISION_CLIENT_EMAIL,
     client_id: "109158157517386112784",
     auth_uri: "https://accounts.google.com/o/oauth2/auth",
@@ -18,7 +18,7 @@ const CREDENTIALS = {
 
 const visionClient = new vision.ImageAnnotatorClient({
     credentials: CREDENTIALS,
-    fallback: true, // Use HTTP/REST instead of gRPC
+    fallback: true,
 });
 
 export default visionClient;
