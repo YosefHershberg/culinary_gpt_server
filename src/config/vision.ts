@@ -18,7 +18,7 @@ const CREDENTIALS = {
 
 const visionClient = new vision.ImageAnnotatorClient({
     credentials: CREDENTIALS,
-    fallback: true,
+    // fallback: true,
 });
 
 export default visionClient;

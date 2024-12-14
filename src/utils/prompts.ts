@@ -1,13 +1,15 @@
 import { CreateRecipeProps } from "../api/services/createRecipe.service"
 import { KitchenUtils } from "../interfaces"
+import { PartialUserIngredientResponse as PartialIngredient } from "../interfaces"
 
 interface CreateRecipePromptProps extends CreateRecipeProps {
-    userIngredients: string[];
+    userIngredients: PartialIngredient[];
+    recipeTitle: string;
     kitchenUtils: KitchenUtils;
 }
 
-export const createRecipePrompt = ({ mealSelected, selectedTime, userIngredients, kitchenUtils, numOfPeople }: CreateRecipePromptProps) => {
-    return `create a recipe for ${mealSelected} that takes ${selectedTime} minutes
+export const createRecipePrompt = ({ mealSelected, selectedTime, userIngredients, recipeTitle, kitchenUtils, numOfPeople, prompt }: CreateRecipePromptProps) => {
+    return `create a recipe of a ${recipeTitle} for ${mealSelected} that takes ${selectedTime} minutes
         the following ingredients are available: ${userIngredients?.join(', ')}
         with the following kitchen utilities: ${kitchenUtils}
         the recipe should serve ${numOfPeople} people.
@@ -34,7 +36,7 @@ export const createRecipePrompt = ({ mealSelected, selectedTime, userIngredients
     `
 }
 
-export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: string[]) => {
+export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: PartialIngredient[]) => {
     return `A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}. 
         made with these ingredients: ${userIngredients?.join(', ')}.
         Don't show the ingredients in the image. just the dish!
@@ -46,8 +48,8 @@ export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: st
     `
 }
 
-export const createCocktailPrompt = (userIngredients: string[], prompt: string) => {
-    return `Create a cocktail recipe with these ingredients: ${userIngredients?.join(', ')}
+export const createCocktailPrompt = (userIngredients: PartialIngredient[], prompt: string, title: string) => {
+    return `Create a ${title} cocktail recipe with these ingredients: ${userIngredients?.join(', ')}
         Also, consider this prompt: ${prompt}.
         Important: Use only the provided ingredients.
         Don't use more than 5 ingredients.
@@ -64,7 +66,7 @@ export const createCocktailPrompt = (userIngredients: string[], prompt: string) 
     `
 }
 
-export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients: string[]) => {
+export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients: PartialIngredient[]) => {
     return `A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail.
         the ingredients are: ${userIngredients?.join(', ')}.
         Don't show the ingredients in the image. just the cocktail!
@@ -75,5 +77,29 @@ export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients
         with a modern or elegant bar setting, but remain blurred to maintain focus 
         on the cocktail. Exclude any visible ingredients or text—just the cocktail itself, 
         as if photographed by a professional food photographer.
+    `
+}
+
+export const createRecipeTitlePrompt = (userIngredients: PartialIngredient[], prompt: string) => {
+    return `Create a recipe title using these ingredients: ${userIngredients?.join(', ')}.
+        The title should be catchy and descriptive, capturing the essence of the dish.
+        Avoid generic titles and aim for something unique and appealing.
+        Important: take in mind this prompt: ${prompt}.
+        Format in valid JSON without backticks:
+        {
+            "title": "Recipe title"
+        }
+    `
+}
+
+export const createCocktailTitlePrompt = (userIngredients: PartialIngredient[], prompt: string) => {
+    return `Create a cocktail title using these ingredients: ${userIngredients?.join(', ')}.
+        The title should be creative and engaging, reflecting the character of the cocktail.
+        Avoid common names and opt for something intriguing and memorable.
+        Important: consider this prompt: ${prompt}.
+        Format in valid JSON without backticks:
+        {
+            "title": "Cocktail title"
+        }
     `
 }

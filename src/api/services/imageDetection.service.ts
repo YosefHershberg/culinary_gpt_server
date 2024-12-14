@@ -40,7 +40,9 @@ const imageDetectionOperations = {
         let res;
 
         try {
-            const [result] = await visionClient.labelDetection({ image: { content: pureBase64 } });
+            const [result] = await visionClient.labelDetection({
+                image: { content: pureBase64 },
+            });
             res = result;
         } catch (error) {
             logger.error(error);
