@@ -27,3 +27,13 @@ export const searchIngredientsByQueryAndTypeDB = async (
 
     return ingredients
 }
+
+export const getManyIngredientsByLabelsDB = async (labels: string[]): Promise<IngredientDocument[]> => {
+    const ingredients = await Ingredient.find({ name: { $in: labels } }).exec()
+
+    if (!ingredients) {
+        throw new Error('Ingredients not found')
+    }
+
+    return ingredients
+}

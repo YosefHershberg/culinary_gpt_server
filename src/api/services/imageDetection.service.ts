@@ -1,6 +1,7 @@
 import logger from "../../config/logger";
-import visionClient from "../../config/vision";
-import { compressBase64string, getStringSizeInKB } from "../../utils/helperFunctions";
+import openai from "../../config/openai";
+import { isValidJSON } from "../../utils/helperFunctions";
+import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
 import Ingredient, { IngredientDocument } from "../models/ingredient.model";
 
 /**
@@ -18,13 +19,12 @@ const imageDetectionOperations = {
      * @returns {IngredientDocument[]}
      */
     getIngredientsFromImage: async (base64image: string): Promise<IngredientDocument[]> => {
-        const pureBase64 = base64image.replace('data:image/jpeg;base64,', '');
 
-        const labels = await imageDetectionOperations.detectLabels(pureBase64);
+        const labels = await imageDetectionOperations.detectLabels(base64image);
 
         if (labels.length === 0) return [];
 
-        const ingredients = await imageDetectionOperations.getIngredientsFromLabels(labels);
+        const ingredients = await getManyIngredientsByLabelsDB(labels);
 
         if (ingredients.length === 0) return [];
 
@@ -33,40 +33,65 @@ const imageDetectionOperations = {
 
     /**
      * @description This function detects labels in an image
-     * @param {string} pureBase64 
+     * @param {string} base64image 
      * @returns {string}
      */
-    detectLabels: async (pureBase64: string): Promise<string[]> => {
-        let res;
+    // detectLabels: async (base64image: string): Promise<string[]> => {
+    detectLabels: async (base64image: string) => {
+        const maxRetries = 3;
+        let attempts = 0;
+        let isValidJson = false;
 
-        try {
-            const [result] = await visionClient.labelDetection({
-                image: { content: pureBase64 },
-            });
-            res = result;
-        } catch (error) {
-            logger.error(error);
-            console.log(error);
+        let result;
+
+        while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
+            try {
+                const completion = await openai.chat.completions.create({
+                    model: "gpt-4o-mini",
+                    messages: [
+                        {
+                            role: "user",
+                            content: [
+                                {
+                                    type: "text", 
+                                    text: `Send me the ingredients of this image.
+                                        respond with a json in this format without backticks: 
+                                        [
+                                            "ingredient1", "ingredient2", "ingredient3"
+                                        ]
+                                        Note: make the ingredients first letter uppercase.
+                                        Note: remove irrelevant words. (like "vanilla" from "vanilla ice cream")`
+                                },
+                                {
+                                    type: "image_url",
+                                    image_url: {
+                                        "url": base64image,
+                                    },
+                                }
+                            ],
+                        },
+                    ],
+                    max_tokens: 100,
+                });
+                const response = completion.choices[0].message.content as string;
+
+                isValidJson = isValidJSON(response);
+
+                if (isValidJson) {
+                    result = JSON.parse(response);
+                }
+            } catch (error) {
+                logger.error(error);
+                attempts++;
+            }
+
+            if (!isValidJson) {
+                throw new Error('No valid JSON response generated for cocktail recipe');
+            }
         }
-        const labels = res?.labelAnnotations;
-        return labels?.map(label => label.description) as string[];
+         
+        return result
     },
-
-    /**
-     * @description This function gets the ingredients from the labels
-     * @param {string[]} labels 
-     * @returns {IngredientDocument[]}
-     */
-    getIngredientsFromLabels: async (labels: string[]): Promise<IngredientDocument[]> => {
-        const formattedLabels = labels.map(label =>
-            label.split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ')
-        );
-        const ingredients = await Ingredient.find({ name: { $in: formattedLabels } });
-
-        return ingredients;
-    }
 }
 
 export default imageDetectionOperations;
