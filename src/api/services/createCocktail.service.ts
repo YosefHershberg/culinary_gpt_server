@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { Response } from 'express';
 
-import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
-
 import openai from '../../config/openai';
 import logger from '../../config/logger';
 import env from '../../config/env';
 
+import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 import { PartialUserIngredientResponse as PartialIngredient, Recipe } from "../../interfaces";

@@ -2,7 +2,7 @@ import logger from "../../config/logger";
 import openai from "../../config/openai";
 import { isValidJSON } from "../../utils/helperFunctions";
 import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
-import Ingredient, { IngredientDocument } from "../models/ingredient.model";
+import { IngredientDocument } from "../models/ingredient.model";
 
 /**
  * @module vision.service

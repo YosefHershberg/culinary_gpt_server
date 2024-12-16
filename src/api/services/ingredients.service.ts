@@ -1,9 +1,6 @@
 import { FilterQuery } from "mongoose";
-
 import { IngredientDocument } from "../models/ingredient.model";
-
-import * as ingredientOperationsDB from "../data-access/ingredient.da";
-
+import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../data-access/ingredient.da";
 import { IngredientType } from "../../interfaces";
 
 /**
@@ -15,15 +12,15 @@ import { IngredientType } from "../../interfaces";
 
 const ingredientOperations = {
     getByCategory: async (category: string): Promise<IngredientDocument[]> => {
-        const ingredients = await ingredientOperationsDB.getIngredientsByCategoryDB(category)
+        const ingredients = await getIngredientsByCategoryDB(category)
         return ingredients
     },
-    
+
     search: async (
         query: FilterQuery<IngredientDocument>,
         type: IngredientType
     ): Promise<IngredientDocument[]> => {
-        const ingredients = await ingredientOperationsDB.searchIngredientsByQueryAndTypeDB(query, type)
+        const ingredients = await searchIngredientsByQueryAndTypeDB(query, type)
         return ingredients
     },
 }
