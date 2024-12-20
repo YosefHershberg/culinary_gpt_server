@@ -10,17 +10,7 @@ import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePro
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 import { PartialUserIngredientResponse as PartialIngredient, Recipe } from "../../interfaces";
 
-/**
- * @module createCocktail.service
- * 
- * @description This module provides operations for creating a cocktail recipe
- * @note this service uses server sent events to stream data to the client. therefore, the response object is passed to the functions
- * 
- * @exports createCocktailOperations
- */
-
-
-interface createCocktailOpenAIProps {
+interface CreateCocktailProps {
     prompt: string;
     userIngredients: PartialIngredient[];
     cocktailTitle: string;
@@ -46,15 +36,20 @@ const createCocktailOperations = {
 
         const userIngredients = ingredients.map((ingredient: PartialIngredient) => ingredient.name) as PartialIngredient[];
 
+        const cocktailTitlePrompt = createCocktailTitlePrompt(userIngredients, prompt);
+
         // Create a cocktail title using OpenAI API
-        const cocktailTitle = await createCocktailOperations.createCocktailTitleOpenAI(userIngredients, prompt);
+        const cocktailTitle = await createCocktailOperations.createCocktailTitleOpenAI(cocktailTitlePrompt);
+
+        const imagePrompt = createCocktailImagePrompt(cocktailTitle, userIngredients);
+        const cocktailPrompt = createCocktailPrompt(userIngredients, prompt, cocktailTitle);
 
         const [base64image] = await Promise.all([
             // Create the cocktail image using GetimgAI API
-            createCocktailOperations.createImageGetimgAI(cocktailTitle, userIngredients),
+            createCocktailOperations.createImageGetimgAI(imagePrompt),
 
             // Create the cocktail recipe using OpenAI API
-            createCocktailOperations.createCocktailOpenAI({ prompt, userIngredients, cocktailTitle, res })
+            createCocktailOperations.createCocktailOpenAI(cocktailPrompt, res)
         ]);
 
         // Compress the image
@@ -72,7 +67,7 @@ const createCocktailOperations = {
      * @param {string} prompt
      * @returns {string} cocktail title
      */
-    createCocktailTitleOpenAI: async (userIngredients: PartialIngredient[], prompt: string): Promise<string> => {
+    createCocktailTitleOpenAI: async (cocktailTitlePrompt: string): Promise<string> => {
         const maxRetries = 3;
         let attempts = 0;
         let isValidJson = false;
@@ -84,7 +79,7 @@ const createCocktailOperations = {
                 const completion = await openai.chat.completions.create({
                     messages: [{
                         role: "user",
-                        content: createCocktailTitlePrompt(userIngredients, prompt)
+                        content: cocktailTitlePrompt
                     }],
                     model: "gpt-3.5-turbo",
                 });
@@ -119,7 +114,7 @@ const createCocktailOperations = {
      * @param {Response} params.res 
      * @returns {Recipe} cocktail recipe
      */
-    createCocktailOpenAI: async ({ prompt, userIngredients, cocktailTitle, res }: createCocktailOpenAIProps): Promise<Recipe> => {
+    createCocktailOpenAI: async (cocktailPrompt: string, res: Response): Promise<Recipe> => {
         const maxRetries = 3;
         let attempts = 0;
         let isValidJson = false;
@@ -129,12 +124,12 @@ const createCocktailOperations = {
         while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
-                    messages: [{
-                        role: "user",
-                        content: createCocktailPrompt(
-                            userIngredients, prompt, cocktailTitle
-                        )
-                    }],
+                    messages: [
+                        { role: "system", content: "You are an professional mixologist." },
+                        {
+                            role: "user",
+                            content: cocktailPrompt
+                        }],
                     model: "gpt-3.5-turbo",
                 });
 
@@ -187,14 +182,14 @@ const createCocktailOperations = {
      * @param {PartialIngredient[]} userIngredients
      * @returns {string} base64 image
      */
-    createImageGetimgAI: async (cocktailTitle: string, userIngredients: PartialIngredient[]): Promise<string> => {
+    createImageGetimgAI: async (imagePrompt: string): Promise<string> => {
         const url = 'https://api.getimg.ai/v1/flux-schnell/text-to-image';
         const headers = {
             Authorization: `Bearer ${env.GETIMGAI_API_KEY}`,
         };
 
         const { data } = await axios.post(url, {
-            prompt: createCocktailImagePrompt(cocktailTitle, userIngredients),
+            prompt: imagePrompt,
         }, { headers });
 
         return data.image;

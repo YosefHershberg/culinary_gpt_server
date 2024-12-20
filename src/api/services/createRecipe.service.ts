@@ -12,6 +12,15 @@ import { compressBase64string, isValidJSON, returnStreamData } from "../../utils
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
 import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, Recipe } from "../../interfaces";
 
+export interface CreateRecipeProps {
+    mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
+    selectedTime: number;
+    prompt: string;
+    numOfPeople: number;
+}
+
+const MAX_RETRIES = 3;
+
 /**
  * @module createRecipe.service
  * 
@@ -20,21 +29,6 @@ import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, Recip
  * 
  * @exports createRecipeOperations
  */
-
-export interface CreateRecipeProps {
-    mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
-    selectedTime: number;
-    prompt: string;
-    numOfPeople: number;
-}
-
-interface createRecipeOpenAIProps {
-    recipeInput: CreateRecipeProps,
-    userIngredients: PartialIngredient[],
-    kitchenUtils: KitchenUtils,
-    recipeTitle: string,
-    res: Response
-}
 
 const createRecipeOperations = {
 
@@ -59,23 +53,30 @@ const createRecipeOperations = {
 
         const userIngredients = ingredients.map((ingredient: PartialIngredient) => ingredient.name) as PartialIngredient[];
 
+        const recipeTitlePrompt = createRecipeTitlePrompt(userIngredients, recipeInput.prompt, kitchenUtils);
+
         // Create a recipe title using OpenAI API
-        const recipeTitle = await createRecipeOperations.createRecipeTitleOpenAI(userIngredients, recipeInput.prompt)
+        const recipeTitle = await createRecipeOperations.createRecipeTitleOpenAI(recipeTitlePrompt);
+
+        const imagePrompt = createRecipeImagePrompt(recipeTitle, userIngredients);
+        const recipePrompt = createRecipePrompt({ ...recipeInput, userIngredients, recipeTitle, kitchenUtils });
 
         const [base64image] = await Promise.all([
 
             // Create the recipe image using GetimgAI API
-            createRecipeOperations.createImageGetimgAI(recipeTitle, userIngredients),
+            createRecipeOperations.createImageGetimgAI(imagePrompt),
 
-            // Create the recipe using OpenAI API
-            createRecipeOperations.createRecipeOpenAI({ recipeInput, userIngredients, kitchenUtils, recipeTitle, res })
+            // Create the recipe using OpenAI API & stream it to client
+            createRecipeOperations.createRecipeOpenAI(recipePrompt, res)
         ]);
+
         // Compress the image
         const compressedBase64Image = await compressBase64string(base64image as string, 60); //30 KB
 
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${compressedBase64Image}`;
 
+        // Stream the image to the client
         return returnStreamData(res, { event: 'image', data: base64DataUrl });
     },
 
@@ -89,23 +90,21 @@ const createRecipeOperations = {
      * @param {Response} params.res 
      * @returns {Recipe} recipe
      */
-    createRecipeOpenAI: async ({ recipeInput, userIngredients, kitchenUtils, recipeTitle, res }: createRecipeOpenAIProps): Promise<Recipe> => {
-
-        const maxRetries = 3;
+    createRecipeOpenAI: async (recipePrompt: string, res: Response): Promise<Recipe> => {
         let attempts = 0;
         let isValidJson = false;
 
         let recipe = null;
 
-        while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
+        while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
-                    messages: [{
-                        role: "user",
-                        content: createRecipePrompt({
-                            ...recipeInput, userIngredients, recipeTitle, kitchenUtils
-                        })
-                    }],
+                    messages: [
+                        { role: "system", content: "You are an professional chef." },
+                        {
+                            role: "user",
+                            content: recipePrompt
+                        }],
                     model: "gpt-3.5-turbo",
                 });
 
@@ -157,32 +156,31 @@ const createRecipeOperations = {
      * @param userIngredients 
      * @returns 
      */
-    createImageGetimgAI: async (recipeTitle: string, userIngredients: PartialIngredient[]): Promise<string> => {
+    createImageGetimgAI: async (imagePrompt: string): Promise<string> => {
         const url = 'https://api.getimg.ai/v1/flux-schnell/text-to-image';
         const headers = {
             Authorization: `Bearer ${env.GETIMGAI_API_KEY}`,
         };
 
         const { data } = await axios.post(url, {
-            prompt: createRecipeImagePrompt(recipeTitle, userIngredients),
+            prompt: imagePrompt,
         }, { headers });
 
         return data.image
     },
 
-    createRecipeTitleOpenAI: async (userIngredient: PartialIngredient[], prompt: string) => {
-        const maxRetries = 3;
+    createRecipeTitleOpenAI: async (recipeTitlePrompt: string) => {
         let attempts = 0;
         let isValidJson = false;
 
         let title = null;
 
-        while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
+        while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
                     messages: [{
                         role: "user",
-                        content: createRecipeTitlePrompt(userIngredient, prompt)
+                        content: recipeTitlePrompt
                     }],
                     model: "gpt-3.5-turbo",
                 });
