@@ -6,8 +6,6 @@ name: Node.js CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 env:
   CLERK_SECRET_KEY: "${{ secrets.CLERK_SECRET_KEY }}"
@@ -29,24 +27,27 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
     # runs-on: self-hosted # For self-hosted runners
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    # - run: |
-    #     touch .env
-    #     echo "${{ secrets.PROD_ENV_FILE }}" > .env
-    - run: npm run build --if-present
-    - run: npm test
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
+      - name: Build docker image
+        run: docker build -t culinary-gpt-server .
+      - name: Publish image to docker hub
+        run: docker push culinary-gpt-server:latest
+
+  deploy:
+    needs: build
+    runs-on: [aws-ec2]
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull culinary-gpt-server:latest
+      - name: Delete old container
+        run: docker rm -f server-container
+      - name: Create .env file
+        run: echo "${{ secrets.PROD_ENV_FILE }}" > .env
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name server-container culinary-gpt-server:latest
