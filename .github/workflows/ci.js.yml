@@ -26,16 +26,18 @@ env:
 
 jobs:
   build:
-
     runs-on: [ubuntu-latest]
     # runs-on: self-hosted # For self-hosted runners
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
+
       - name: Build docker image
         run: docker build -t culinary-gpt-server .
+
       - name: Publish image to docker hub
         run: docker push culinary-gpt-server:latest
 
@@ -43,11 +45,16 @@ jobs:
     needs: build
     runs-on: [aws-ec2]
     steps:
-      - name: Pull image from docker hub
+      - name: Pull image from Docker Hub
         run: docker pull culinary-gpt-server:latest
+
       - name: Delete old container
-        run: docker rm -f server-container
+        run: docker rm -f server-container || true
+
       - name: Create .env file
+        env:
+          PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
         run: echo "${{ secrets.PROD_ENV_FILE }}" > .env
-      - name: Run docker container
-        run: docker run -d -p 5000:5000 --name server-container culinary-gpt-server:latest
+
+      - name: Run Docker container with environment file
+        run: docker run -d -p 5000:5000 --name server-container --env-file .env culinary-gpt-server:latest
