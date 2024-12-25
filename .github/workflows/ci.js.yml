@@ -40,8 +40,8 @@ jobs:
   
       - name: Build and push Docker image
         run: |
-          docker build -t yosefhershberg/culinary-gpt-server:latest .
-          docker push yosefhershberg/culinary-gpt-server:latest
+          docker build -t culinary-gpt-server:latest .
+          docker push culinary-gpt-server:latest
   
 
   deploy:
