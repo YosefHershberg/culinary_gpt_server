@@ -40,8 +40,8 @@ jobs:
   
       - name: Build and push Docker image
         run: |
-          docker build -t culinary-gpt-server:latest .
-          docker push culinary-gpt-server:latest
+          docker build -t yosefhershberg/culinary-gpt-server:latest .
+          docker push yosefhershberg/culinary-gpt-server:latest
   
 
   deploy:
@@ -49,7 +49,7 @@ jobs:
     runs-on: [aws-ec2]
     steps:
       - name: Pull image from Docker Hub
-        run: docker pull culinary-gpt-server:latest
+        run: docker pull yosefhershberg/culinary-gpt-server:latest
 
       - name: Delete old container
         run: docker rm -f server-container || true
