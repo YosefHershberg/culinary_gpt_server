@@ -4,6 +4,7 @@ import recipeOperations from '../../services/recipes.service';
 import createRecipeOperations from '../../services/createRecipe.service';
 import { HttpStatusCode } from 'axios';
 import { mockRecipe } from '../../../lib/mock/mockData';
+import { FilterOptions } from '../../../interfaces/ServiceInterfaces';
 
 jest.mock('../../services/recipes.service');
 jest.mock('../../services/createRecipe.service');
@@ -22,7 +23,9 @@ describe('Recipe Controller', () => {
             const props = {
                 userId,
                 page: 1,
-                limit: 10
+                limit: 10,
+                query: undefined,
+                filter: 'all' as FilterOptions
             };
 
             const recipes = await recipeOperations.getUserPageRecipes(props);
@@ -86,9 +89,9 @@ describe('Recipe Controller', () => {
             prompt: 'make it spicy & kosher',
             numOfPeople: 2,
         };
-    
+
         const createdRecipe = { id: '3', ...mockRecipeInput, userId };
-    
+
         it('should create a recipe', async () => {
             // Mock `res` to simulate the `Response` object
             const resMock = {
@@ -97,16 +100,16 @@ describe('Recipe Controller', () => {
                 on: jest.fn(),
                 end: jest.fn(),
             };
-    
+
             (createRecipeOperations.createRecipe as jest.Mock).mockResolvedValueOnce(createdRecipe);
-    
+
             const response = await request(app)
                 .post('/api/user/recipes/create')
                 .send(mockRecipeInput);
-    
+
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(createRecipeOperations.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput, expect.any(Object));
         });
     });
-    
+
 });

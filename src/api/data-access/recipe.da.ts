@@ -2,27 +2,22 @@ import { getUserPageRecipesProps } from "../../interfaces/ServiceInterfaces";
 import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { DeleteResult } from "mongodb";
 
-/**
- * @description Get a page of recipes from the database
- * @param param0 
- * @returns 
- */
-export const getRecipesPageDB = async ({ userId, page, limit }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
-    const recipes = await Recipe.find({ userId: userId })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
+export const getRecipesPageDB = async ({ userId, page, limit, filter, query }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
+    let dbQuery: any = { userId };
 
-    if (!recipes) {
-        throw new Error('Recipes not found');
+    if (filter !== 'all') {
+        if (filter === 'recipes') {
+            dbQuery['recipe.type'] = 'recipe';
+        } else {
+            dbQuery['recipe.type'] = 'cocktail';
+        }
     }
 
-    return recipes;
-}
+    if (query) {
+        dbQuery['recipe.title'] = { $regex: query, $options: 'i' };
+    }
 
-export const getRecipesPageByQueryDB = async ({ userId, page, limit, query }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
-
-    const recipes = await Recipe.find({ userId, 'recipe.title': { $regex: query, $options: 'i' } })
+    const recipes = await Recipe.find(dbQuery)
         .skip((page - 1) * limit)
         .limit(limit)
         .exec();

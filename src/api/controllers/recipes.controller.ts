@@ -2,17 +2,18 @@ import { NextFunction, Response } from 'express';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import { RecipeDocument } from '../models/recipe.model';
 import recipeOperations from '../services/recipes.service';
 import createRecipeOperations from '../services/createRecipe.service';
+import createCocktailOperations from '../services/createCocktail.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import MessageResponse from '../../interfaces/MessageResponse';
+import { FilterOptions } from '../../interfaces/ServiceInterfaces';
 
 import { recipeSchema } from '../schemas/recipe.schema';
+import { RecipeDocument } from '../models/recipe.model';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
-import createCocktailOperations from '../services/createCocktail.service';
 import { returnStreamData } from '../../utils/helperFunctions';
 
 /**
@@ -36,6 +37,19 @@ import { returnStreamData } from '../../utils/helperFunctions';
  *         schema:
  *           type: integer
  *           description: The number of recipes to retrieve per page.
+ *       - in: query
+ *         name: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *           description: Optional search query to filter recipes.
+ *       - in: query
+ *         name: filter
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [recipes, cocktails, all]
+ *           description: Filter recipes by type.
  *     responses:
  *       200:
  *         description: A paginated list of recipes belonging to the user.
@@ -55,7 +69,8 @@ export const getRecipesSchema = z.object({
     query: z.object({
         page: z.number(),
         limit: z.number(),
-        query: z.string().optional()
+        query: z.string().optional(),
+        filter: z.enum(['recipes', 'cocktails', 'all'])
     })
 });
 
@@ -66,7 +81,8 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocumen
             userId: req.userId as string,
             page: Number(req.query.page),
             limit: Number(req.query.limit),
-            query: req.query.query as string
+            query: req.query.query as string,
+            filter: req.query.filter as FilterOptions
         });
 
         return res.json(recipes);
@@ -313,7 +329,7 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);
-        }        
+        }
         returnStreamData(res, {
             event: 'error',
             error

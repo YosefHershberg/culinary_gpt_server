@@ -2,10 +2,10 @@ import { base64ToArrayBuffer, hashString } from "../../utils/helperFunctions";
 import firebaseStorageOperations from "./firebase.service";
 
 import MessageResponse from "../../interfaces/MessageResponse";
-import { RecipeDocument } from "../models/recipe.model";
 import { RecipeWithImage } from "../../interfaces";
-import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageByQueryDB, getRecipesPageDB } from "../data-access/recipe.da";
 import { getUserPageRecipesProps } from "../../interfaces/ServiceInterfaces";
+import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageDB } from "../data-access/recipe.da";
+import { RecipeDocument } from "../models/recipe.model";
 
 /**
  * @module recipes.service
@@ -19,22 +19,17 @@ const recipeOperations = {
     /**
      * @description Get a page of recipes from the database. If there is a query, get recipes by query
      * @param props 
-     * @returns 
+     * @returns {RecipeDocument[]} 
      */
     getUserPageRecipes: async (props: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
-        let recipes: RecipeDocument[] | undefined
+        const recipes = await getRecipesPageDB(props)
 
-        // if there is a query, get recipes by query, otherwise just get recipes
-        if (props.query) {
-            recipes = await getRecipesPageByQueryDB(props)
-        } else {
-            recipes = await getRecipesPageDB(props)
-        }
         return recipes
     },
 
     getAllUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
         const recipes = await getAllRecipesDB(userId)
+        
         return recipes
     },
 

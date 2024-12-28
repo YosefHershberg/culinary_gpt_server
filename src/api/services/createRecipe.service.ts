@@ -154,7 +154,7 @@ const createRecipeOperations = {
      * @description This function creates an image using GetimgAI API
      * @param recipeTitle 
      * @param userIngredients 
-     * @returns 
+     * @returns {string} base64 image
      */
     createImageGetimgAI: async (imagePrompt: string): Promise<string> => {
         const url = 'https://api.getimg.ai/v1/flux-schnell/text-to-image';
