@@ -1,6 +1,6 @@
 import { CreateRecipeProps } from "../api/services/createRecipe.service"
 import { KitchenUtils } from "../interfaces"
-import { PartialUserIngredientResponse as PartialIngredient } from "../interfaces"
+import { PartialIngredient as PartialIngredient } from "../interfaces"
 
 interface CreateRecipePromptProps extends CreateRecipeProps {
     userIngredients: PartialIngredient[];

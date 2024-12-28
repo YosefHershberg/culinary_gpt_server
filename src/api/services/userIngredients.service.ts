@@ -2,7 +2,7 @@ import { IngredientDocument } from "../models/ingredient.model";
 
 import { addMultipleUserIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/userIngredient.da";
 
-import { PartialUserIngredientResponse as PartialIngredient } from "../../interfaces";
+import { PartialIngredient as PartialIngredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 import { UserIngredientInterface } from "../models/UserIngredients.model";
 

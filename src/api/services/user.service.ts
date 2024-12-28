@@ -30,7 +30,7 @@ const userOperations = {
      * @returns {UserDocument}
      */
     deleteUser: async (userId: string): Promise<UserDocument> => {
-        const recipes = await recipeOperations.getUserRecipes(userId);
+        const recipes = await recipeOperations.getAllUserRecipes(userId);
 
         const [user] = await Promise.all([
             //delete user

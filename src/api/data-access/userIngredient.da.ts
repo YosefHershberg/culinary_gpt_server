@@ -1,5 +1,5 @@
 import { DeleteResult } from "mongodb"
-import { PartialUserIngredientResponse as PartialIngredient, IngredientType } from "../../interfaces"
+import { PartialIngredient as PartialIngredient, IngredientType } from "../../interfaces"
 import UserIngredient, { UserIngredientInterface } from "../models/UserIngredients.model"
 
 export const addUserIngredientDB = async (userIngredient: UserIngredientInterface): Promise<PartialIngredient> => {

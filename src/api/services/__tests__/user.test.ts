@@ -31,7 +31,7 @@ describe('user services', () => {
     //     it('should delete a user and related data successfully', async () => {
     //         const mockRecipes = [{ recipe: { description: 'recipe1' } }, { recipe: { description: 'recipe2' } }];
 
-    //         (recipeOperations.getUserRecipes as jest.Mock).mockResolvedValue(mockRecipes);
+    //         (recipeOperations.getUserPageRecipes as jest.Mock).mockResolvedValue(mockRecipes);
     //         (deleteUserDB as jest.Mock).mockResolvedValue(mockUser);
     //         (deleteUserRecipes as jest.Mock).mockResolvedValue(undefined);
     //         (deleteKitchenUtilsDB as jest.Mock).mockResolvedValue(undefined);
@@ -40,7 +40,7 @@ describe('user services', () => {
 
     //         const result = await userOperations.deleteUser(userId);
 
-    //         expect(recipeOperations.getUserRecipes).toHaveBeenCalledWith(userId);
+    //         expect(recipeOperations.getUserPageRecipes).toHaveBeenCalledWith(userId);
     //         expect(deleteUserDB).toHaveBeenCalledWith(userId);
     //         expect(deleteUserRecipes).toHaveBeenCalledWith(userId);
     //         expect(deleteKitchenUtilsDB).toHaveBeenCalledWith(userId);

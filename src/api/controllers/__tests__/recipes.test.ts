@@ -13,14 +13,23 @@ describe('Recipe Controller', () => {
 
     describe('GET /api/user/recipes', () => {
         it('should return a list of recipes for the user', async () => {
-            (recipeOperations.getUserRecipes as jest.Mock).mockResolvedValue(mockRecipes);
+            (recipeOperations.getUserPageRecipes as jest.Mock).mockResolvedValue(mockRecipes);
 
             const response = await request(app)
                 .get('/api/user/recipes')
+                .query({ page: 1, limit: 10 });
+
+            const props = {
+                userId,
+                page: 1,
+                limit: 10
+            };
+
+            const recipes = await recipeOperations.getUserPageRecipes(props);
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipes);
-            expect(recipeOperations.getUserRecipes).toHaveBeenCalledWith(userId);
+            expect(recipeOperations.getUserPageRecipes).toHaveBeenCalledWith(props);
         });
     });
 

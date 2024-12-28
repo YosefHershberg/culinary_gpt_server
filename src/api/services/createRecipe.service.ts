@@ -10,7 +10,7 @@ import logger from '../../config/logger';
 
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
-import { PartialUserIngredientResponse as PartialIngredient, KitchenUtils, Recipe } from "../../interfaces";
+import { PartialIngredient as PartialIngredient, KitchenUtils, Recipe } from "../../interfaces";
 
 export interface CreateRecipeProps {
     mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';

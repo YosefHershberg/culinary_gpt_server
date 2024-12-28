@@ -4,7 +4,8 @@ import firebaseStorageOperations from "./firebase.service";
 import MessageResponse from "../../interfaces/MessageResponse";
 import { RecipeDocument } from "../models/recipe.model";
 import { RecipeWithImage } from "../../interfaces";
-import { addRecipeDB, deleteRecipeDB, getRecipeDB, getRecipesDB } from "../data-access/recipe.da";
+import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageByQueryDB, getRecipesPageDB } from "../data-access/recipe.da";
+import { getUserPageRecipesProps } from "../../interfaces/ServiceInterfaces";
 
 /**
  * @module recipes.service
@@ -14,14 +15,32 @@ import { addRecipeDB, deleteRecipeDB, getRecipeDB, getRecipesDB } from "../data-
  */
 
 const recipeOperations = {
-    getUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
-        const recipes = await getRecipesDB(userId)
+
+    /**
+     * @description Get a page of recipes from the database. If there is a query, get recipes by query
+     * @param props 
+     * @returns 
+     */
+    getUserPageRecipes: async (props: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
+        let recipes: RecipeDocument[] | undefined
+
+        // if there is a query, get recipes by query, otherwise just get recipes
+        if (props.query) {
+            recipes = await getRecipesPageByQueryDB(props)
+        } else {
+            recipes = await getRecipesPageDB(props)
+        }
+        return recipes
+    },
+
+    getAllUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
+        const recipes = await getAllRecipesDB(userId)
         return recipes
     },
 
     /**
      * @description Converts the base64 image to an ArrayBuffer and uploads it to Firebase Storage and saves the link to it in the recipe to the DB
-     * @param recipe 
+     * @param recipe
      * @returns {RecipeDocument}
      */
     addRecipe: async (recipe: RecipeWithImage): Promise<RecipeDocument> => {
@@ -33,7 +52,7 @@ const recipeOperations = {
 
         const image_url = await firebaseStorageOperations.uploadImage(imageBuffer, hashString(recipe.recipe.description))
 
-        const newRecipe = await addRecipeDB({...recipe, image_url} as RecipeDocument)
+        const newRecipe = await addRecipeDB({ ...recipe, image_url } as RecipeDocument)
 
         return newRecipe
     },

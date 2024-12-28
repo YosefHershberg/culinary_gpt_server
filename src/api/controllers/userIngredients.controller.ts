@@ -5,7 +5,7 @@ import logger from "../../config/logger";
 import userIngredientOperations from "../services/userIngredients.service";
 
 import CustomRequest from "../../interfaces/CustomRequest";
-import { PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
+import { PartialIngredient as PartialIngredient } from '../../interfaces';
 import { HttpError } from "../../lib/HttpError";
 import { z } from "zod";
 import { ingredientSchema } from "../schemas/ingredient.schema";

@@ -8,7 +8,7 @@ import env from '../../config/env';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
-import { PartialUserIngredientResponse as PartialIngredient, Recipe } from "../../interfaces";
+import { PartialIngredient as PartialIngredient, Recipe } from "../../interfaces";
 
 interface CreateCocktailProps {
     prompt: string;

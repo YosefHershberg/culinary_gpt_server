@@ -3,7 +3,7 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as userIngredientControllers from '../controllers/userIngredients.controller';
-import { PartialUserIngredientResponse as PartialIngredient } from '../../interfaces';
+import { PartialIngredient as PartialIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 import { doSomethingByIdSchema } from '../schemas';
 

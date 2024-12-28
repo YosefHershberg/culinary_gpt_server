@@ -1,8 +1,41 @@
+import { getUserPageRecipesProps } from "../../interfaces/ServiceInterfaces";
 import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { DeleteResult } from "mongodb";
 
-export const getRecipesDB = async (userId: string): Promise<RecipeDocument[]> => {
-    const recipes = await Recipe.find({ userId }).exec()
+/**
+ * @description Get a page of recipes from the database
+ * @param param0 
+ * @returns 
+ */
+export const getRecipesPageDB = async ({ userId, page, limit }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
+    const recipes = await Recipe.find({ userId: userId })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
+
+    if (!recipes) {
+        throw new Error('Recipes not found');
+    }
+
+    return recipes;
+}
+
+export const getRecipesPageByQueryDB = async ({ userId, page, limit, query }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
+
+    const recipes = await Recipe.find({ userId, 'recipe.title': { $regex: query, $options: 'i' } })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
+
+    if (!recipes) {
+        throw new Error('Recipes not found');
+    }
+
+    return recipes;
+}
+
+export const getAllRecipesDB = async (userId: string): Promise<RecipeDocument[]> => {
+    const recipes = await Recipe.find({ userId }).exec();
 
     if (!recipes) {
         throw new Error('Recipes not found');

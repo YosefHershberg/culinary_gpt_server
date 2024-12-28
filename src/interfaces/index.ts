@@ -2,7 +2,7 @@
  * @fileoverview Interfaces for the application
  */
 
-export interface UserIngredientResponse {
+export interface Ingredient {
     category: string[];
     popularity: number;
     type: IngredientType[];        
@@ -10,7 +10,7 @@ export interface UserIngredientResponse {
     id: string;
 }
 
-export type PartialUserIngredientResponse = Partial<UserIngredientResponse>
+export type PartialIngredient = Partial<Ingredient>
 
 export interface KitchenUtils {
     "Stove Top": boolean,

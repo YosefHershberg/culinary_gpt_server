@@ -20,13 +20,25 @@ import { returnStreamData } from '../../utils/helperFunctions';
  * /api/user/recipes:
  *   get:
  *     summary: Retrieve all recipes for the authenticated user
- *     description: Fetches a list of recipes that belong to the currently authenticated user. 
+ *     description: Fetches a paginated list of recipes that belong to the currently authenticated user.
  *     tags:
  *       - User Recipes
- * 
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           description: The page number for pagination.
+ *       - in: query
+ *         name: limit
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           description: The number of recipes to retrieve per page.
  *     responses:
  *       200:
- *         description: A list of recipes belonging to the user
+ *         description: A paginated list of recipes belonging to the user.
  *         content:
  *           application/json:
  *             schema:
@@ -34,14 +46,28 @@ import { returnStreamData } from '../../utils/helperFunctions';
  *               items:
  *                 $ref: '#/components/schemas/Recipe'
  *       401:
- *         description: Unauthorized access
+ *         description: Unauthorized access.
  *       500:
- *         description: An error occurred while fetching recipes
+ *         description: An error occurred while fetching recipes.
  */
 
+export const getRecipesSchema = z.object({
+    query: z.object({
+        page: z.number(),
+        limit: z.number(),
+        query: z.string().optional()
+    })
+});
+
 export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
+
     try {
-        const recipes = await recipeOperations.getUserRecipes(req.userId as string);
+        const recipes = await recipeOperations.getUserPageRecipes({
+            userId: req.userId as string,
+            page: Number(req.query.page),
+            limit: Number(req.query.limit),
+            query: req.query.query as string
+        });
 
         return res.json(recipes);
     } catch (error) {
