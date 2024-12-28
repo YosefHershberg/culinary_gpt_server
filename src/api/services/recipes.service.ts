@@ -53,7 +53,7 @@ const recipeOperations = {
     },
 
     deleteRecipe: async (recipeId: string): Promise<MessageResponse> => {
-        const recipe = await getRecipeDB(recipeId)
+        const recipe = await getRecipeDB(recipeId)        
 
         if (!recipe) {
             throw new Error('Recipe not found')
