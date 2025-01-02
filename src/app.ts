@@ -11,6 +11,7 @@ import clerkWebhook from './api/webhooks/clerkWebhook';
 import rateLimiter from './config/rateLimit';
 import env from './config/env';
 import swagger from './utils/swagger';
+import { healthCheck } from './api/controllers/healthCheck.controller';
 
 const app = express();
 
@@ -34,6 +35,8 @@ app.post(
 app.use(express.json());
 
 app.use('/api', middlewares.authMiddleware, api);
+
+app.get('/health', healthCheck);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
