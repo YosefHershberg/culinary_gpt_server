@@ -17,8 +17,10 @@ const firebaseStorageOperations = {
      * @param {string} imageName 
      * @returns {string}
      */
-    uploadImage: async (buffer: ArrayBuffer): Promise<string> => {
+    uploadImage: async (buffer: ArrayBuffer, imageName: string): Promise<string> => {
         const storage = getStorage(firebaseApp);
+
+        const storagePath = `${env.NODE_ENV === 'production' ? 'images-prod' : 'images-dev'}/${imageName}`;
 
         // Create a reference to the storage location
         const storageRef = ref(storage, storagePath);
@@ -38,9 +40,9 @@ const firebaseStorageOperations = {
      * @returns {void}
     */
     deleteImage: async (imageName: string): Promise<void> => {
-        console.log('Deleting image:', imageName);
-
         const storage = getStorage(firebaseApp);
+
+        const storagePath = `${env.NODE_ENV === 'production' ? 'images-prod' : 'images-dev'}/${imageName}`;
 
         // Create a reference to the storage location
         const storageRef = ref(storage, storagePath);
