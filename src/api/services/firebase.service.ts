@@ -22,10 +22,8 @@ const firebaseStorageOperations = {
 
         const imageName = Math.random().toString(36).substring(15);
 
-        const storagePath = `${env.NODE_ENV === 'production' ? 'images-prod' : 'images-dev'}/${imageName}`;
-
         // Create a reference to the storage location
-        const storageRef = ref(storage, storagePath);
+        const storageRef = ref(storage, `images/${imageName}`);
 
         // Upload the file
         const snapshot = await uploadBytesResumable(storageRef, buffer);
@@ -46,7 +44,7 @@ const firebaseStorageOperations = {
 
         const storage = getStorage(firebaseApp);
 
-        const storagePath = `${env.NODE_ENV === 'production' ? 'images-prod' : 'images-dev'}/${imageName}`;
+        const storagePath = `images/${imageName}`;
 
         // Create a reference to the storage location
         const storageRef = ref(storage, storagePath);
