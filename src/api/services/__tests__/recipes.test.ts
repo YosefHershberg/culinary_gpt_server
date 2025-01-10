@@ -51,7 +51,6 @@ describe('recipeOperations', () => {
             const mockImageUrl = 'mockImageUrl';
 
             (base64ToArrayBuffer as jest.Mock).mockReturnValue(mockImageBuffer);
-            (hashString as jest.Mock).mockReturnValue('hashedDescription');
             (firebaseStorageOperations.uploadImage as jest.Mock).mockResolvedValue(mockImageUrl);
             (addRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
 
@@ -59,8 +58,7 @@ describe('recipeOperations', () => {
 
             expect(result).toEqual(mockRecipe);
             expect(base64ToArrayBuffer).toHaveBeenCalledWith(mockRecipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, ''));
-            expect(hashString).toHaveBeenCalledWith(mockRecipe.recipe.description);
-            expect(firebaseStorageOperations.uploadImage).toHaveBeenCalledWith(mockImageBuffer, 'hashedDescription');
+            expect(firebaseStorageOperations.uploadImage).toHaveBeenCalledWith(mockImageBuffer);
             expect(addRecipeDB).toHaveBeenCalledWith({ ...mockRecipe, image_url: mockImageUrl });
         });
     });

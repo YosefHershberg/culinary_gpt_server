@@ -45,7 +45,7 @@ const recipeOperations = {
         // Convert base64 to ArrayBuffer
         const imageBuffer = base64ToArrayBuffer(base64Image);
 
-        const image_url = await firebaseStorageOperations.uploadImage(imageBuffer, hashString(recipe.recipe.description))
+        const image_url = await firebaseStorageOperations.uploadImage(imageBuffer)
 
         const newRecipe = await addRecipeDB({ ...recipe, image_url } as RecipeDocument)
 
@@ -60,7 +60,7 @@ const recipeOperations = {
         }
 
         await Promise.all([
-            firebaseStorageOperations.deleteImage(hashString(recipe.recipe.description)),
+            firebaseStorageOperations.deleteImage(recipeId),
             deleteRecipeDB(recipeId)
         ]);
 
