@@ -1,5 +1,6 @@
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import firebaseApp from "../../config/firebase";
+import env from "../../config/env";
 
 /**
  * @module firebase.service
@@ -19,8 +20,10 @@ const firebaseStorageOperations = {
     uploadImage: async (buffer: ArrayBuffer, imageName: string): Promise<string> => {
         const storage = getStorage(firebaseApp);
 
+        const storagePath = `${env.NODE_ENV === 'production' ? 'images-prod' : 'images-dev'}/${imageName}`;
+
         // Create a reference to the storage location
-        const storageRef = ref(storage, `images/${imageName}`);
+        const storageRef = ref(storage, storagePath);
 
         // Upload the file
         const snapshot = await uploadBytesResumable(storageRef, buffer);
@@ -35,12 +38,14 @@ const firebaseStorageOperations = {
      * @description This function deletes an image from Firebase Storage
      * @param {string} imageName 
      * @returns {void}
-     */
+    */
     deleteImage: async (imageName: string): Promise<void> => {
         const storage = getStorage(firebaseApp);
 
+        const storagePath = `${env.NODE_ENV === 'production' ? 'images-prod' : 'images-dev'}/${imageName}`;
+
         // Create a reference to the storage location
-        const storageRef = ref(storage, `images/${imageName}`);
+        const storageRef = ref(storage, storagePath);
 
         // Delete the file
         return await deleteObject(storageRef);
