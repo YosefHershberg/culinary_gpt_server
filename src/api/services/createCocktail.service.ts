@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Response } from 'express';
+import { v4 as uuid } from 'uuid';
 
 import openai from '../../config/openai';
 import logger from '../../config/logger';
@@ -114,7 +115,7 @@ const createCocktailOperations = {
      * @param {Response} params.res 
      * @returns {Recipe} cocktail recipe
      */
-    createCocktailOpenAI: async (cocktailPrompt: string, res: Response): Promise<Recipe> => {
+    createCocktailOpenAI: async (cocktailPrompt: string, res: Response): Promise<void> => {
         const maxRetries = 3;
         let attempts = 0;
         let isValidJson = false;
@@ -153,8 +154,7 @@ const createCocktailOperations = {
         // This is relevant for deleting the recipe
         recipe.id = uuid();
 
-        returnStreamData(res, { event: 'recipe', data: recipe });
-        return recipe;
+        return returnStreamData(res, { event: 'recipe', data: recipe });
     },
 
     /**
@@ -200,7 +200,3 @@ const createCocktailOperations = {
 };
 
 export default createCocktailOperations
-
-function uuid(): any {
-    throw new Error('Function not implemented.');
-}
