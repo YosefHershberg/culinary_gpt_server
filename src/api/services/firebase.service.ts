@@ -20,10 +20,8 @@ const firebaseStorageOperations = {
     uploadImage: async (buffer: ArrayBuffer): Promise<string> => {
         const storage = getStorage(firebaseApp);
 
-        const imageName = Math.random().toString(36).substring(15);
-
         // Create a reference to the storage location
-        const storageRef = ref(storage, `images/${imageName}`);
+        const storageRef = ref(storage, storagePath);
 
         // Upload the file
         const snapshot = await uploadBytesResumable(storageRef, buffer);
@@ -43,8 +41,6 @@ const firebaseStorageOperations = {
         console.log('Deleting image:', imageName);
 
         const storage = getStorage(firebaseApp);
-
-        const storagePath = `images/${imageName}`;
 
         // Create a reference to the storage location
         const storageRef = ref(storage, storagePath);
