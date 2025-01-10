@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { Response } from 'express';
+import { v4 as uuid } from 'uuid';
+
 
 import openai from '../../config/openai';
 import logger from '../../config/logger';
@@ -9,13 +11,6 @@ import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 import { PartialIngredient as PartialIngredient, Recipe } from "../../interfaces";
-
-interface CreateCocktailProps {
-    prompt: string;
-    userIngredients: PartialIngredient[];
-    cocktailTitle: string;
-    res: Response;
-}
 
 const createCocktailOperations = {
 
@@ -200,7 +195,3 @@ const createCocktailOperations = {
 };
 
 export default createCocktailOperations
-
-function uuid(): any {
-    throw new Error('Function not implemented.');
-}
