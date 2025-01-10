@@ -28,7 +28,8 @@ export const mockRecipe: RecipeWithImage = {
         ],
         time: "20 minutes",
         level: "Easy",
-        type: "recipe"
+        type: "recipe",
+        id: "recipe123"
     }
 };
 

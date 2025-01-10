@@ -42,6 +42,7 @@ export interface Recipe {
     time: string;
     level: string;
     type: "recipe" | "cocktail";
+    id: string;
 }
 
 export type IngredientType = "food" | "drink";

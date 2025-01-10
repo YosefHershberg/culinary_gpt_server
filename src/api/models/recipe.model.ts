@@ -49,6 +49,10 @@ const recipeSchema = new mongoose.Schema<RecipeDocument>({
             type: String,
             enum: ['recipe', 'cocktail'],
             required: true,
+        },
+        id: {
+            type: String,
+            required: true,
         }
     },
     image_url: {

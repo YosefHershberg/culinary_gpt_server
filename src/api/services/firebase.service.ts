@@ -40,6 +40,7 @@ const firebaseStorageOperations = {
      * @returns {void}
     */
     deleteImage: async (imageName: string): Promise<void> => {
+
         const storage = getStorage(firebaseApp);
 
         const storagePath = `${env.NODE_ENV === 'production' ? 'images-prod' : 'images-dev'}/${imageName}`;

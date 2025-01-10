@@ -40,6 +40,9 @@ import { TypeOf, z } from "zod";
  *           enum:
  *             - recipe
  *             - cocktail
+ *         id:
+ *           type: string
+
  *       required:
  *         - title
  *         - ingredients
@@ -47,6 +50,7 @@ import { TypeOf, z } from "zod";
  *         - time
  *         - level
  *         - type
+ *         - id
  */
 
 export const recipeSchema = z.object({
@@ -61,7 +65,8 @@ export const recipeSchema = z.object({
     })).min(1),
     time: z.string(),
     level: z.string(),
-    type: z.enum(['recipe', 'cocktail'])
+    type: z.enum(['recipe', 'cocktail']),
+    id: z.string(),
 });
 
 export type Recipe = TypeOf<typeof recipeSchema>;

@@ -150,6 +150,9 @@ const createCocktailOperations = {
             throw new Error('No valid JSON response generated for cocktail recipe');
         }
 
+        // This is relevant for deleting the recipe
+        recipe.id = uuid();
+
         returnStreamData(res, { event: 'recipe', data: recipe });
         return recipe;
     },
@@ -197,3 +200,7 @@ const createCocktailOperations = {
 };
 
 export default createCocktailOperations
+
+function uuid(): any {
+    throw new Error('Function not implemented.');
+}

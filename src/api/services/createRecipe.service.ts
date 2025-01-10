@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Response } from 'express';
+import { v4 as uuid } from 'uuid';
 
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
@@ -10,7 +11,7 @@ import logger from '../../config/logger';
 
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
-import { PartialIngredient as PartialIngredient, KitchenUtils, Recipe } from "../../interfaces";
+import { PartialIngredient as PartialIngredient, Recipe } from "../../interfaces";
 
 export interface CreateRecipeProps {
     mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
@@ -124,6 +125,9 @@ const createRecipeOperations = {
         if (!isValidJson) {
             throw new Error('No valid JSON response generated');
         }
+
+        // This is relevant for deleting the recipe
+        recipe.id = uuid();
 
         returnStreamData(res, { event: 'recipe', data: recipe });
         return recipe
