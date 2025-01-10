@@ -2,8 +2,6 @@ import axios from 'axios';
 import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
 
-import { v4 as uuid } from 'uuid';
-
 import openai from '../../config/openai';
 import logger from '../../config/logger';
 import env from '../../config/env';
