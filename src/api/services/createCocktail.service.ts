@@ -52,7 +52,7 @@ const createCocktailOperations = {
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${compressedBase64Image}`;
 
-        return returnStreamData(res, { event: 'image', data: base64DataUrl });
+        return returnStreamData(res, { event: 'image', payload: base64DataUrl });
     },
 
     /**
@@ -147,7 +147,7 @@ const createCocktailOperations = {
         // This is relevant for deleting the recipe
         recipe.id = uuid();
 
-        return returnStreamData(res, { event: 'recipe', data: recipe });
+        return returnStreamData(res, { event: 'recipe', payload: recipe });
     },
 
     /**

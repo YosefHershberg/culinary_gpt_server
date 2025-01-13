@@ -78,7 +78,7 @@ const createRecipeOperations = {
         const base64DataUrl = `data:image/jpeg;base64,${compressedBase64Image}`;
 
         // Stream the image to the client
-        return returnStreamData(res, { event: 'image', data: base64DataUrl });
+        return returnStreamData(res, { event: 'image', payload: base64DataUrl });
     },
 
     /**
@@ -129,7 +129,7 @@ const createRecipeOperations = {
         // This is relevant for deleting the recipe
         recipe.id = uuid();
 
-        returnStreamData(res, { event: 'recipe', data: recipe });
+        returnStreamData(res, { event: 'recipe', payload: recipe });
         return recipe
     },
 

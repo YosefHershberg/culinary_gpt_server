@@ -2,7 +2,7 @@ import sharp from "sharp";
 import crypto from "crypto";
 import { Response } from "express";
 
-export const returnStreamData = (res: Response, data: Record<string, unknown>) => {
+export const returnStreamData = (res: Response, data: { event: string, payload: any }) => {
   res.write(`data: ${JSON.stringify(data)}\n\n`);
 }
 

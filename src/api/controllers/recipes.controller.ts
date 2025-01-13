@@ -332,7 +332,7 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
         }
         returnStreamData(res, {
             event: 'error',
-            error
+            payload: error
         });
         res.end()
         next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while creating your recipe'));
@@ -411,7 +411,7 @@ export const createCocktail = async (req: CustomRequest, res: Response, next: Ne
         }
         returnStreamData(res, {
             event: 'error',
-            error
+            payload: error
         });
         res.end()
         next(new HttpError(HttpStatusCode.InternalServerError, 'An error accrued while creating your cocktail'));
