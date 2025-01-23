@@ -11,6 +11,17 @@ import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePro
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 import { UserIngredient as UserIngredient, Recipe } from "../../interfaces";
 
+/**
+ * @module createRecipe.service
+ * 
+ * @description This module provides operations for creating a recipe
+ * @note this service uses server sent events to stream data to the client. therefore, the response object is passed to the functions
+ * 
+ * @exports createRecipeOperations
+ */
+
+const MAX_RETRIES = 3;
+
 const createCocktailOperations = {
 
     /**
@@ -18,6 +29,7 @@ const createCocktailOperations = {
      * @note We create the title first and then the recipe and image simultaneously. This way is faster.
      * @param {string} userId
      * @param {string} prompt
+     * @param {Response} res
      * @returns {RecipeWithImage}
      */
     createCocktail: async (userId: string, prompt: string, res: Response): Promise<void> => {
@@ -57,18 +69,16 @@ const createCocktailOperations = {
 
     /**
      * @description This function creates a cocktail title using OpenAI API
-     * @param {UserIngredient[]} userIngredients 
-     * @param {string} prompt
+     * @param {string} cocktailTitlePrompt
      * @returns {string} cocktail title
      */
     createCocktailTitleOpenAI: async (cocktailTitlePrompt: string): Promise<string> => {
-        const maxRetries = 3;
         let attempts = 0;
         let isValidJson = false;
 
         let title = null;
 
-        while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
+        while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
                     messages: [{
@@ -101,12 +111,9 @@ const createCocktailOperations = {
 
     /**
      * @description This function creates a cocktail recipe using OpenAI API and returns a valid JSON
-     * @param {object} params - The parameters object
-     * @param {string} params.prompt 
-     * @param {string[]} params.userIngredients 
-     * @param {string} params.cocktailTitle 
-     * @param {Response} params.res 
-     * @returns {Recipe} cocktail recipe
+     * @param {string} cocktailPrompt
+     * @param {Response} res
+     * @returns {Recipe} recipe
      */
     createCocktailOpenAI: async (cocktailPrompt: string, res: Response): Promise<void> => {
         const maxRetries = 3;
@@ -152,8 +159,7 @@ const createCocktailOperations = {
 
     /**
      * @description This function creates an image using GetimgAI API
-     * @param {string} cocktailTitle
-     * @param {UserIngredient[]} userIngredients
+     * @param {string} imagePrompt
      * @returns {string} base64 image
      */
     createImageGetimgAI: async (imagePrompt: string): Promise<string> => {

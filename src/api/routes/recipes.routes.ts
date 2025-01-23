@@ -36,7 +36,7 @@ router.post<{}, RecipeDocument | MessageResponse>(
 router.get<{ id: string }, RecipeDocument | MessageResponse>(
     '/:id',
     validate(doSomethingByIdSchema),
-    recipesController.getRecipe
+    recipesController.getRecipeById
 );
 
 router.delete<{ id: string }, MessageResponse>(

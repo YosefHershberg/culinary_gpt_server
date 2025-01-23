@@ -36,13 +36,12 @@ const imageDetectionOperations = {
      * @param {string} base64image 
      * @returns {string}
      */
-    // detectLabels: async (base64image: string): Promise<string[]> => {
-    detectLabels: async (base64image: string) => {
+    detectLabels: async (base64image: string): Promise<string[]> => {
         const maxRetries = 3;
         let attempts = 0;
         let isValidJson = false;
 
-        let result;
+        let result: string[] = [];
 
         while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
             try {

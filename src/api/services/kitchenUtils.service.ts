@@ -9,7 +9,6 @@ import { getKitchenUtilsDB, toggleKitchenUtilDB } from "../data-access/kitchenUt
  */
 
 const kitchenUtilsOperations = {
-
     get: async (userId: string): Promise<KitchenUtils> => {
         const kitchenUtils = await getKitchenUtilsDB(userId);
 

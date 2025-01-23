@@ -27,6 +27,11 @@ const recipeOperations = {
         return recipes
     },
 
+    /**
+     * @description Get all recipes from the database
+     * @param userId 
+     * @returns {RecipeDocument[]} 
+     */
     getAllUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
         const recipes = await getAllRecipesDB(userId)
         
@@ -52,6 +57,11 @@ const recipeOperations = {
         return newRecipe
     },
 
+    /**
+     * @description Delete a recipe from the database and the image from Firebase Storage
+     * @param recipeId 
+     * @returns {MessageResponse}
+     */
     deleteRecipe: async (recipeId: string): Promise<MessageResponse> => {
         const recipe = await getRecipeDB(recipeId)        
 
@@ -67,7 +77,12 @@ const recipeOperations = {
         return { message: 'Recipe deleted successfully' }
     },
 
-    getRecipe: async (recipeId: string): Promise<RecipeDocument> => {
+    /**
+     * @description Get a recipe by its id
+     * @param recipeId 
+     * @returns {RecipeDocument}
+     */
+    getRecipeById: async (recipeId: string): Promise<RecipeDocument> => {
         const recipe = await getRecipeDB(recipeId)
 
         if (!recipe) {

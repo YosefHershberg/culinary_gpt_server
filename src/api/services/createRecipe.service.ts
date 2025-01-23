@@ -38,6 +38,7 @@ const createRecipeOperations = {
      * @note We create the title first and then the recipe and image simultaneously. This way is faster.
      * @param {string} userId
      * @param {CreateRecipeProps} recipeInput
+     * @param {Response} res
      * @returns {RecipeWithImage}
      */
     createRecipe: async (userId: string, recipeInput: CreateRecipeProps, res: Response): Promise<void> => {
@@ -83,12 +84,8 @@ const createRecipeOperations = {
 
     /**
      * @description This function creates a recipe using OpenAI API and returns a valid JSON
-     * @param {object} params - The parameters object
-     * @param {CreateRecipeProps} params.recipeInput 
-     * @param {string[]} params.userIngredients 
-     * @param {KitchenUtils} params.kitchenUtils 
-     * @param {string} params.recipeTitle 
-     * @param {Response} params.res 
+     * @param {string} recipePrompt
+     * @param {Response} res
      * @returns {Recipe} recipe
      */
     createRecipeOpenAI: async (recipePrompt: string, res: Response): Promise<Recipe> => {
@@ -135,8 +132,7 @@ const createRecipeOperations = {
 
     /**
      * @description This function creates an image using GetimgAI API
-     * @param recipeTitle 
-     * @param userIngredients 
+     * @param {string} imagePrompt
      * @returns {string} base64 image
      */
     createImageGetimgAI: async (imagePrompt: string): Promise<string> => {
@@ -152,6 +148,11 @@ const createRecipeOperations = {
         return data.image
     },
 
+    /**
+     * @description This function creates a recipe title using OpenAI API and returns a valid JSON
+     * @param {string} recipeTitlePrompt
+     * @returns {string} title
+     */
     createRecipeTitleOpenAI: async (recipeTitlePrompt: string) => {
         let attempts = 0;
         let isValidJson = false;

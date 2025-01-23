@@ -84,7 +84,7 @@ describe('recipeOperations', () => {
 
             (getRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
 
-            const result = await recipeOperations.getRecipe('recipeId');
+            const result = await recipeOperations.getRecipeById('recipeId');
 
             expect(result).toEqual(mockRecipe);
             expect(getRecipeDB).toHaveBeenCalledWith('recipeId');

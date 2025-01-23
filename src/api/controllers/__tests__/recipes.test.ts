@@ -55,14 +55,14 @@ describe('Recipe Controller', () => {
         const recipeId = '1';
 
         it('should return a recipe by id', async () => {
-            (recipeOperations.getRecipe as jest.Mock).mockResolvedValue(mockRecipes[0]);
+            (recipeOperations.getRecipeById as jest.Mock).mockResolvedValue(mockRecipes[0]);
 
             const response = await request(app)
                 .get(`/api/user/recipes/${recipeId}`)
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipes[0]);
-            expect(recipeOperations.getRecipe).toHaveBeenCalledWith(recipeId);
+            expect(recipeOperations.getRecipeById).toHaveBeenCalledWith(recipeId);
         });
     });
 

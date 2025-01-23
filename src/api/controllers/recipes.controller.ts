@@ -184,11 +184,11 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
  *         description: An error occurred while fetching the recipe
  */
 
-export const getRecipe = async (req: CustomRequest, res: Response<RecipeDocument>, next: NextFunction) => {
+export const getRecipeById = async (req: CustomRequest, res: Response<RecipeDocument>, next: NextFunction) => {
     const id = req.params.id;
 
     try {
-        const recipe = await recipeOperations.getRecipe(id);
+        const recipe = await recipeOperations.getRecipeById(id);
 
         return res.json(recipe);
     } catch (error) {
