@@ -11,7 +11,7 @@ import logger from '../../config/logger';
 
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
-import { PartialIngredient as PartialIngredient, Recipe } from "../../interfaces";
+import { UserIngredient, Recipe } from "../../interfaces";
 
 export interface CreateRecipeProps {
     mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
@@ -52,7 +52,7 @@ const createRecipeOperations = {
             throw new Error('Not enough ingredients to create a recipe');
         }
 
-        const userIngredients = ingredients.map((ingredient: PartialIngredient) => ingredient.name) as PartialIngredient[];
+        const userIngredients = ingredients.map((ingredient: UserIngredient) => ingredient.name);
 
         const recipeTitlePrompt = createRecipeTitlePrompt(userIngredients, recipeInput.prompt, kitchenUtils);
 
@@ -131,27 +131,6 @@ const createRecipeOperations = {
 
         returnStreamData(res, { event: 'recipe', payload: recipe });
         return recipe
-    },
-
-    /**
-     * @description This function creates an image using OpenAI API
-     * @param {string} recipeTitle
-     * @returns {string} valid base64 image
-     */
-    createImageOpenAI: async (recipeTitle: string, userIngredients: PartialIngredient[]): Promise<string> => {
-        const response = await openai.images.generate({
-            model: "dall-e-3",
-            prompt: createRecipeImagePrompt(recipeTitle, userIngredients),
-            n: 1,
-            size: "1024x1024",
-            quality: 'standard',
-            style: 'vivid',
-            response_format: 'b64_json',
-        });
-
-        const imageBase64Url = response?.data[0].b64_json as string;
-
-        return imageBase64Url;
     },
 
     /**

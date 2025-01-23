@@ -1,9 +1,8 @@
 import { CreateRecipeProps } from "../api/services/createRecipe.service"
 import { KitchenUtils } from "../interfaces"
-import { PartialIngredient as PartialIngredient } from "../interfaces"
 
 interface CreateRecipePromptProps extends CreateRecipeProps {
-    userIngredients: PartialIngredient[];
+    userIngredients: string[];
     recipeTitle: string;
     kitchenUtils: KitchenUtils;
 }
@@ -35,7 +34,7 @@ export const createRecipePrompt = ({ mealSelected, selectedTime, userIngredients
     `
 }
 
-export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: PartialIngredient[]) => {
+export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: string[]) => {
     return `A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}. 
         made with these ingredients: ${userIngredients?.join(', ')}.
         Don't any of the ingredients in the image. just the dish!
@@ -49,7 +48,7 @@ export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: Pa
     `
 }
 
-export const createRecipeTitlePrompt = (userIngredients: PartialIngredient[], prompt: string, kitchenUtils: KitchenUtils) => {
+export const createRecipeTitlePrompt = (userIngredients: string[], prompt: string, kitchenUtils: KitchenUtils) => {
     return `Create a recipe title using these ingredients: ${userIngredients?.join(', ')}.
         have the recipe (of witch you will give me the title of) be made with the following kitchen utilities: ${kitchenUtils}.
         The title should be catchy and descriptive, capturing the essence of the dish.
@@ -64,7 +63,7 @@ export const createRecipeTitlePrompt = (userIngredients: PartialIngredient[], pr
     `
 }
 
-export const createCocktailPrompt = (userIngredients: PartialIngredient[], prompt: string, title: string) => {
+export const createCocktailPrompt = (userIngredients: string[], prompt: string, title: string) => {
     return `Create a ${title} cocktail recipe with these ingredients: ${userIngredients?.join(', ')}
         Also, consider this prompt: ${prompt}.
         Important: Use only the provided ingredients.
@@ -83,7 +82,7 @@ export const createCocktailPrompt = (userIngredients: PartialIngredient[], promp
     `
 }
 
-export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients: PartialIngredient[]) => {
+export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients: string[]) => {
     return `A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail.
         the ingredients are: ${userIngredients?.join(', ')}.
         Don't show any of the ingredients in the image. just the cocktail!
@@ -97,7 +96,7 @@ export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients
     `
 }
 
-export const createCocktailTitlePrompt = (userIngredients: PartialIngredient[], prompt: string) => {
+export const createCocktailTitlePrompt = (userIngredients: string[], prompt: string) => {
     return `Create a cocktail title using these ingredients: ${userIngredients?.join(', ')}.
         The title should be creative and engaging, reflecting the character of the cocktail.
         If you can, give me a title of a cocktail that already exists. (if the ingredients match)

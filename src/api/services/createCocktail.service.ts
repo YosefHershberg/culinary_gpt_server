@@ -9,7 +9,7 @@ import env from '../../config/env';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
-import { PartialIngredient as PartialIngredient, Recipe } from "../../interfaces";
+import { UserIngredient as UserIngredient, Recipe } from "../../interfaces";
 
 const createCocktailOperations = {
 
@@ -28,7 +28,7 @@ const createCocktailOperations = {
             throw new Error('Not enough ingredients to create a recipe');
         }
 
-        const userIngredients = ingredients.map((ingredient: PartialIngredient) => ingredient.name) as PartialIngredient[];
+        const userIngredients = ingredients.map((ingredient: UserIngredient) => ingredient.name);
 
         const cocktailTitlePrompt = createCocktailTitlePrompt(userIngredients, prompt);
 
@@ -57,7 +57,7 @@ const createCocktailOperations = {
 
     /**
      * @description This function creates a cocktail title using OpenAI API
-     * @param {PartialIngredient[]} userIngredients 
+     * @param {UserIngredient[]} userIngredients 
      * @param {string} prompt
      * @returns {string} cocktail title
      */
@@ -151,31 +151,9 @@ const createCocktailOperations = {
     },
 
     /**
-     * @description This function creates an image using OpenAI API
-     * @param {string} cocktailTitle
-     * @param {PartialIngredient[]} userIngredients
-     * @returns {string} valid base64 image
-     */
-    createImageOpenAI: async (cocktailTitle: string, userIngredients: PartialIngredient[]): Promise<string> => {
-        const response = await openai.images.generate({
-            model: "dall-e-3",
-            prompt: createCocktailImagePrompt(cocktailTitle, userIngredients),
-            n: 1,
-            size: "1024x1024",
-            quality: 'standard',
-            style: 'vivid',
-            response_format: 'b64_json',
-        });
-
-        const imageUrl = response.data[0].b64_json as string;
-
-        return imageUrl;
-    },
-
-    /**
      * @description This function creates an image using GetimgAI API
      * @param {string} cocktailTitle
-     * @param {PartialIngredient[]} userIngredients
+     * @param {UserIngredient[]} userIngredients
      * @returns {string} base64 image
      */
     createImageGetimgAI: async (imagePrompt: string): Promise<string> => {

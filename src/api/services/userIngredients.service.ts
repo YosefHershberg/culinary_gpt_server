@@ -2,7 +2,7 @@ import { IngredientDocument } from "../models/ingredient.model";
 
 import { addMultipleUserIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/userIngredient.da";
 
-import { PartialIngredient as PartialIngredient } from "../../interfaces";
+import { UserIngredient as UserIngredient } from "../../interfaces";
 import MessageResponse from "../../interfaces/MessageResponse";
 import { UserIngredientInterface } from "../models/UserIngredients.model";
 
@@ -14,12 +14,12 @@ import { UserIngredientInterface } from "../models/UserIngredients.model";
  */
 
 const userIngredientOperations = {
-    getAll: async (userId: string): Promise<PartialIngredient[]> => {
+    getAll: async (userId: string): Promise<UserIngredient[]> => {
         const ingredients = await getUserIngredientsDB(userId);
         return ingredients;
     },
 
-    addIngredient: async (userIngredient: UserIngredientInterface): Promise<PartialIngredient> => {
+    addIngredient: async (userIngredient: UserIngredientInterface): Promise<UserIngredient> => {
         const newIngredient = await addUserIngredientDB(userIngredient);
         return newIngredient;
     },
@@ -29,7 +29,7 @@ const userIngredientOperations = {
         return { message: "Ingredient deleted successfully" };
     },
 
-    addMultiple: async (userId: string, userIngredients: IngredientDocument[]): Promise<PartialIngredient[]> => {
+    addMultiple: async (userId: string, userIngredients: IngredientDocument[]): Promise<UserIngredient[]> => {
         const userIngredientDocs: UserIngredientInterface[] = userIngredients.map((ingredient) => ({
             userId,
             ingredientId: ingredient.id,

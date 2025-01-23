@@ -3,24 +3,24 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as userIngredientControllers from '../controllers/userIngredients.controller';
-import { PartialIngredient as PartialIngredient } from '../../interfaces';
+import { UserIngredient as UserIngredient } from '../../interfaces';
 import MessageResponse from '../../interfaces/MessageResponse';
 import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();
 
-router.get<{}, PartialIngredient[] | MessageResponse>(
+router.get<{}, UserIngredient[] | MessageResponse>(
     '/',
-    userIngredientControllers.getIngredients
+    userIngredientControllers.getAllIngredients
 );
 
-router.post<{}, PartialIngredient | MessageResponse>(
+router.post<{}, UserIngredient | MessageResponse>(
     '/',
     validate(userIngredientControllers.addIngredientSchema),
     userIngredientControllers.addIngredient
 );
 
-router.post<{}, PartialIngredient[] | MessageResponse>(
+router.post<{}, UserIngredient[] | MessageResponse>(
     '/multiple',
     validate(userIngredientControllers.addMultipleIngredientsSchema),
     userIngredientControllers.addMultipleIngredients

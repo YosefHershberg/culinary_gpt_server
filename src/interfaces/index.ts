@@ -10,9 +10,9 @@ export interface Ingredient {
     id: string;
 }
 
-export type PartialIngredient = Partial<Ingredient>
+export type UserIngredient = Omit<Ingredient, 'popularity' | 'category'>;
 
-export interface KitchenUtils {
+export interface KitchenUtils { 
     "Stove Top": boolean,
     "Oven": boolean,
     "Microwave": boolean,
