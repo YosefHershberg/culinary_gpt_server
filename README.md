@@ -10,6 +10,7 @@ This application is deployed on AWS with a CI/CD pipeline with Github Actions an
 
 - User authentication and authorization using Clerk
 - Recipe generation using the OpenAI API
+- Image detection using the OpenAI API
 - CRUD operations for managing user-generated recipes
 - MongoDB for storing recipes and user data
 - Image storage with firebase
@@ -17,7 +18,7 @@ This application is deployed on AWS with a CI/CD pipeline with Github Actions an
 
 ## Documentation
 
-JSDoc is shown in various functions ans services and SwaggerUI is available for this application.
+JSDoc is shown in various functions and services and SwaggerUI is available for this application.
 to create the swagger HTML file enter this command - 
 
 ```console
@@ -67,7 +68,11 @@ npm run dev
 │   └── app.ts
 ├── .env
 ├── package.json
+├── package-lock.json
 ├── tsconfig.json
 ├── jest.config.json
 ├── jsdoc.json
+├── DockerFile
+├── .eslintrc
+├── .dockerignore
 └── README.md
