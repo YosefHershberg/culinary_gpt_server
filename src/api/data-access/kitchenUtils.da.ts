@@ -14,11 +14,11 @@ export const getKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsInt
 export const createKitchenUtilsDB = async (userId: string): Promise<IKitchenUtils> => {
     const kitchenUtils = new KitchenUtils({
         kitchenUtils: {
-            "Stove Top": false,
-            "Oven": false,
-            "Microwave": false,
+            "Stove Top": true,
+            "Oven": true,
+            "Microwave": true,
             "Air Fryer": false,
-            "Blender": false,
+            "Blender": true,
             "Food Processor": false,
             "Slow Cooker": false,
             "BBQ": false,
