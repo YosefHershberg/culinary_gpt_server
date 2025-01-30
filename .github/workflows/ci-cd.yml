@@ -11,7 +11,7 @@ env:
   ECS_CLUSTER: arn:aws:ecs:eu-central-1:879381237613:cluster/culinary-gpt-cluster
   ECS_TASK_DEFINITION: c-gpt-task-def-revision2.json
                                               
-  CONTAINER_NAME: culinary-gpt-server   
+  CONTAINER_NAME: culinary-gpt-server-container
                                               
 jobs:
   # test:
