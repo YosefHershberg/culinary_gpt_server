@@ -9,7 +9,7 @@ env:
   ECR_REPOSITORY: culinary-gpt-server
   ECS_SERVICE: arn:aws:ecs:eu-central-1:879381237613:service/culinary-gpt-cluster/culinary-gpt-service                 
   ECS_CLUSTER: arn:aws:ecs:eu-central-1:879381237613:cluster/culinary-gpt-cluster
-  ECS_TASK_DEFINITION: c-gpt-task-def-revision2.json
+  ECS_TASK_DEFINITION: c-gpt-task-def-revision3.json
                                               
   CONTAINER_NAME: culinary-gpt-server-container
                                               
