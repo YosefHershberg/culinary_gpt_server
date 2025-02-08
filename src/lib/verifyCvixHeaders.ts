@@ -4,7 +4,7 @@ import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import env from "../config/env";
 import logger from "../config/logger";
 
-const varifyCvixHeaders = (req: Request) => {
+const verifyCvixHeaders = (req: Request) => {
 
     const WEBHOOK_SECRET = env.WEBHOOK_SECRET;
     if (!WEBHOOK_SECRET) {
@@ -46,4 +46,4 @@ const varifyCvixHeaders = (req: Request) => {
     return evt
 }
 
-export default varifyCvixHeaders
+export default verifyCvixHeaders

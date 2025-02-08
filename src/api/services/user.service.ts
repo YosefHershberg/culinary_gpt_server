@@ -16,6 +16,11 @@ import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
  */
 
 const userOperations = {
+    /**
+     * @description This function creates a user & kitchen utilities
+     * @param userData 
+     * @returns 
+     */
     createUser: async (userData: CreateUserDBProps): Promise<UserDocument> => {
         const [user, _kitchenUtils] = await Promise.all([
             createUserDB(userData),
@@ -46,6 +51,7 @@ const userOperations = {
             deleteAllUserIngredientsDB(userId),
 
             //delete recipe images from firebase storage
+            // TODO: batch these operations
             recipes.map(recipe =>
                 firebaseStorageOperations.deleteImage(hashString(recipe.recipe.description))
             ),

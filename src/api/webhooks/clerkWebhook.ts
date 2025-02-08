@@ -1,7 +1,7 @@
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Request, Response, NextFunction } from "express";
 import userOperations from "../services/user.service";
-import varifyCvixHeaders from "../../lib/varifyCvixHeaders";
+import verifyCvixHeaders from "../../lib/verifyCvixHeaders";
 import logger from "../../config/logger";
 import { HttpError } from "../../lib/HttpError";
 
@@ -11,7 +11,7 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
     let message: string = '';
 
     try {
-        evt = varifyCvixHeaders(req) as WebhookEvent;
+        evt = verifyCvixHeaders(req) as WebhookEvent;
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message)

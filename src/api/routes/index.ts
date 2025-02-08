@@ -11,7 +11,6 @@ import kitchenUtilsRoutes from './kitchenUtils.routes';
 import recipesRoutes from './recipes.routes';
 import ingredientsRoutes from './ingredients.routes';
 
-
 const router = express.Router();
 
 router.use(
