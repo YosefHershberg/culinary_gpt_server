@@ -7,32 +7,52 @@ interface CreateRecipePromptProps extends CreateRecipeProps {
     kitchenUtils: KitchenUtils;
 }
 
-export const createRecipePrompt = ({ mealSelected, selectedTime, userIngredients, recipeTitle, kitchenUtils, numOfPeople, prompt }: CreateRecipePromptProps) => {
-    return `create a recipe of a ${recipeTitle} for ${mealSelected} that takes ${selectedTime} minutes
-        the following ingredients are available: ${userIngredients?.join(', ')}
-        with the following kitchen utilities: ${kitchenUtils}
-        the recipe should serve ${numOfPeople} people.
-        add also keep in mind this - ${prompt}.
-        Very Important: don't use ingredients that are not available in the list of ingredients provided.
-        Very Important: don't use kitchen utensils that aren't available in hte data I gave you.
-        Very Important: the response that I want you to give me should be nothing but a VALID json without the backticks that looks like this:
+export const createRecipePrompt = ({
+    mealSelected,
+    selectedTime,
+    userIngredients,
+    recipeTitle,
+    kitchenUtils,
+    numOfPeople,
+    prompt
+}: CreateRecipePromptProps) => {
+    return `
+        Create a recipe for a ${recipeTitle} that is suitable for ${mealSelected}. The recipe should take no more than ${selectedTime} minutes to prepare and cook.
+        
+        Available ingredients: ${userIngredients?.join(', ')}.
+        Available kitchen utilities: ${kitchenUtils}.
+        The recipe should serve ${numOfPeople} people.
+        
+        Additional instructions: ${prompt}.
+        
+        **Very Important Rules:**
+        1. Do not use any ingredients that are not listed in the available ingredients.
+        2. Do not use any kitchen utensils that are not listed in the available kitchen utilities.
+        3. The response must be a valid JSON object without any backticks or additional text.
+        4. The JSON structure must strictly follow the format below:
+        
         {
             "title": "Recipe title",
-            "description": "Recipe description" (no more than 120 characters),
-            "ingredients": [{
-                "ingredient": "ingredient name and quantity",
-            }],
-            "steps": [{
-                "step": "step description",
-                "time": "time to complete the step"
-            }],
+            "description": "Recipe description (no more than 120 characters)",
+            "ingredients": [
+                {
+                    "ingredient": "ingredient name and quantity"
+                }
+            ],
+            "steps": [
+                {
+                    "step": "step description",
+                    "time": "time to complete the step"
+                }
+            ],
             "time": "total time to complete the recipe",
             "level": "difficulty level of the recipe (easy, medium, hard)",
-            "type": "recipe" (exactly like this)
+            "type": "recipe"
         }
-        NOTE: the json i want you to generate must be a valid json object and without the backticks
-    `
-}
+        
+        **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks.
+    `;
+};
 
 export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: string[]) => {
     return `A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}. 
@@ -48,39 +68,72 @@ export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: st
     `
 }
 
-export const createRecipeTitlePrompt = (userIngredients: string[], prompt: string, kitchenUtils: KitchenUtils) => {
-    return `Create a recipe title using these ingredients: ${userIngredients?.join(', ')}.
-        have the recipe (of witch you will give me the title of) be made with the following kitchen utilities: ${kitchenUtils}.
-        The title should be catchy and descriptive, capturing the essence of the dish.
-        The title should not be more than 7 words.
-        If you can, give me a title of a dish that already exists. (if the ingredients match)
-        Note: You don't have to use all of the ingredients in the title.
-        Important: take in mind this prompt: ${prompt}.
-        Very Important: the response that I want you to give me should be nothing but a VALID json without the backticks that looks like this:
+export const createRecipeTitlePrompt = (
+    userIngredients: string[],
+    prompt: string,
+    kitchenUtils: KitchenUtils
+) => {
+    return `
+        Create a catchy and descriptive recipe title using the following ingredients: ${userIngredients?.join(', ')}.
+        The recipe should be made using the following kitchen utilities: ${kitchenUtils}.
+        
+        **Rules:**
+        1. The title should not exceed 7 words.
+        2. If possible, provide the title of an existing dish that matches the ingredients.
+        3. You do not need to use all the ingredients in the title.
+        4. Take into account this additional prompt: ${prompt}.
+        
+        **Very Important:**
+        - The response must be a valid JSON object without any backticks or additional text.
+        - The JSON structure must strictly follow the format below:
+        
         {
             "title": "Recipe title"
         }
-    `
-}
+        
+        **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks. If a title cannot be created with the given constraints, return an empty JSON object: {}.
+    `;
+};
 
-export const createCocktailPrompt = (userIngredients: string[], prompt: string, title: string) => {
-    return `Create a ${title} cocktail recipe with these ingredients: ${userIngredients?.join(', ')}
-        Also, consider this prompt: ${prompt}.
-        Important: Use only the provided ingredients.
-        Don't use more than 5 ingredients.
-        DON'T FORGET:
-        the response that I want you to give me should be nothing but a VALID json without the backticks that looks like this:
+export const createCocktailPrompt = (
+    userIngredients: string[],
+    prompt: string,
+    title: string
+) => {
+    return `
+        Create a ${title} cocktail recipe using the following ingredients: ${userIngredients?.join(', ')}.
+        
+        **Rules:**
+        1. Use only the provided ingredients.
+        2. Do not use more than 5 ingredients.
+        3. Take into account this additional prompt: ${prompt}.
+        
+        **Very Important:**
+        - The response must be a valid JSON object without any backticks or additional text.
+        - The JSON structure must strictly follow the format below:
+        
         {
             "title": "Cocktail title",
-            "description": "Cocktail description",
-            "ingredients": [{"ingredient": "ingredient name and quantity"}],
-            "steps": [{"step": "step description", "time": "time to complete"}],
-            "level": "difficulty level",
-            "time": "total time",
-            "type": "cocktail" (exactly like this)
+            "description": "Cocktail description (no more than 120 characters)",
+            "ingredients": [
+                {
+                    "ingredient": "ingredient name and quantity"
+                }
+            ],
+            "steps": [
+                {
+                    "step": "step description",
+                    "time": "time to complete the step"
+                }
+            ],
+            "level": "difficulty level (easy, medium, hard)",
+            "time": "total time to prepare the cocktail",
+            "type": "cocktail"
         }
-    `
-}
+        
+        **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks. If a cocktail recipe cannot be created with the given constraints, return an empty JSON object: {}.
+    `;
+};
 
 export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients: string[]) => {
     return `A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail.
@@ -96,15 +149,27 @@ export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients
     `
 }
 
-export const createCocktailTitlePrompt = (userIngredients: string[], prompt: string) => {
-    return `Create a cocktail title using these ingredients: ${userIngredients?.join(', ')}.
-        The title should be creative and engaging, reflecting the character of the cocktail.
-        If you can, give me a title of a cocktail that already exists. (if the ingredients match)
-        Note: You don't have to use all of the ingredients in the title.
-        Important: consider this prompt: ${prompt}.
-        Format in valid JSON without backticks:
+export const createCocktailTitlePrompt = (
+    userIngredients: string[],
+    prompt: string
+) => {
+    return `
+        Create a creative and engaging cocktail title using the following ingredients: ${userIngredients?.join(', ')}.
+        
+        **Rules:**
+        1. The title should reflect the character of the cocktail.
+        2. If possible, provide the title of an existing cocktail that matches the ingredients.
+        3. You do not need to use all the ingredients in the title.
+        4. Take into account this additional prompt: ${prompt}.
+        
+        **Very Important:**
+        - The response must be a valid JSON object without any backticks or additional text.
+        - The JSON structure must strictly follow the format below:
+        
         {
             "title": "Cocktail title"
         }
-    `
-}
+        
+        **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks. If a title cannot be created with the given constraints, return an empty JSON object: {}.
+    `;
+};
