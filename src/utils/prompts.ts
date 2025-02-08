@@ -54,19 +54,27 @@ export const createRecipePrompt = ({
     `;
 };
 
-export const createRecipeImagePrompt = (recipeTitle: string, userIngredients: string[]) => {
-    return `A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}. 
-        made with these ingredients: ${userIngredients?.join(', ')}.
-        Don't any of the ingredients in the image. just the dish!
-        Don't show ingredients that are not in the list.
-        Make the dish look like an actual dish that you would see in a restaurant.
-        The dish should look professionally plated and served in an elegant yet simple style. 
-        Use natural lighting with soft shadows to bring out the textures and vibrant colors of the food.
-        The background should be subtly blurred and complement the dish, like a clean, modern kitchen or rustic wooden table. 
-        Do not display raw ingredients—focus only on the final plated dish, making it look appetizing and fresh, 
-        as if captured by a professional food photographer.
-    `
-}
+export const createRecipeImagePrompt = (
+    recipeTitle: string,
+    userIngredients: string[]
+) => {
+    return `
+        A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}, made exclusively with these ingredients: ${userIngredients?.join(', ')}.
+        
+        **Key Details:**
+        - Do not show any raw ingredients in the image—only the final plated dish.
+        - Ensure the dish looks like it was prepared in a high-end restaurant, with professional plating and presentation.
+        - Use natural lighting to highlight the textures and vibrant colors of the food.
+        - Include soft shadows to add depth and realism.
+        - The background should be subtly blurred and complement the dish, such as a clean modern kitchen or a rustic wooden table.
+        - Make the dish look appetizing, fresh, and visually stunning, as if captured by a professional food photographer.
+        
+        **Important Rules:**
+        1. Do not include any ingredients that are not in the provided list.
+        2. Focus solely on the final dish—no raw ingredients, utensils, or distractions.
+        3. The image should evoke a sense of elegance and simplicity, with a strong emphasis on the dish itself.
+    `;
+};
 
 export const createRecipeTitlePrompt = (
     userIngredients: string[],
@@ -135,19 +143,28 @@ export const createCocktailPrompt = (
     `;
 };
 
-export const createCocktailImagePrompt = (cocktailTitle: string, userIngredients: string[]) => {
-    return `A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail.
-        the ingredients are: ${userIngredients?.join(', ')}.
-        Don't show any of the ingredients in the image. just the cocktail!
-        The drink should appear professionally crafted and served in a fitting glass, 
-        with vibrant, natural colors and subtle reflections to make it look freshly prepared.
-        Include visually stunning lighting, such as soft natural or studio lighting, 
-        to enhance the textures and depth. The background should complement the drink 
-        with a modern or elegant bar setting, but remain blurred to maintain focus 
-        on the cocktail. Exclude any visible ingredients or text—just the cocktail itself, 
-        as if photographed by a professional food photographer.
-    `
-}
+export const createCocktailImagePrompt = (
+    cocktailTitle: string,
+    userIngredients: string[]
+) => {
+    return `
+        A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail, made exclusively with these ingredients: ${userIngredients?.join(', ')}.
+        
+        **Key Details:**
+        - Do not show any raw ingredients in the image—only the final cocktail in a glass.
+        - The drink should appear professionally crafted, with vibrant, natural colors and a fresh, inviting look.
+        - Use a fitting glass (e.g., martini glass, highball glass, or coupe) that complements the cocktail's style.
+        - Include subtle reflections and condensation on the glass to enhance realism.
+        - Use soft natural or studio lighting to highlight the drink's textures, colors, and depth.
+        - The background should be a modern or elegant bar setting, subtly blurred to keep the focus on the cocktail.
+        - Exclude any visible raw ingredients, utensils, or text—only the cocktail itself, as if photographed by a professional food photographer.
+        
+        **Important Rules:**
+        1. Do not include any ingredients that are not in the provided list.
+        2. Focus solely on the final cocktail—no raw ingredients, tools, or distractions.
+        3. The image should evoke a sense of sophistication and freshness, with a strong emphasis on the drink itself.
+    `;
+};
 
 export const createCocktailTitlePrompt = (
     userIngredients: string[],
