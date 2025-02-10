@@ -26,8 +26,6 @@ app.use(cors({
 
 app.use(rateLimiter);
 
-app.set('trust proxy', true);
-
 app.post(
   "/api/webhooks",
   bodyParser.raw({ type: "application/json" }),
