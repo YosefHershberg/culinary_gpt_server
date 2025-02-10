@@ -1,4 +1,3 @@
-import { hashString } from "../../utils/helperFunctions";
 import firebaseStorageOperations from "./firebase.service";
 import recipeOperations from "./recipes.service";
 
