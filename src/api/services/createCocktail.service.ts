@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import openai from '../../config/openai';
 import logger from '../../config/logger';
-import env from '../../config/env';
+import env from '../../utils/env';
 
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';

@@ -1,0 +1,19 @@
+
+CLERK WEBHOOK
+-----------------
+
+IMPORTANT: when making user operations in the app in dev mode, make sure the webhook is setup
+
+1. open ngrok.exe
+2. start webhook command - ngrok http 5000
+3. paste the url in the clerk dashboard with /api/webhooks - https://dashboard.clerk.com/apps/app_2geyOkhf8p3My8Rl9MMZOstJb0P/instances/ins_2geyOkE1gBuVItaQYFV2KfUe4Fa/webhooks
+
+DON'T FORGET - when deploy add the url/api/webhooks to the clerk dashboard!!!
+
+
+STRIPE WEBHOOK 
+----------------
+
+1. go to command line. (not shell. yes cmd)
+2. start listener with this command - stripe listen --forward-to localhost:5000/api/webhooks/stripe
+3. paste the webhook signing key to .env STRIPE_WEBHOOK_SECRET

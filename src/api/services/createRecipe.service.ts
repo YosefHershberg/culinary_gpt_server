@@ -6,7 +6,7 @@ import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
 import openai from '../../config/openai';
-import env from '../../config/env';
+import env from '../../utils/env';
 import logger from '../../config/logger';
 
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";

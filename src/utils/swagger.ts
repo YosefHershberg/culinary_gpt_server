@@ -4,7 +4,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { swaggerOptions } from '../config/swaggerOptions';
 import logger from '../config/logger';
-import env from '../config/env';
+import env from './env';
 
 export const swagger = (app: Express) => {
     const specs = swaggerJsdoc(swaggerOptions);

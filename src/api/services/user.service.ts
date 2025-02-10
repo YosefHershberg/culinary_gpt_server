@@ -53,7 +53,7 @@ const userOperations = {
             //delete recipe images from firebase storage
             // TODO: batch these operations
             recipes.map(recipe =>
-                firebaseStorageOperations.deleteImage(hashString(recipe.recipe.description))
+                firebaseStorageOperations.deleteImage(recipe.recipe.id)
             ),
         ])
 
