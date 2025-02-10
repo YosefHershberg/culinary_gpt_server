@@ -2,16 +2,15 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import bodyParser from "body-parser";
 
 import * as middlewares from './middlewares';
 import api from './api/routes';
 import webhooksRouter from './api/routes/webhooks.routes';
+import { healthCheck } from './api/controllers/healthCheck.controller';
 
 import rateLimiter from './config/rateLimit';
 import env from './utils/env';
 import swagger from './utils/swagger';
-import { healthCheck } from './api/controllers/healthCheck.controller';
 
 const app = express();
 

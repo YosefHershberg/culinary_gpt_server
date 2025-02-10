@@ -29,7 +29,7 @@ const userOperations = {
     },
 
     /**
-     * @description This function deletes a user & recipes & recipe images from firebase storage & user ingredients
+     * @description This function deletes a user & user-recipes & recipe images from firebase storage & user ingredients
      * @param {string} userId 
      * @returns {UserDocument}
      */
@@ -59,6 +59,12 @@ const userOperations = {
         return user;
     },
 
+    /**
+     * @description This function updates a user
+     * @param {string} userId 
+     * @param {UpdateUserDBProps} update 
+     * @returns {UserDocument}
+     */
     updateUser: async (userId: string, update: UpdateUserDBProps): Promise<UserDocument> => {
         const user = await updateUserDB(userId, update);
         return user;
