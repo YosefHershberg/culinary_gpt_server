@@ -40,7 +40,6 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
             break;
 
         case 'user.deleted':
-            console.log('User deleted:', evt.data.id);
             try {
                 const user = await userOperations.deleteUser(evt.data.id as string);
 
