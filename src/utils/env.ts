@@ -19,6 +19,8 @@ const envSchema = z.object({
     FIREBASE_MESSAGING_SENDER_ID: z.string(),
     FIREBASE_APP_ID: z.string(),
     FIREBASE_MEASUREMENT_ID: z.string(),
+    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_WEBHOOK_SECRET: z.string(),
 });
 
 const parsedResults = envSchema.safeParse(process.env);

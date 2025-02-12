@@ -1,4 +1,3 @@
-import { hashString } from "../../utils/helperFunctions";
 import firebaseStorageOperations from "./firebase.service";
 import recipeOperations from "./recipes.service";
 
@@ -30,7 +29,7 @@ const userOperations = {
     },
 
     /**
-     * @description This function deletes a user & recipes & recipe images from firebase storage & user ingredients
+     * @description This function deletes a user & user-recipes & recipe images from firebase storage & user ingredients
      * @param {string} userId 
      * @returns {UserDocument}
      */
@@ -53,13 +52,19 @@ const userOperations = {
             //delete recipe images from firebase storage
             // TODO: batch these operations
             recipes.map(recipe =>
-                firebaseStorageOperations.deleteImage(hashString(recipe.recipe.id))
+                firebaseStorageOperations.deleteImage(recipe.recipe.id)
             ),
         ])
 
         return user;
     },
 
+    /**
+     * @description This function updates a user
+     * @param {string} userId 
+     * @param {UpdateUserDBProps} update 
+     * @returns {UserDocument}
+     */
     updateUser: async (userId: string, update: UpdateUserDBProps): Promise<UserDocument> => {
         const user = await updateUserDB(userId, update);
         return user;

@@ -2,16 +2,15 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import bodyParser from "body-parser";
 
 import * as middlewares from './middlewares';
 import api from './api/routes';
-import clerkWebhook from './api/webhooks/clerkWebhook';
+import webhooksRouter from './api/routes/webhooks.routes';
+import { healthCheck } from './api/controllers/healthCheck.controller';
 
 import rateLimiter from './config/rateLimit';
-import env from './config/env';
+import env from './utils/env';
 import swagger from './utils/swagger';
-import { healthCheck } from './api/controllers/healthCheck.controller';
 
 const app = express();
 
@@ -26,10 +25,9 @@ app.use(cors({
 
 app.use(rateLimiter);
 
-app.post(
+app.use(
   "/api/webhooks",
-  bodyParser.raw({ type: "application/json" }),
-  clerkWebhook
+  webhooksRouter
 );
 
 app.use(express.json());

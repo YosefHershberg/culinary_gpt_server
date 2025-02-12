@@ -1,6 +1,6 @@
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import firebaseApp from "../../config/firebase";
-import env from "../../config/env";
+import env from "../../utils/env";
 
 /**
  * @module firebase.service

@@ -4,7 +4,7 @@ import { HttpStatusCode } from 'axios';
 
 import clerkClient from './config/clerkClient';
 import { HttpError } from './lib/HttpError';
-import env from './config/env';
+import env from './utils/env';
 
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomRequest from './interfaces/CustomRequest';

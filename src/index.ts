@@ -1,5 +1,5 @@
 import app from './app';
-import env from './config/env';
+import env from './utils/env';
 import logger from './config/logger';
 import { connectToDatabase } from './config/database';
 
