@@ -9,7 +9,7 @@ import env from '../../utils/env';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
-import { UserIngredient as UserIngredient, Recipe } from "../../interfaces";
+import { UserIngredient } from "../../interfaces";
 
 /**
  * @module createRecipe.service
@@ -20,7 +20,7 @@ import { UserIngredient as UserIngredient, Recipe } from "../../interfaces";
  * @exports createRecipeOperations
  */
 
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 5;
 
 const createCocktailOperations = {
 
@@ -98,8 +98,6 @@ const createCocktailOperations = {
                 if (isValidJson) {
                     const parsedResponse = JSON.parse(response);
                     title = parsedResponse.title;
-                } else {
-                    attempts++;
                 }
             } catch (error: any) {
                 logger.error(error);
@@ -130,7 +128,6 @@ const createCocktailOperations = {
 
         while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
 
-            console.log('attempts cocktail', attempts);
 
             try {
                 const completion = await openai.chat.completions.create({

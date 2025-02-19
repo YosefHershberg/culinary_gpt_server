@@ -51,6 +51,9 @@ export const createRecipePrompt = ({
         }
         
         **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks.
+
+        **Response Format:**
+        - Only the JSON object as described above. Do not include any additional text, explanations, or backticks.
     `;
 };
 
@@ -100,6 +103,10 @@ export const createRecipeTitlePrompt = (
         }
         
         **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks. If a title cannot be created with the given constraints, return an empty JSON object: {}.
+
+        **Response Format:** 
+        - Only the JSON object as described above. Do not include any additional text, explanations, or backticks.
+
     `;
 };
 
@@ -117,7 +124,7 @@ export const createCocktailPrompt = (
         3. Take into account this additional prompt: ${prompt}.
         
         **Very Important:**
-        - The response must be a valid JSON object without any backticks or additional text.
+        - The response must be a valid JSON object without any backticks, additional text, or explanations.
         - The JSON structure must strictly follow the format below:
         
         {
@@ -139,7 +146,10 @@ export const createCocktailPrompt = (
             "type": "cocktail"
         }
         
-        **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks. If a cocktail recipe cannot be created with the given constraints, return an empty JSON object: {}.
+        **NOTE:** If a cocktail recipe cannot be created with the given constraints, return an empty JSON object: {}.
+        
+        **Response Format:** 
+        - Only the JSON object as described above. Do not include any additional text, explanations, or backticks.
     `;
 };
 
@@ -180,13 +190,16 @@ export const createCocktailTitlePrompt = (
         4. Take into account this additional prompt: ${prompt}.
         
         **Very Important:**
-        - The response must be a valid JSON object without any backticks or additional text.
+        - The response must be a valid JSON object without any backticks, additional text, or explanations.
         - The JSON structure must strictly follow the format below:
         
         {
             "title": "Cocktail title"
         }
         
-        **NOTE:** The JSON object must be valid and should not contain any additional text, explanations, or backticks. If a title cannot be created with the given constraints, return an empty JSON object: {}.
+        **NOTE:** If a title cannot be created with the given constraints, return an empty JSON object: {}.
+        
+        **Response Format:** 
+        - Only the JSON object as described above. Do not include any additional text, explanations, or backticks.
     `;
 };
