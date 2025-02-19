@@ -38,6 +38,9 @@ export const mockUser: CreateUserDBProps = {
     first_name: 'John',
     last_name: 'Doe',
     email: 'john.doe@example.com',
+    isSubscribed: false,
+    stripeCustomerId: null,
+    stripeSubscriptionId: null
 };
 
 export const mockUserDoc = {
@@ -47,6 +50,7 @@ export const mockUserDoc = {
     email: 'john.doe@example.com',
     createdAt: new Date('2023-01-01T00:00:00Z'),
     updatedAt: new Date('2023-01-02T00:00:00Z'),
+    isSubscribed: false,
 } as UserDocument; //Typed like this because UserDocument extends mongoose.Document
 
 export const mockKitchenUtils: KitchenUtils = {

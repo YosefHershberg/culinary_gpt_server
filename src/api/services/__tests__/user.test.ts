@@ -57,6 +57,7 @@ describe('user services', () => {
                 first_name: 'John',
                 last_name: 'Doe',
                 email: 'john.doe@example.com',
+                isSubscribed: false,
             };
 
             (updateUserDB as jest.Mock).mockResolvedValue(mockUser);

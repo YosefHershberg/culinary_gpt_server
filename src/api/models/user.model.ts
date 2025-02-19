@@ -1,14 +1,8 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
+import { User as UserInterface } from '../../lib/types/user.type';
 
-export interface UserDocument extends Document {
-    first_name: string;
-    last_name: string;
-    clerkId: string;
-    email: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
+export type UserDocument = UserInterface & Document;
 
 const userSchema = new mongoose.Schema<UserDocument>({
     first_name: {
@@ -31,6 +25,16 @@ const userSchema = new mongoose.Schema<UserDocument>({
         unique: true,
         lowercase: true,
         trim: true,
+    },
+    isSubscribed: {
+        type: Boolean,
+        default: false,
+    },
+    stripeCustomerId: {
+        type: String,
+    },
+    stripeSubscriptionId: {
+        type: String,
     },
     createdAt: {
         type: Date,

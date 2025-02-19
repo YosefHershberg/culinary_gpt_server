@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response,  NextFunction } from 'express';
 import { FilterQuery } from 'mongoose';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
@@ -49,7 +49,7 @@ export const ingredientSuggestionsSchema = z.object({
     }),
 });
 
-export const ingredientSuggestions = async (req: Request, res: Response<IngredientDocument[]>, next: NextFunction) => {
+export const ingredientSuggestions = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction) => {
     const { category } = req.params;
 
     try {
