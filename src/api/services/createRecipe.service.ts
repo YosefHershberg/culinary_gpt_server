@@ -98,11 +98,9 @@ const createRecipeOperations = {
             try {
                 const completion = await openai.chat.completions.create({
                     messages: [
-                        { role: "system", content: "You are an professional chef." },
-                        {
-                            role: "user",
-                            content: recipePrompt
-                        }],
+                        { role: "system", content: "You are a professional chef. Your responses must always be a valid JSON object without any additional text or explanations." },
+                        { role: "user", content: recipePrompt },
+                    ],
                     model: "gpt-3.5-turbo",
                 });
 

@@ -14,8 +14,8 @@ export const createRecipePrompt = ({
     recipeTitle,
     kitchenUtils,
     numOfPeople,
-    prompt
-}: CreateRecipePromptProps) => {
+    prompt,
+}: CreateRecipePromptProps): string => {
     return `
         Create a recipe for a ${recipeTitle} that is suitable for ${mealSelected}. The recipe should take no more than ${selectedTime} minutes to prepare and cook.
         
