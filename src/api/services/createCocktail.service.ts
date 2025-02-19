@@ -79,6 +79,9 @@ const createCocktailOperations = {
         let title = null;
 
         while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
+
+            console.log('attempts title', attempts);
+
             try {
                 const completion = await openai.chat.completions.create({
                     messages: [{
@@ -95,9 +98,12 @@ const createCocktailOperations = {
                 if (isValidJson) {
                     const parsedResponse = JSON.parse(response);
                     title = parsedResponse.title;
+                } else {
+                    attempts++;
                 }
             } catch (error: any) {
                 logger.error(error);
+            } finally {
                 attempts++;
             }
         }
@@ -123,6 +129,9 @@ const createCocktailOperations = {
         let recipe = null;
 
         while (attempts < maxRetries && !isValidJson) { // Retry until a valid JSON is generated
+
+            console.log('attempts cocktail', attempts);
+
             try {
                 const completion = await openai.chat.completions.create({
                     messages: [
@@ -143,6 +152,7 @@ const createCocktailOperations = {
                 }
             } catch (error) {
                 logger.error(error);
+            } finally {
                 attempts++;
             }
         }

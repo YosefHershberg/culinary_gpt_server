@@ -115,6 +115,7 @@ const createRecipeOperations = {
                 }
             } catch (error) {
                 logger.error(error);
+            } finally {
                 attempts++;
             }
         }
@@ -179,6 +180,7 @@ const createRecipeOperations = {
                 }
             } catch (error: any) {
                 logger.error(error);
+            } finally {
                 attempts++;
             }
         }
