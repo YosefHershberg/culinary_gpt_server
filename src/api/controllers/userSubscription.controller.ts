@@ -1,6 +1,9 @@
 import { NextFunction, Response } from "express";
 import CustomRequest from "../../interfaces/CustomRequest";
 import userOperations from "../services/user.service";
+import { HttpError } from "../../lib/HttpError";
+import { HttpStatusCode } from "axios";
+import logger from "../../config/logger";
 
 /**
  * @openapi
@@ -32,13 +35,19 @@ export interface isSubscriptionActive {
 }
 
 export const getUserSubscription = async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const { userId } = req 
+    const { userId } = req
 
     try {
         const isSubscribed = await userOperations.isSubscribed(userId as string);
 
         return res.status(200).json({ subscriptionActive: isSubscribed });
     } catch (error) {
-        next(error);
+        if (error instanceof Error) {
+            logger.error(error.message);
+        }
+        next(new HttpError(
+            HttpStatusCode.InternalServerError,
+            'An error occurred while checking the subscription status',
+        ));
     }
 }

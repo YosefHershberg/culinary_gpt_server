@@ -52,9 +52,9 @@ const stripeWebhook = async (req: Request, res: Response) => {
             case 'customer.subscription.deleted': {
                 const subscription = data.object as Stripe.Subscription;
 
-                logger.info(subscription)                
-
                 await userOperations.unsubscribe(subscription.id);
+
+                logger.info(`Subscription deleted: ${subscription.id}`);
 
                 break;
             }

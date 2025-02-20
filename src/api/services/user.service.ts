@@ -90,7 +90,7 @@ const userOperations = {
     unsubscribe: async (subscriptionId: string): Promise<UserDocument> => {
         const user = await getUserBySubscriptionIdDB(subscriptionId);
 
-        const newUser = await updateUserDB(user.id, {
+        const newUser = await updateUserDB(user.clerkId, {
             isSubscribed: false,
             stripeCustomerId: null,
             stripeSubscriptionId: null,

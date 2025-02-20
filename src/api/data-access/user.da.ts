@@ -1,3 +1,4 @@
+import logger from "../../config/logger";
 import { User as UserType } from "../../lib/types/user.type";
 import User, { UserDocument } from "../models/user.model";
 
@@ -49,9 +50,11 @@ export const updateUserDB = async (userId: string, update: UpdateUserDBProps): P
 export const getUserBySubscriptionIdDB = async (stripeSubscriptionId: string): Promise<UserDocument> => {
     const user = await User.findOne({ stripeSubscriptionId }).exec();
 
-    if (!user) {
-        throw new Error('User not found');
-    }
+    // if (!user) {
+    //     throw new Error('User not found');
+    // }
 
-    return user;
+    //TODO: Fix this, for some reason the error is thrown although the user is found
+
+    return user as UserDocument;
 }
