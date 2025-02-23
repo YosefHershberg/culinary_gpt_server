@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import userOperations from "../services/user.service";
 import verifyCvixHeaders from "../../lib/verifyCvixHeaders";
 import logger from "../../config/logger";
-import { HttpError } from "../../lib/HttpError";
 
 const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => {
     let evt: WebhookEvent;
