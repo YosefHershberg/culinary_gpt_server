@@ -1,10 +1,12 @@
 import { WebhookEvent } from "@clerk/clerk-sdk-node";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
+import { HttpStatusCode } from "axios";
+
 import userOperations from "../services/user.service";
 import verifyCvixHeaders from "../../lib/verifyCvixHeaders";
 import logger from "../../config/logger";
 
-const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => {
+const clerkWebhook = async (req: Request, res: Response) => {
     let evt: WebhookEvent;
     let message: string = '';
 
@@ -14,7 +16,8 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        return res.status(400).json({ success: false, message: 'Invalid webhook event' });
+        return res.status(HttpStatusCode.BadRequest)
+            .json({ success: false, message: 'Invalid webhook event' });
     }
 
     try {
@@ -24,7 +27,8 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
                     clerkId: evt.data.id,
                     first_name: evt.data.first_name as string,
                     last_name: evt.data.last_name as string,
-                    email: evt.data.email_addresses[0].email_address
+                    email: evt.data.email_addresses[0].email_address,
+                    isSubscribed: false,
                 });
 
                 logger.info('User created:', createdUser.id);
@@ -53,12 +57,12 @@ const clerkWebhook = async (req: Request, res: Response, next: NextFunction) => 
                 return res.status(400).json({ success: false, message: 'Unrecognized webhook event' });
         }
 
-        return res.status(200).json({ success: true, message });
+        return res.status(HttpStatusCode.Ok).json({ success: true, message });
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        return res.status(500).json({ success: false, message: 'An error occurred while processing the webhook' });
+        return res.status(HttpStatusCode.InternalServerError).json({ success: false, message: 'An error occurred while processing the webhook' });
     }
 };
 
