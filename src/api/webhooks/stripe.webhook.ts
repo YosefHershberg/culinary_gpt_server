@@ -1,13 +1,9 @@
 import { Request, Response } from "express";
-import env from "../../utils/env";
-import Stripe from "stripe";
 import logger from "../../config/logger";
 import userOperations from "../services/user.service";
-
-const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: '2025-01-27.acacia',
-    typescript: true,
-});
+import Stripe from "stripe";
+import stripe from "../../config/stripe";
+import env from "../../utils/env";
 
 const stripeWebhook = async (req: Request, res: Response) => {
     const signature = req.headers['stripe-signature'] as string;
