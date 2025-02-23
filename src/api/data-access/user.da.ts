@@ -1,3 +1,5 @@
+import logger from "../../config/logger";
+import { User as UserType } from "../../lib/types/user.type";
 import User, { UserDocument } from "../models/user.model";
 
 export const getUserDB = async (userId: string): Promise<UserDocument> => {
@@ -10,12 +12,7 @@ export const getUserDB = async (userId: string): Promise<UserDocument> => {
     return user;
 }
 
-export interface CreateUserDBProps {
-    clerkId: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-}
+export type CreateUserDBProps = Omit<UserType, 'createdAt' | 'updatedAt'>;
 
 export const createUserDB = async (userData: CreateUserDBProps): Promise<UserDocument> => {
     const user = new User(userData);
@@ -34,11 +31,7 @@ export const deleteUserDB = async (userId: string): Promise<UserDocument> => {
     return user;
 }
 
-export interface UpdateUserDBProps {
-    first_name: string
-    last_name: string,
-    email: string,
-}
+export type UpdateUserDBProps = Partial<UserType>;
 
 export const updateUserDB = async (userId: string, update: UpdateUserDBProps): Promise<UserDocument> => {
     const updatedUser = await User.findOneAndUpdate(
@@ -52,4 +45,16 @@ export const updateUserDB = async (userId: string, update: UpdateUserDBProps): P
     }
 
     return updatedUser;
+}
+
+export const getUserBySubscriptionIdDB = async (stripeSubscriptionId: string): Promise<UserDocument> => {
+    const user = await User.findOne({ stripeSubscriptionId }).exec();
+
+    // if (!user) {
+    //     throw new Error('User not found');
+    // }
+
+    //TODO: Fix this, for some reason the error is thrown although the user is found
+
+    return user as UserDocument;
 }

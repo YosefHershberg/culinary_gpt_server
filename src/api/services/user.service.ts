@@ -1,11 +1,12 @@
 import firebaseStorageOperations from "./firebase.service";
 import recipeOperations from "./recipes.service";
 
-import { createUserDB, CreateUserDBProps, deleteUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
+import { createUserDB, CreateUserDBProps, deleteUserDB, getUserBySubscriptionIdDB, getUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
 import { UserDocument } from "../models/user.model";
 import { createKitchenUtilsDB, deleteKitchenUtilsDB } from "../data-access/kitchenUtils.da";
 import { deleteUserRecipesDB } from "../data-access/recipe.da";
 import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
+import { subscribe, unsubscribe } from "diagnostics_channel";
 
 /**
  * @module user.service
@@ -68,6 +69,39 @@ const userOperations = {
     updateUser: async (userId: string, update: UpdateUserDBProps): Promise<UserDocument> => {
         const user = await updateUserDB(userId, update);
         return user;
+    },
+
+    /**
+     * @description This function subscribes a user
+     * @param {string} userId
+     * @param {string} stripeCustomerId
+     * @param {string} stripeSubscriptionId
+     * @returns {UserDocument}
+     */
+    subscribe: async (userId: string, stripeCustomerId: string, stripeSubscriptionId: string): Promise<UserDocument> => {
+        const user = await updateUserDB(userId, {
+            isSubscribed: true,
+            stripeCustomerId,
+            stripeSubscriptionId,
+        });
+        return user;
+    },
+
+    unsubscribe: async (subscriptionId: string): Promise<UserDocument> => {
+        const user = await getUserBySubscriptionIdDB(subscriptionId);
+
+        const newUser = await updateUserDB(user.clerkId, {
+            isSubscribed: false,
+            stripeCustomerId: null,
+            stripeSubscriptionId: null,
+        });
+
+        return newUser;
+    },
+
+    isSubscribed: async (userId: string): Promise<boolean> => {
+        const user = await getUserDB(userId);
+        return user.isSubscribed;
     }
 }
 
