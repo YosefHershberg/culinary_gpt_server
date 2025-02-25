@@ -1,5 +1,6 @@
 import logger from "../../config/logger";
 import openai from "../../config/openai";
+import { HttpError } from "../../lib/HttpError";
 import { isValidJSON } from "../../utils/helperFunctions";
 import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
 import { IngredientDocument } from "../models/ingredient.model";
@@ -19,7 +20,6 @@ const imageDetectionOperations = {
      * @returns {IngredientDocument[]}
      */
     getIngredientsFromImage: async (base64image: string): Promise<IngredientDocument[]> => {
-
         const labels = await imageDetectionOperations.detectLabels(base64image);
 
         if (labels.length === 0) return [];
