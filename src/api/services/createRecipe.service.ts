@@ -94,6 +94,8 @@ const createRecipeOperations = {
 
         let recipe = null;
 
+        logger.info(recipePrompt)
+
         while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
@@ -187,6 +189,7 @@ const createRecipeOperations = {
             throw new Error('No valid JSON response generated');
         }
 
+        logger.info(`Recipe title: ${title}`);
         return title
     }
 }
