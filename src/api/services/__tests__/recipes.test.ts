@@ -3,7 +3,7 @@ import firebaseStorageServices from '../firebase.service';
 import { RecipeDocument } from '../../models/recipe.model';
 import { mockRecipe } from '../../../lib/mock/mockData';
 import { base64ToArrayBuffer } from '../../../utils/helperFunctions';
-import MessageResponse from '../../../interfaces/MessageResponse';
+import MessageResponse from '../../../types/MessageResponse';
 import { addRecipeDB, deleteRecipeDB, getRecipeDB, getAllRecipesDB, getRecipesPageDB } from '../../data-access/recipe.da';
 import { userId } from '../../../lib/mock/mockApp';
 

@@ -1,13 +1,13 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { KitchenUtils } from '../../interfaces';
+import { KitchenUtils } from '../schemas/kitchenUtils.schema';
 
-export interface IKitchenUtils extends Document {
+export type KitchenUtilsDocument = Document & {
   kitchenUtils: KitchenUtils,
   userId: string,
 }
 
-const kitchenUtilsSchema = new mongoose.Schema<IKitchenUtils>({
+const kitchenUtilsSchema = new mongoose.Schema<KitchenUtilsDocument>({
   kitchenUtils: {
     "Stove Top": {
       type: Boolean,
@@ -53,6 +53,6 @@ const kitchenUtilsSchema = new mongoose.Schema<IKitchenUtils>({
   }
 }, mongooseVirtuals);
 
-const KitchenUtils = mongoose.model<IKitchenUtils>('KitchenUtils', kitchenUtilsSchema);
+const KitchenUtils = mongoose.model<KitchenUtilsDocument>('KitchenUtils', kitchenUtilsSchema);
 
 export default KitchenUtils;

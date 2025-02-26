@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
 import kitchenUtilsServices from '../services/kitchenUtils.service';
-import { KitchenUtils } from '../../interfaces';
-import CustomRequest from '../../interfaces/CustomRequest';
+import { KitchenUtils } from '../schemas/kitchenUtils.schema';
+import CustomRequest from '../../types/CustomRequest';
 
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';

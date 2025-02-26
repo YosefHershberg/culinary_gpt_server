@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import CustomRequest from "../../interfaces/CustomRequest";
+import CustomRequest from "../../types/CustomRequest";
 import userServices from "../services/user.service";
 import { HttpError } from "../../lib/HttpError";
 import { HttpStatusCode } from "axios";
@@ -30,11 +30,11 @@ import logger from "../../config/logger";
  *           description: Internal server error
  */
 
-export interface isSubscriptionActive {
+export type isSubscriptionActive = {
     subscriptionActive: boolean;
 }
 
-export const getUserSubscription = async (req: CustomRequest, res: Response, next: NextFunction) => {
+export const getUserSubscription = async (req: CustomRequest, res: Response<isSubscriptionActive>, next: NextFunction) => {
     const { userId } = req
 
     try {

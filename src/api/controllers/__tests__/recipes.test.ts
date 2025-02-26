@@ -4,7 +4,7 @@ import recipeServices from '../../services/recipes.service';
 import createRecipeServices from '../../services/createRecipe.service';
 import { HttpStatusCode } from 'axios';
 import { mockRecipe } from '../../../lib/mock/mockData';
-import { FilterOptions } from '../../../interfaces/ServiceInterfaces';
+import { FilterOptions } from '../../../types/ServiceTypes';
 
 jest.mock('../../services/recipes.service');
 jest.mock('../../services/createRecipe.service');

@@ -1,7 +1,7 @@
-import KitchenUtils, { IKitchenUtils } from "../models/kitchenUtils.model";
-import { KitchenUtils as KitchenUtilsInterface } from "../../interfaces";
+import KitchenUtils, { KitchenUtilsDocument } from "../models/kitchenUtils.model";
+import { KitchenUtils as KitchenUtilsType } from "../schemas/kitchenUtils.schema";
 
-export const getKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsInterface> => {
+export const getKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsType> => {
     const res = await KitchenUtils.findOne({ userId }).exec();
 
     if (!res) {
@@ -11,7 +11,7 @@ export const getKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsInt
     return res.kitchenUtils;
 }
 
-export const createKitchenUtilsDB = async (userId: string): Promise<IKitchenUtils> => {
+export const createKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsDocument> => {
     const kitchenUtils = new KitchenUtils({
         kitchenUtils: {
             "Stove Top": true,
@@ -32,7 +32,7 @@ export const createKitchenUtilsDB = async (userId: string): Promise<IKitchenUtil
     return newKitchenUtils;
 }
 
-export const toggleKitchenUtilDB = async (userId: string, name: string): Promise<IKitchenUtils> => {
+export const toggleKitchenUtilDB = async (userId: string, name: string): Promise<KitchenUtilsDocument> => {
     const kitchenUtils = await KitchenUtils.findOne({ userId }).exec();
 
     if (!kitchenUtils) {
@@ -46,7 +46,7 @@ export const toggleKitchenUtilDB = async (userId: string, name: string): Promise
     return kitchenUtils;
 }
 
-export const deleteKitchenUtilsDB = async (userId: string): Promise<IKitchenUtils> => {
+export const deleteKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsDocument> => {
     const kitchenUtils = await KitchenUtils.findOneAndDelete({ userId }).exec();
 
     if (!kitchenUtils) {

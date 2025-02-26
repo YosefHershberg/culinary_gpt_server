@@ -4,7 +4,7 @@ import { validate } from '../../middlewares';
 
 import * as recipesController from '../controllers/recipes.controller';
 
-import MessageResponse from '../../interfaces/MessageResponse';
+import MessageResponse from '../../types/MessageResponse';
 import { RecipeDocument } from '../models/recipe.model';
 import { doSomethingByIdSchema } from '../schemas';
 

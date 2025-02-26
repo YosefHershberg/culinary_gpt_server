@@ -1,7 +1,8 @@
 import { CreateUserDBProps } from "../../api/data-access/user.da";
 import { IngredientDocument } from "../../api/models/ingredient.model";
 import { UserDocument } from "../../api/models/user.model";
-import { KitchenUtils, RecipeWithImage } from "../../interfaces";
+import { RecipeWithImage } from "../../types";
+import { KitchenUtils } from "../../api/schemas/kitchenUtils.schema";
 
 export const mockRecipe: RecipeWithImage = {
     image_url: "https://example.com/recipe-image.jpg",
@@ -69,6 +70,7 @@ export const mockIngredient = {
     id: '2',
     name: 'Salt',
     category: ['spice'],
+    popularity: 5,
     type: ['food'],
 } as IngredientDocument; //Typed like this because IngredientDocument extends mongoose.Document
 

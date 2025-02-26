@@ -1,5 +1,19 @@
 import { TypeOf, z } from "zod";
 
+export const kitchenUtilsSchema = z.object({
+    "Stove Top": z.boolean(),
+    "Oven": z.boolean(),
+    "Microwave": z.boolean(),
+    "Air Fryer": z.boolean(),
+    "Blender": z.boolean(),
+    "Food Processor": z.boolean(),
+    "Slow Cooker": z.boolean(),
+    "BBQ": z.boolean(),
+    "Grill": z.boolean(),
+});
+
+export type KitchenUtils = TypeOf<typeof kitchenUtilsSchema>;
+
 /**
  * @openapi
  * components:
@@ -37,16 +51,3 @@ import { TypeOf, z } from "zod";
  *         - Grill
  */
 
-export const kitchenUtilsSchema = z.object({
-    "Stove Top": z.boolean(),
-    "Oven": z.boolean(),
-    "Microwave": z.boolean(),
-    "Air Fryer": z.boolean(),
-    "Blender": z.boolean(),
-    "Food Processor": z.boolean(),
-    "Slow Cooker": z.boolean(),
-    "BBQ": z.boolean(),
-    "Grill": z.boolean(),
-});
-
-export type KitchenUtils = TypeOf<typeof kitchenUtilsSchema>;

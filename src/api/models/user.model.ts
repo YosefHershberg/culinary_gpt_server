@@ -1,8 +1,8 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { User as UserInterface } from '../../lib/types/user.type';
+import { User as UserType } from '../../lib/types/user.type';
 
-export type UserDocument = UserInterface & Document;
+export type UserDocument = UserType & Document;
 
 const userSchema = new mongoose.Schema<UserDocument>({
     first_name: {

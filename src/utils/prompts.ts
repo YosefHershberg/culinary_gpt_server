@@ -1,7 +1,7 @@
 import { CreateRecipeProps } from "../api/services/createRecipe.service"
-import { KitchenUtils } from "../interfaces"
+import { KitchenUtils } from "../api/schemas/kitchenUtils.schema"
 
-interface CreateRecipePromptProps extends CreateRecipeProps {
+type CreateRecipePromptProps = CreateRecipeProps & {
     userIngredients: string[];
     recipeTitle: string;
     kitchenUtils: KitchenUtils;

@@ -2,7 +2,7 @@ import request from 'supertest';
 import { HttpStatusCode } from 'axios';
 import app, { userId } from '../../../lib/mock/mockApp';
 import kitchenUtilsServices from '../../services/kitchenUtils.service';
-import { KitchenUtils } from '../../../interfaces';
+import { KitchenUtils } from '../../schemas/kitchenUtils.schema';
 
 jest.mock('../../services/kitchenUtils.service');
 

@@ -3,8 +3,8 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as kitchenUtilsController from '../controllers/kitchenUtils.controller';
-import { KitchenUtils } from '../../interfaces';
-import MessageResponse from '../../interfaces/MessageResponse';
+import { KitchenUtils } from '../schemas/kitchenUtils.schema';
+import MessageResponse from '../../types/MessageResponse';
 
 const router = express.Router();
 

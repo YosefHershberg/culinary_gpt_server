@@ -1,5 +1,23 @@
 import { TypeOf, z } from "zod";
 
+export const recipeSchema = z.object({
+    title: z.string().min(3).max(100),
+    description: z.string().max(500),
+    ingredients: z.array(z.object({
+        ingredient: z.string().min(2)
+    })).min(1),
+    steps: z.array(z.object({
+        step: z.string(),
+        time: z.string()
+    })).min(1),
+    time: z.string(),
+    level: z.string(),
+    type: z.enum(['recipe', 'cocktail']),
+    id: z.string(),
+});
+
+export type Recipe = TypeOf<typeof recipeSchema>;
+
 /**
  * @openapi
  * components:
@@ -52,21 +70,3 @@ import { TypeOf, z } from "zod";
  *         - type
  *         - id
  */
-
-export const recipeSchema = z.object({
-    title: z.string().min(3).max(100),
-    description: z.string().max(500),
-    ingredients: z.array(z.object({
-        ingredient: z.string().min(2)
-    })).min(1),
-    steps: z.array(z.object({
-        step: z.string(),
-        time: z.string()
-    })).min(1),
-    time: z.string(),
-    level: z.string(),
-    type: z.enum(['recipe', 'cocktail']),
-    id: z.string(),
-});
-
-export type Recipe = TypeOf<typeof recipeSchema>;

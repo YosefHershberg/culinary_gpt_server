@@ -1,20 +1,20 @@
 import { DeleteResult } from "mongodb"
-import { UserIngredient as UserIngredientType, IngredientType } from "../../interfaces"
-import UserIngredient, { UserIngredientInterface } from "../models/UserIngredients.model"
+import { UserIngredient as UserIngredientRes, IngredientType } from "../../types"
+import UserIngredient, { UserIngredientType } from "../models/UserIngredients.model"
 
-export const addUserIngredientDB = async (userIngredient: UserIngredientInterface): Promise<UserIngredientType> => {
+export const addUserIngredientDB = async (userIngredient: UserIngredientType): Promise<UserIngredientRes> => {
     const ingredient = new UserIngredient(userIngredient)
     const newIngredient = await ingredient.save()
     return newIngredient
 }
 
-export const addMultipleUserIngredientsDB = async (userIngredientDocs: UserIngredientInterface[]): Promise<UserIngredientType[]> => {
+export const addMultipleUserIngredientsDB = async (userIngredientDocs: UserIngredientType[]): Promise<UserIngredientRes[]> => {
     const createdUserIngredients = await UserIngredient.insertMany(userIngredientDocs);
 
     return createdUserIngredients;
 }
 
-export const deleteUserIngredientDB = async (userId: string, ingredientId: string): Promise<UserIngredientType> => {
+export const deleteUserIngredientDB = async (userId: string, ingredientId: string): Promise<UserIngredientRes> => {
     const ingredient = await UserIngredient.findOneAndDelete({ userId, ingredientId }).exec()
 
     if (!ingredient) {
@@ -24,7 +24,7 @@ export const deleteUserIngredientDB = async (userId: string, ingredientId: strin
     return ingredient
 }
 
-export const getUserIngredientsDB = async (userId: string): Promise<UserIngredientType[]> => {
+export const getUserIngredientsDB = async (userId: string): Promise<UserIngredientRes[]> => {
     const ingredients = await UserIngredient.find({ userId }).exec()
 
     if (!ingredients) {
@@ -34,7 +34,7 @@ export const getUserIngredientsDB = async (userId: string): Promise<UserIngredie
     return ingredients
 }
 
-export const getUserIngredientsByTypeDB = async (userId: string, type: IngredientType): Promise<UserIngredientType[]> => {
+export const getUserIngredientsByTypeDB = async (userId: string, type: IngredientType): Promise<UserIngredientRes[]> => {
     const ingredients = await UserIngredient.find({ userId, type }).exec()
 
     if (!ingredients) {

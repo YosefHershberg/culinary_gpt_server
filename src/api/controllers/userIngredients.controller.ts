@@ -4,13 +4,13 @@ import logger from "../../config/logger";
 
 import userIngredientServices from "../services/userIngredients.service";
 
-import CustomRequest from "../../interfaces/CustomRequest";
-import { UserIngredient } from '../../interfaces';
+import CustomRequest from "../../types/CustomRequest";
+import { UserIngredient } from '../../types';
 import { HttpError } from "../../lib/HttpError";
 import { z } from "zod";
 import { ingredientSchema } from "../schemas/ingredient.schema";
 import { IngredientDocument } from "../models/ingredient.model";
-import MessageResponse from "../../interfaces/MessageResponse";
+import MessageResponse from "../../types/MessageResponse";
 
 /**
  * @openapi
@@ -85,6 +85,8 @@ export const addIngredientSchema = z.object({
 
 export const addIngredient = async (req: CustomRequest, res: Response<UserIngredient>, next: NextFunction) => {
     const ingredient = req.body;
+
+    console.log(ingredient);
 
     try {
         const newIngredient =

@@ -2,9 +2,9 @@ import { IngredientDocument } from "../models/ingredient.model";
 
 import { addMultipleUserIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/userIngredient.da";
 
-import { UserIngredient as UserIngredient } from "../../interfaces";
-import MessageResponse from "../../interfaces/MessageResponse";
-import { UserIngredientInterface } from "../models/UserIngredients.model";
+import { UserIngredient as UserIngredient } from "../../types";
+import MessageResponse from "../../types/MessageResponse";
+import { UserIngredientType } from "../models/UserIngredients.model";
 
 /**
  * @module ingredients.service
@@ -19,7 +19,7 @@ const userIngredientServices = {
         return ingredients;
     },
 
-    addIngredient: async (userIngredient: UserIngredientInterface): Promise<UserIngredient> => {
+    addIngredient: async (userIngredient: UserIngredientType): Promise<UserIngredient> => {
         const newIngredient = await addUserIngredientDB(userIngredient);
         return newIngredient;
     },
@@ -30,7 +30,7 @@ const userIngredientServices = {
     },
 
     addMultiple: async (userId: string, userIngredients: IngredientDocument[]): Promise<UserIngredient[]> => {
-        const userIngredientDocs: UserIngredientInterface[] = userIngredients.map((ingredient) => ({
+        const userIngredientDocs: UserIngredientType[] = userIngredients.map((ingredient) => ({
             userId,
             ingredientId: ingredient.id,
             name: ingredient.name,

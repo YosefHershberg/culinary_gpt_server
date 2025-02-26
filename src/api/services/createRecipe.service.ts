@@ -1,23 +1,21 @@
-import axios from 'axios';
 import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
 
+import aiServices from './ai.service';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
-import { UserIngredient, Recipe } from "../../interfaces";
-import aiServices from './ai.service';
+import { UserIngredient } from "../../types";
+import { Recipe } from '../schemas/recipe.schema';
 
-export interface CreateRecipeProps {
+export type CreateRecipeProps = {
     mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
     selectedTime: number;
     prompt: string;
     numOfPeople: number;
 }
-
-const MAX_RETRIES = 3;
 
 /**
  * @module createRecipe.service

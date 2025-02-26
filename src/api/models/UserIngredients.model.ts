@@ -1,15 +1,14 @@
 import mongoose, { Document } from 'mongoose';
-import { IngredientType } from '../../interfaces';
+import { IngredientType } from '../../types';
 
-
-export interface UserIngredientInterface {
+export type UserIngredientType = {
     userId: string;
     ingredientId: string;
     name: string;
     type: IngredientType[];
 }
 
-export interface UserIngredientDocument extends UserIngredientInterface, Document {
+export type UserIngredientDocument = UserIngredientType & Document & {
     id: string;
 }
 

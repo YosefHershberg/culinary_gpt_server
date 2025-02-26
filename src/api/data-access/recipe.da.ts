@@ -1,4 +1,4 @@
-import { getUserPageRecipesProps } from "../../interfaces/ServiceInterfaces";
+import { getUserPageRecipesProps } from "../../types/ServiceTypes";
 import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { DeleteResult } from "mongodb";
 

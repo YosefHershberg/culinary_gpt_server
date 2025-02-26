@@ -1,5 +1,5 @@
 import { IngredientDocument } from "../../models/ingredient.model";
-import { IngredientType } from "../../../interfaces";
+import { IngredientType } from "../../../types";
 import { mockIngredients } from "../../../lib/mock/mockData";
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../../data-access/ingredient.da";
 import { getUserIngredientsDB, addUserIngredientDB, addMultipleUserIngredientsDB, deleteUserIngredientDB, deleteAllUserIngredientsDB } from "../../data-access/userIngredient.da";

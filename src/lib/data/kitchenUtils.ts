@@ -1,4 +1,4 @@
-import { KitchenUtils } from "../../interfaces";
+import { KitchenUtils } from "../../api/schemas/kitchenUtils.schema";
 
 export const kitchenUtils: KitchenUtils = {
     "Stove Top": true,

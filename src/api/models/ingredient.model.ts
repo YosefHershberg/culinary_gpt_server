@@ -1,13 +1,8 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { IngredientType } from '../../interfaces';
+import { Ingredient } from '../schemas/ingredient.schema';
 
-export interface IngredientDocument extends Document {
-    name: string;
-    category: string[];
-    popularity: number;
-    type: IngredientType[];
-};
+export type IngredientDocument = Document & Ingredient
 
 const ingredientSchema = new mongoose.Schema<IngredientDocument>({
     name: {

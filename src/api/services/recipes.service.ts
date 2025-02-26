@@ -1,9 +1,9 @@
 import { base64ToArrayBuffer, hashString } from "../../utils/helperFunctions";
 import firebaseStorageServices from "./firebase.service";
 
-import MessageResponse from "../../interfaces/MessageResponse";
-import { RecipeWithImage } from "../../interfaces";
-import { getUserPageRecipesProps } from "../../interfaces/ServiceInterfaces";
+import MessageResponse from "../../types/MessageResponse";
+import { RecipeWithImage } from "../../types";
+import { getUserPageRecipesProps } from "../../types/ServiceTypes";
 import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageDB } from "../data-access/recipe.da";
 import { RecipeDocument } from "../models/recipe.model";
 

@@ -60,7 +60,7 @@ npm run dev
 │   │   ├── schemas
 │   │   └── webhooks
 │   ├── config
-│   ├── interfaces
+│   ├── types
 │   ├── lib
 │   ├── utils
 │   ├── index.ts

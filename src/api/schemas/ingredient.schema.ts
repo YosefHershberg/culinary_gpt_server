@@ -1,6 +1,21 @@
 import { TypeOf, z } from "zod";
 
 /**
+ * @description Ingredient schema
+ * @note This zod schema is the single source of truth for the ingredient object
+ */
+
+export const ingredientSchema = z.object({
+    category: z.array(z.string()),
+    name: z.string(),
+    id: z.string(),
+    popularity: z.number(),
+    type: z.array(z.enum(['food', 'drink'])),
+})
+
+export type Ingredient = TypeOf<typeof ingredientSchema>;
+
+/**
  * @openapi
  * components:
  *   schemas:
@@ -22,6 +37,9 @@ import { TypeOf, z } from "zod";
  *         id:
  *           type: string
  *           default: '123'
+ *         popularity:
+ *           type: number
+ *           default: 1
  *         type:
  *           type: string
  *           enum:
@@ -34,12 +52,3 @@ import { TypeOf, z } from "zod";
  *         id: '123'
  *         type: 'food'
  */
-
-export const ingredientSchema = z.object({
-    category: z.array(z.string()),
-    name: z.string(),
-    id: z.string(),
-    type: z.array(z.enum(['food', 'drink'])),
-})
-
-export type Ingredient = TypeOf<typeof ingredientSchema>;

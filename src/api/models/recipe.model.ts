@@ -1,8 +1,8 @@
 import mongoose, { Document } from "mongoose";
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { Recipe } from "../../interfaces";
+import { Recipe } from '../schemas/recipe.schema';
 
-export interface RecipeDocument extends Document {
+export type RecipeDocument = Document & {
     recipe: Recipe,
     image_url: string;
     userId: string;

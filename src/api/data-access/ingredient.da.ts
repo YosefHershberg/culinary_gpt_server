@@ -1,4 +1,4 @@
-import {  IngredientType } from "../../interfaces"
+import {  IngredientType } from "../../types"
 import Ingredient, { IngredientDocument } from "../models/ingredient.model"
 import { FilterQuery } from "mongoose"
 

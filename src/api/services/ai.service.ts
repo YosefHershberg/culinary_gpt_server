@@ -8,17 +8,13 @@ const MAX_RETRIES = 5;
 
 const aiServices = {
 
-    openaiCreate: async <T>(prompt: string): Promise<T> => {
+    openaiCreate: async <TResponse>(prompt: string): Promise<TResponse> => {
         let attempts = 0;
         let isValidJson = false;
-        let result: T;
+        let result: TResponse;
 
         while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
             try {
-
-                const before = Date.now();
-                console.log('before: ', before);
-                
                 const completion = await openai.chat.completions.create({
                     messages: [
                         { role: "system", content: "Your responses must always be a valid JSON object without any additional text or explanations." },
@@ -29,15 +25,12 @@ const aiServices = {
                     model: "gpt-3.5-turbo",
                 });
 
-                const after = Date.now();
-                console.log(`created in ${after - before}ms`);
-
                 const response = completion.choices[0].message.content as string;
 
                 isValidJson = isValidJSON(response);
 
                 if (isValidJson) {
-                    result = JSON.parse(response) as T;
+                    result = JSON.parse(response);
                 }
             } catch (error) {
                 logger.error(error);

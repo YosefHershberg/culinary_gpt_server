@@ -1,7 +1,7 @@
 import { FilterQuery } from "mongoose";
 import { IngredientDocument } from "../models/ingredient.model";
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../data-access/ingredient.da";
-import { IngredientType } from "../../interfaces";
+import { IngredientType } from "../../types";
 
 /**
  * @module ingredients.service
