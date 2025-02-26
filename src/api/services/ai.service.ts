@@ -30,7 +30,7 @@ const aiOperations = {
                 });
 
                 const after = Date.now();
-                logger.info(`created in ${after - before}ms`);
+                console.log(`created in ${after - before}ms`);
 
                 const response = completion.choices[0].message.content as string;
 
