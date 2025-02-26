@@ -47,7 +47,7 @@ const createCocktailOperations = {
         // Create a cocktail title using OpenAI API
         const cocktailTitle = await createCocktailOperations.createCocktailTitleOpenAI(cocktailTitlePrompt);
 
-        const imagePrompt = createCocktailImagePrompt(cocktailTitle, userIngredients);
+        const imagePrompt = createCocktailImagePrompt(cocktailTitle);
         const cocktailPrompt = createCocktailPrompt(userIngredients, prompt, cocktailTitle);
 
         const [base64image] = await Promise.all([
