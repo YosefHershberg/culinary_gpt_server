@@ -23,7 +23,7 @@ const aiServices = {
                             role: "user",
                             content: prompt
                         }],
-                    model: "gpt-4-turbo",
+                    model: "gpt-3.5-turbo",
                 });
 
                 const response = completion.choices[0].message.content as string;
