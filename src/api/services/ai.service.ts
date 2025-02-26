@@ -26,7 +26,7 @@ const aiOperations = {
                             role: "user",
                             content: prompt
                         }],
-                    model: "gpt-4-turbo",
+                    model: "gpt-3.5-turbo",
                 });
 
                 const after = Date.now();
