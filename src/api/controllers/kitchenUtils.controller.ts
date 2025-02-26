@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import kitchenUtilsOperations from '../services/kitchenUtils.service';
+import kitchenUtilsServices from '../services/kitchenUtils.service';
 import { KitchenUtils } from '../../interfaces';
 import CustomRequest from '../../interfaces/CustomRequest';
 
@@ -31,7 +31,7 @@ import logger from '../../config/logger';
 
 export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
     try {
-        const kitchenUtils = await kitchenUtilsOperations.get(req.userId as string);
+        const kitchenUtils = await kitchenUtilsServices.get(req.userId as string);
 
         return res.json(kitchenUtils);
     } catch (error) {
@@ -94,7 +94,7 @@ export const toggleKitchenUtils = async (req: CustomRequest, res: Response<Kitch
 
     try {
         const message =
-            await kitchenUtilsOperations.toggle(req.userId as string, name);
+            await kitchenUtilsServices.toggle(req.userId as string, name);
 
         return res.json(message);
     } catch (error) {

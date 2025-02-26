@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app, { userId } from '../../../lib/mock/mockApp';
-import recipeOperations from '../../services/recipes.service';
-import createRecipeOperations from '../../services/createRecipe.service';
+import recipeServices from '../../services/recipes.service';
+import createRecipeServices from '../../services/createRecipe.service';
 import { HttpStatusCode } from 'axios';
 import { mockRecipe } from '../../../lib/mock/mockData';
 import { FilterOptions } from '../../../interfaces/ServiceInterfaces';
@@ -14,7 +14,7 @@ describe('Recipe Controller', () => {
 
     describe('GET /api/user/recipes', () => {
         it('should return a list of recipes for the user', async () => {
-            (recipeOperations.getUserPageRecipes as jest.Mock).mockResolvedValue(mockRecipes);
+            (recipeServices.getUserPageRecipes as jest.Mock).mockResolvedValue(mockRecipes);
 
             const response = await request(app)
                 .get('/api/user/recipes')
@@ -28,18 +28,18 @@ describe('Recipe Controller', () => {
                 filter: 'all' as FilterOptions
             };
 
-            const recipes = await recipeOperations.getUserPageRecipes(props);
+            const recipes = await recipeServices.getUserPageRecipes(props);
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipes);
-            expect(recipeOperations.getUserPageRecipes).toHaveBeenCalledWith(props);
+            expect(recipeServices.getUserPageRecipes).toHaveBeenCalledWith(props);
         });
     });
 
     describe('POST /api/user/recipes', () => {
 
         it('should add a new recipe', async () => {
-            (recipeOperations.addRecipe as jest.Mock).mockResolvedValue(mockRecipe);
+            (recipeServices.addRecipe as jest.Mock).mockResolvedValue(mockRecipe);
 
             const response = await request(app)
                 .post('/api/user/recipes')
@@ -47,7 +47,7 @@ describe('Recipe Controller', () => {
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipe);
-            expect(recipeOperations.addRecipe).toHaveBeenCalledWith({ ...mockRecipe, userId });
+            expect(recipeServices.addRecipe).toHaveBeenCalledWith({ ...mockRecipe, userId });
         });
     });
 
@@ -55,14 +55,14 @@ describe('Recipe Controller', () => {
         const recipeId = '1';
 
         it('should return a recipe by id', async () => {
-            (recipeOperations.getRecipeById as jest.Mock).mockResolvedValue(mockRecipes[0]);
+            (recipeServices.getRecipeById as jest.Mock).mockResolvedValue(mockRecipes[0]);
 
             const response = await request(app)
                 .get(`/api/user/recipes/${recipeId}`)
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipes[0]);
-            expect(recipeOperations.getRecipeById).toHaveBeenCalledWith(recipeId);
+            expect(recipeServices.getRecipeById).toHaveBeenCalledWith(recipeId);
         });
     });
 
@@ -71,14 +71,14 @@ describe('Recipe Controller', () => {
 
         it('should delete a recipe by id', async () => {
             const deleteMessage = { message: 'Recipe deleted successfully' };
-            (recipeOperations.deleteRecipe as jest.Mock).mockResolvedValue(deleteMessage);
+            (recipeServices.deleteRecipe as jest.Mock).mockResolvedValue(deleteMessage);
 
             const response = await request(app)
                 .delete(`/api/user/recipes/${recipeId}`)
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(deleteMessage);
-            expect(recipeOperations.deleteRecipe).toHaveBeenCalledWith(recipeId);
+            expect(recipeServices.deleteRecipe).toHaveBeenCalledWith(recipeId);
         });
     });
 
@@ -101,14 +101,14 @@ describe('Recipe Controller', () => {
                 end: jest.fn(),
             };
 
-            (createRecipeOperations.createRecipe as jest.Mock).mockResolvedValueOnce(createdRecipe);
+            (createRecipeServices.createRecipe as jest.Mock).mockResolvedValueOnce(createdRecipe);
 
             const response = await request(app)
                 .post('/api/user/recipes/create')
                 .send(mockRecipeInput);
 
             expect(response.status).toBe(HttpStatusCode.Ok);
-            expect(createRecipeOperations.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput, expect.any(Object));
+            expect(createRecipeServices.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput, expect.any(Object));
         });
     });
 

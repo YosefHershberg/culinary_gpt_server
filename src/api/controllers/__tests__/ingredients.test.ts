@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { HttpStatusCode } from 'axios';
-import ingredientOperations from '../../services/ingredients.service';
-import userIngredientOperations from '../../services/userIngredients.service';
+import ingredientServices from '../../services/ingredients.service';
+import userIngredientServices from '../../services/userIngredients.service';
 import app, { userId } from '../../../lib/mock/mockApp';
 import { mockIngredient, mockIngredients, mockMessageResponse } from '../../../lib/mock/mockData';
 
@@ -22,14 +22,14 @@ describe('Ingredients API', () => {
 
     describe('GET /api/user/ingredients', () => {
         it('should return all ingredients for a user', async () => {
-            (userIngredientOperations.getAll as jest.Mock).mockResolvedValue(mockIngredients);
+            (userIngredientServices.getAll as jest.Mock).mockResolvedValue(mockIngredients);
 
             const res = await request(app)
                 .get('/api/user/ingredients')
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredients);
-            expect(userIngredientOperations.getAll).toHaveBeenCalledWith(userId);
+            expect(userIngredientServices.getAll).toHaveBeenCalledWith(userId);
         });
     });
 
@@ -37,7 +37,7 @@ describe('Ingredients API', () => {
         it('should add multiple ingredients', async () => {
 
             // Mock the addMultiple function
-            (userIngredientOperations.addMultiple as jest.Mock).mockResolvedValue(mockIngredients);
+            (userIngredientServices.addMultiple as jest.Mock).mockResolvedValue(mockIngredients);
 
             const res = await request(app)
                 .post('/api/user/ingredients/multiple')
@@ -45,7 +45,7 @@ describe('Ingredients API', () => {
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredients);
-            expect(userIngredientOperations.addMultiple).toHaveBeenCalledWith(
+            expect(userIngredientServices.addMultiple).toHaveBeenCalledWith(
                 userId,
                 mockIngredients
             );
@@ -56,40 +56,40 @@ describe('Ingredients API', () => {
 
     describe('DELETE /api/user/ingredients/:id', () => {
         it('should delete an ingredient', async () => {
-            (userIngredientOperations.deleteIngredient as jest.Mock).mockResolvedValue(mockMessageResponse);
+            (userIngredientServices.deleteIngredient as jest.Mock).mockResolvedValue(mockMessageResponse);
 
             const res = await request(app)
                 .delete(`/api/user/ingredients/${mockIngredient.id}`)
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockMessageResponse);
-            expect(userIngredientOperations.deleteIngredient).toHaveBeenCalledWith(userId, mockIngredient.id);
+            expect(userIngredientServices.deleteIngredient).toHaveBeenCalledWith(userId, mockIngredient.id);
         });
     });
 
     describe('DELETE /api/user/ingredients/all', () => {
         it('should delete an ingredient', async () => {
-            (userIngredientOperations.deleteAll as jest.Mock).mockResolvedValue(mockMessageResponse);
+            (userIngredientServices.deleteAll as jest.Mock).mockResolvedValue(mockMessageResponse);
 
             const res = await request(app)
                 .delete('/api/user/ingredients/all')
 
             expect(res.status).toBe(HttpStatusCode.Ok);
-            expect(userIngredientOperations.deleteAll).toHaveBeenCalledWith(userId);
+            expect(userIngredientServices.deleteAll).toHaveBeenCalledWith(userId);
         });
     });
 
     describe('GET /api/ingredients/suggestions/:category', () => {
         it('should return ingredient suggestions by category', async () => {
             const category = 'carbs';
-            (ingredientOperations.getByCategory as jest.Mock).mockResolvedValue(mockIngredients);
+            (ingredientServices.getByCategory as jest.Mock).mockResolvedValue(mockIngredients);
 
             const res = await request(app)
                 .get(`/api/ingredients/suggestions/${category}`);
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredients);
-            expect(ingredientOperations.getByCategory).toHaveBeenCalledWith(category);
+            expect(ingredientServices.getByCategory).toHaveBeenCalledWith(category);
         });
     });
 
@@ -97,7 +97,7 @@ describe('Ingredients API', () => {
         it('should search ingredients', async () => {
             const query = 'Tomato';
             const type = 'food';
-            (ingredientOperations.search as jest.Mock).mockResolvedValue(mockIngredients);
+            (ingredientServices.search as jest.Mock).mockResolvedValue(mockIngredients);
 
             const res = await request(app)
                 .get('/api/ingredients/search')
@@ -105,7 +105,7 @@ describe('Ingredients API', () => {
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockIngredients);
-            expect(ingredientOperations.search).toHaveBeenCalledWith(query, type);
+            expect(ingredientServices.search).toHaveBeenCalledWith(query, type);
         });
     });
 });

@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import CustomRequest from "../../interfaces/CustomRequest";
-import userOperations from "../services/user.service";
+import userServices from "../services/user.service";
 import { HttpError } from "../../lib/HttpError";
 import { HttpStatusCode } from "axios";
 import logger from "../../config/logger";
@@ -38,7 +38,7 @@ export const getUserSubscription = async (req: CustomRequest, res: Response, nex
     const { userId } = req
 
     try {
-        const isSubscribed = await userOperations.isSubscribed(userId as string);
+        const isSubscribed = await userServices.isSubscribed(userId as string);
 
         return res.status(200).json({ subscriptionActive: isSubscribed });
     } catch (error) {

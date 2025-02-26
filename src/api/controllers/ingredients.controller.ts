@@ -6,11 +6,11 @@ import { HttpStatusCode } from 'axios';
 import CustomRequest from '../../interfaces/CustomRequest';
 import { IngredientType } from '../../interfaces';
 
-import ingredientOperations from '../services/ingredients.service';
+import ingredientServices from '../services/ingredients.service';
 import { IngredientDocument } from '../models/ingredient.model';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
-import imageDetectionOperations from '../services/imageDetection.service';
+import imageDetectionServices from '../services/imageDetection.service';
 
 /**
  * @openapi
@@ -53,7 +53,7 @@ export const ingredientSuggestions = async (req: CustomRequest, res: Response<In
     const { category } = req.params;
 
     try {
-        const result = await ingredientOperations.getByCategory(category as string);
+        const result = await ingredientServices.getByCategory(category as string);
 
         return res.json(result);
     } catch (error) {
@@ -117,7 +117,7 @@ export const searchIngredients = async (req: CustomRequest, res: Response<Ingred
     const { query, type } = req.query;
 
     try {
-        const ingredients = await ingredientOperations.search(
+        const ingredients = await ingredientServices.search(
             query as FilterQuery<IngredientDocument>,
             type as IngredientType
         );
@@ -178,7 +178,7 @@ export const imageIngredientDetector = async (req: CustomRequest, res: Response<
     try {
         const { imageUrl } = req.body;
 
-        const ingredients = await imageDetectionOperations.getIngredientsFromImage(imageUrl);
+        const ingredients = await imageDetectionServices.getIngredientsFromImage(imageUrl);
 
         res.status(HttpStatusCode.Ok).json(ingredients);
     } catch (error) {

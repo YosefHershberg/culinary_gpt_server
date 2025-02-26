@@ -1,4 +1,4 @@
-import kitchenUtilsOperations from '../../services/kitchenUtils.service';
+import kitchenUtilsServices from '../../services/kitchenUtils.service';
 import { userId } from '../../../lib/mock/mockApp';
 import { mockKitchenUtils } from '../../../lib/mock/mockData';
 import { getKitchenUtilsDB, toggleKitchenUtilDB } from '../../data-access/kitchenUtils.da';
@@ -6,7 +6,7 @@ import { getKitchenUtilsDB, toggleKitchenUtilDB } from '../../data-access/kitche
 jest.mock('../../data-access/user.da');
 jest.mock('../../data-access/kitchenUtils.da');
 
-describe('kitchenUtilsOperations', () => {
+describe('kitchenUtilsServices', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -16,7 +16,7 @@ describe('kitchenUtilsOperations', () => {
 
             (getKitchenUtilsDB as jest.Mock).mockResolvedValue(mockKitchenUtils);
 
-            const result = await kitchenUtilsOperations.get(userId);
+            const result = await kitchenUtilsServices.get(userId);
 
             expect(getKitchenUtilsDB).toHaveBeenCalledWith(userId);
             expect(result).toEqual(mockKitchenUtils);
@@ -34,7 +34,7 @@ describe('kitchenUtilsOperations', () => {
 
             const utilityName = 'Microwave';
 
-            const result = await kitchenUtilsOperations.toggle(userId, utilityName);
+            const result = await kitchenUtilsServices.toggle(userId, utilityName);
 
             expect(toggleKitchenUtilDB).toHaveBeenCalledWith(userId, utilityName);
             expect(result).toEqual(updatedKitchenUtils);

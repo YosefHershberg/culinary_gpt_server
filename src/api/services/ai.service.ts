@@ -6,7 +6,7 @@ import { isValidJSON } from "../../utils/helperFunctions";
 
 const MAX_RETRIES = 5;
 
-const aiOperations = {
+const aiServices = {
 
     openaiCreate: async <T>(prompt: string): Promise<T> => {
         let attempts = 0;
@@ -135,4 +135,4 @@ const aiOperations = {
     }
 }
 
-export default aiOperations;
+export default aiServices;

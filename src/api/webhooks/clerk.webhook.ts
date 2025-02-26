@@ -2,7 +2,7 @@ import { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Request, Response } from "express";
 import { HttpStatusCode } from "axios";
 
-import userOperations from "../services/user.service";
+import userServices from "../services/user.service";
 import verifyCvixHeaders from "../../lib/verifyCvixHeaders";
 import logger from "../../config/logger";
 
@@ -23,7 +23,7 @@ const clerkWebhook = async (req: Request, res: Response) => {
     try {
         switch (evt.type) {
             case 'user.created':
-                const createdUser = await userOperations.createUser({
+                const createdUser = await userServices.createUser({
                     clerkId: evt.data.id,
                     first_name: evt.data.first_name as string,
                     last_name: evt.data.last_name as string,
@@ -36,13 +36,13 @@ const clerkWebhook = async (req: Request, res: Response) => {
                 break;
 
             case 'user.deleted':
-                const deletedUser = await userOperations.deleteUser(evt.data.id as string);
+                const deletedUser = await userServices.deleteUser(evt.data.id as string);
                 logger.info('User deleted. clerk id:', deletedUser.id);
                 message = "Webhook received and user deleted successfully.";
                 break;
 
             case 'user.updated':
-                const updatedUser = await userOperations.updateUser(evt.data.id as string, {
+                const updatedUser = await userServices.updateUser(evt.data.id as string, {
                     first_name: evt.data.first_name as string,
                     last_name: evt.data.last_name as string,
                     email: evt.data.email_addresses[0].email_address

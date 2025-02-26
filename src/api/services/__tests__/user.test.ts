@@ -1,5 +1,5 @@
 import { createUserDB, updateUserDB, UpdateUserDBProps } from "../../data-access/user.da";
-import userOperations from "../user.service";
+import userServices from "../user.service";
 import { mockUser } from "../../../lib/mock/mockData";
 
 jest.mock('../../data-access/user.da');
@@ -11,12 +11,12 @@ jest.mock('../../data-access/kitchenUtils.da');
 
 describe('user services', () => {
 
-    describe('userOperations.createUser', () => {
+    describe('userServices.createUser', () => {
         it('should create a user successfully', async () => {
 
             (createUserDB as jest.Mock).mockResolvedValue(mockUser);
 
-            const result = await userOperations.createUser(mockUser);
+            const result = await userServices.createUser(mockUser);
 
             expect(createUserDB).toHaveBeenCalledWith(mockUser);
 
@@ -27,30 +27,30 @@ describe('user services', () => {
 
     // TODO: fix this test. it takes too much time to run
 
-    // describe('userOperations.deleteUser', () => {
+    // describe('userServices.deleteUser', () => {
     //     it('should delete a user and related data successfully', async () => {
     //         const mockRecipes = [{ recipe: { description: 'recipe1' } }, { recipe: { description: 'recipe2' } }];
 
-    //         (recipeOperations.getUserPageRecipes as jest.Mock).mockResolvedValue(mockRecipes);
+    //         (recipeServices.getUserPageRecipes as jest.Mock).mockResolvedValue(mockRecipes);
     //         (deleteUserDB as jest.Mock).mockResolvedValue(mockUser);
     //         (deleteUserRecipes as jest.Mock).mockResolvedValue(undefined);
     //         (deleteKitchenUtilsDB as jest.Mock).mockResolvedValue(undefined);
-    //         (userIngredientOperations.deleteAll as jest.Mock).mockResolvedValue(undefined);
-    //         (firebaseStorageOperations.deleteImage as jest.Mock).mockResolvedValue(undefined);
+    //         (userIngredientServices.deleteAll as jest.Mock).mockResolvedValue(undefined);
+    //         (firebaseStorageServices.deleteImage as jest.Mock).mockResolvedValue(undefined);
 
-    //         const result = await userOperations.deleteUser(userId);
+    //         const result = await userServices.deleteUser(userId);
 
-    //         expect(recipeOperations.getUserPageRecipes).toHaveBeenCalledWith(userId);
+    //         expect(recipeServices.getUserPageRecipes).toHaveBeenCalledWith(userId);
     //         expect(deleteUserDB).toHaveBeenCalledWith(userId);
     //         expect(deleteUserRecipes).toHaveBeenCalledWith(userId);
     //         expect(deleteKitchenUtilsDB).toHaveBeenCalledWith(userId);
-    //         expect(userIngredientOperations.deleteAll).toHaveBeenCalledWith(userId);
-    //         expect(firebaseStorageOperations.deleteImage).toHaveBeenCalledTimes(mockRecipes.length);
+    //         expect(userIngredientServices.deleteAll).toHaveBeenCalledWith(userId);
+    //         expect(firebaseStorageServices.deleteImage).toHaveBeenCalledTimes(mockRecipes.length);
     //         expect(result).toEqual(mockUser);
     //     });
     // });
 
-    describe('userOperations.updateUser', () => {
+    describe('userServices.updateUser', () => {
         it('should update a user successfully', async () => {
             const userId = 'userId';
             const mockUpdate: UpdateUserDBProps = {
@@ -62,7 +62,7 @@ describe('user services', () => {
 
             (updateUserDB as jest.Mock).mockResolvedValue(mockUser);
 
-            const result = await userOperations.updateUser(userId, mockUpdate);
+            const result = await userServices.updateUser(userId, mockUpdate);
 
             expect(updateUserDB).toHaveBeenCalledWith(userId, mockUpdate);
             expect(result).toEqual(mockUser);

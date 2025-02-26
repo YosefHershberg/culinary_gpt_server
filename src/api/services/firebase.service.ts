@@ -5,11 +5,11 @@ import env from "../../utils/env";
 /**
  * @module firebase.service
  * 
- * @description This module provides operations for uploading and deleting images from Firebase Storage
- * @exports firebaseStorageOperations
+ * @description This module provides Services for uploading and deleting images from Firebase Storage
+ * @exports firebaseStorageServices
  */
 
-const firebaseStorageOperations = {
+const firebaseStorageServices = {
 
     /**
      * @description This function uploads an image to Firebase Storage
@@ -53,4 +53,4 @@ const firebaseStorageOperations = {
     }
 }
 
-export default firebaseStorageOperations
+export default firebaseStorageServices

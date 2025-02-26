@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { HttpStatusCode } from 'axios';
 import app, { userId } from '../../../lib/mock/mockApp';
-import kitchenUtilsOperations from '../../services/kitchenUtils.service';
+import kitchenUtilsServices from '../../services/kitchenUtils.service';
 import { KitchenUtils } from '../../../interfaces';
 
 jest.mock('../../services/kitchenUtils.service');
@@ -22,14 +22,14 @@ describe('Kitchen Utils Controller', () => {
 
     describe('GET /api/user/kitchen-utils', () => {
         it('should return kitchen utils for a user', async () => {
-            (kitchenUtilsOperations.get as jest.Mock).mockResolvedValue(mockKitchenUtils);
+            (kitchenUtilsServices.get as jest.Mock).mockResolvedValue(mockKitchenUtils);
 
             const res = await request(app)
                 .get('/api/user/kitchen-utils');
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockKitchenUtils);
-            expect(kitchenUtilsOperations.get).toHaveBeenCalledWith(userId);
+            expect(kitchenUtilsServices.get).toHaveBeenCalledWith(userId);
         });
     });
 
@@ -41,7 +41,7 @@ describe('Kitchen Utils Controller', () => {
         it('should update kitchen utils for a user', async () => {
             const mockMessage = { message: 'Kitchen utils updated successfully' };
 
-            (kitchenUtilsOperations.toggle as jest.Mock).mockResolvedValue(mockMessage);
+            (kitchenUtilsServices.toggle as jest.Mock).mockResolvedValue(mockMessage);
 
             const res = await request(app)
                 .patch('/api/user/kitchen-utils')
@@ -49,7 +49,7 @@ describe('Kitchen Utils Controller', () => {
 
             expect(res.status).toBe(HttpStatusCode.Ok);
             expect(res.body).toEqual(mockMessage);
-            expect(kitchenUtilsOperations.toggle).toHaveBeenCalledWith(userId, updatePayload.name);
+            expect(kitchenUtilsServices.toggle).toHaveBeenCalledWith(userId, updatePayload.name);
         });
     });
 

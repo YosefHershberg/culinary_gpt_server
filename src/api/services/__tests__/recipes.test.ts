@@ -1,5 +1,5 @@
-import recipeOperations from '../../services/recipes.service';
-import firebaseStorageOperations from '../firebase.service';
+import recipeServices from '../../services/recipes.service';
+import firebaseStorageServices from '../firebase.service';
 import { RecipeDocument } from '../../models/recipe.model';
 import { mockRecipe } from '../../../lib/mock/mockData';
 import { base64ToArrayBuffer } from '../../../utils/helperFunctions';
@@ -11,7 +11,7 @@ jest.mock('../../data-access/recipe.da');
 jest.mock('../firebase.service');
 jest.mock('../../../utils/helperFunctions');
 
-describe('recipeOperations', () => {
+describe('recipeServices', () => {
 
     describe('getUserPageRecipes', () => {
         it('should return the correct recipes for a given user ID', async () => {
@@ -20,7 +20,7 @@ describe('recipeOperations', () => {
             ];
             (getRecipesPageDB as jest.Mock).mockResolvedValueOnce(mockRecipes);
 
-            const result = await recipeOperations.getUserPageRecipes({
+            const result = await recipeServices.getUserPageRecipes({
                 userId,
                 page: 1,
                 limit: 10,
@@ -38,7 +38,7 @@ describe('recipeOperations', () => {
             ];
             (getAllRecipesDB as jest.Mock).mockResolvedValue(mockRecipes);
 
-            const result = await recipeOperations.getAllUserRecipes('userId');
+            const result = await recipeServices.getAllUserRecipes('userId');
 
             expect(result).toEqual(mockRecipes);
         });
@@ -51,14 +51,14 @@ describe('recipeOperations', () => {
             const mockImageUrl = 'mockImageUrl';
 
             (base64ToArrayBuffer as jest.Mock).mockReturnValue(mockImageBuffer);
-            (firebaseStorageOperations.uploadImage as jest.Mock).mockResolvedValue(mockImageUrl);
+            (firebaseStorageServices.uploadImage as jest.Mock).mockResolvedValue(mockImageUrl);
             (addRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
 
-            const result = await recipeOperations.addRecipe(mockRecipe);
+            const result = await recipeServices.addRecipe(mockRecipe);
 
             expect(result).toEqual(mockRecipe);
             expect(base64ToArrayBuffer).toHaveBeenCalledWith(mockRecipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, ''));
-            expect(firebaseStorageOperations.uploadImage).toHaveBeenCalledWith(mockImageBuffer, 'recipe123');
+            expect(firebaseStorageServices.uploadImage).toHaveBeenCalledWith(mockImageBuffer, 'recipe123');
             expect(addRecipeDB).toHaveBeenCalledWith({ ...mockRecipe, image_url: mockImageUrl });
         });
     });
@@ -67,14 +67,14 @@ describe('recipeOperations', () => {
         it('should delete the recipe and its associated image from storage', async () => {
 
             (getRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
-            (firebaseStorageOperations.deleteImage as jest.Mock).mockResolvedValue(undefined);
+            (firebaseStorageServices.deleteImage as jest.Mock).mockResolvedValue(undefined);
             (deleteRecipeDB as jest.Mock).mockResolvedValue(undefined);
 
-            const result: MessageResponse = await recipeOperations.deleteRecipe('recipeId');
+            const result: MessageResponse = await recipeServices.deleteRecipe('recipeId');
 
             expect(result).toEqual({ message: 'Recipe deleted successfully' });
             expect(getRecipeDB).toHaveBeenCalledWith('recipeId');
-            expect(firebaseStorageOperations.deleteImage).toHaveBeenCalledWith(mockRecipe.recipe.id);
+            expect(firebaseStorageServices.deleteImage).toHaveBeenCalledWith(mockRecipe.recipe.id);
             expect(deleteRecipeDB).toHaveBeenCalledWith('recipeId');
         });
     });
@@ -84,7 +84,7 @@ describe('recipeOperations', () => {
 
             (getRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
 
-            const result = await recipeOperations.getRecipeById('recipeId');
+            const result = await recipeServices.getRecipeById('recipeId');
 
             expect(result).toEqual(mockRecipe);
             expect(getRecipeDB).toHaveBeenCalledWith('recipeId');

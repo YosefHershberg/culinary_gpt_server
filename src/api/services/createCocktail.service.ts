@@ -5,19 +5,19 @@ import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 import { UserIngredient } from "../../interfaces";
-import aiOperations from './ai.service';
+import aiServices from './ai.service';
 import { Recipe } from '../schemas/recipe.schema';
 
 /**
  * @module createRecipe.service
  * 
- * @description This module provides operations for creating a recipe
+ * @description This module provides services for creating a recipe
  * @note this service uses server sent events to stream data to the client. therefore, the response object is passed to the functions
  * 
- * @exports createRecipeOperations
+ * @exports createRecipeServices
  */
 
-const createCocktailOperations = {
+const createCocktailServices = {
 
     /**
      * @description This function creates a cocktail recipe and returns a valid JSON with image
@@ -39,17 +39,17 @@ const createCocktailOperations = {
 
         const cocktailTitlePrompt = createCocktailTitlePrompt(userIngredients, prompt);
 
-        const { title: cocktailTitle } = await aiOperations.openaiCreate<{ title: string }>(cocktailTitlePrompt);
+        const { title: cocktailTitle } = await aiServices.openaiCreate<{ title: string }>(cocktailTitlePrompt);
 
         const imagePrompt = createCocktailImagePrompt(cocktailTitle);
         const cocktailPrompt = createCocktailPrompt(userIngredients, prompt, cocktailTitle);
 
         const [base64image] = await Promise.all([
             // Create the cocktail image using GetimgAI API
-            aiOperations.createImageGetimgAI(imagePrompt),
+            aiServices.createImageGetimgAI(imagePrompt),
 
             // Create the cocktail recipe using OpenAI API
-            createCocktailOperations.createCocktailService(cocktailPrompt, res)
+            createCocktailServices.createCocktailService(cocktailPrompt, res)
         ]);
 
         // Compress the image
@@ -68,7 +68,7 @@ const createCocktailOperations = {
      * @returns {Recipe} recipe
      */
     createCocktailService: async (cocktailPrompt: string, res: Response): Promise<void> => {
-        let recipe = await aiOperations.openaiCreate<Recipe>(cocktailPrompt);
+        let recipe = await aiServices.openaiCreate<Recipe>(cocktailPrompt);
 
         // This is relevant for deleting the recipe
         recipe.id = uuid();
@@ -77,4 +77,4 @@ const createCocktailOperations = {
     },
 };
 
-export default createCocktailOperations
+export default createCocktailServices

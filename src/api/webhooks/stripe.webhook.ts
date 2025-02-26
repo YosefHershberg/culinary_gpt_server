@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import logger from "../../config/logger";
-import userOperations from "../services/user.service";
+import userServices from "../services/user.service";
 import Stripe from "stripe";
 import stripe from "../../config/stripe";
 import env from "../../utils/env";
@@ -38,7 +38,7 @@ const stripeWebhook = async (req: Request, res: Response) => {
                 const customerId = checkoutSession.customer as string;
                 const subscriptionId = checkoutSession.subscription as string;
                 
-                await userOperations.subscribe(userId, customerId, subscriptionId);
+                await userServices.subscribe(userId, customerId, subscriptionId);
                 
                 logger.info(`Checkout session completed: ${userId}`);
                 break;
@@ -48,7 +48,7 @@ const stripeWebhook = async (req: Request, res: Response) => {
             case 'customer.subscription.deleted': {
                 const subscription = data.object as Stripe.Subscription;
 
-                await userOperations.unsubscribe(subscription.id);
+                await userServices.unsubscribe(subscription.id);
 
                 logger.info(`Subscription deleted: ${subscription.id}`);
 

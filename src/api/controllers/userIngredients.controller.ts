@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { Response, NextFunction } from "express";
 import logger from "../../config/logger";
 
-import userIngredientOperations from "../services/userIngredients.service";
+import userIngredientServices from "../services/userIngredients.service";
 
 import CustomRequest from "../../interfaces/CustomRequest";
 import { UserIngredient } from '../../interfaces';
@@ -37,7 +37,7 @@ import MessageResponse from "../../interfaces/MessageResponse";
 
 export const getAllIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
     try {
-        const ingredients = await userIngredientOperations.getAll(req.userId as string);
+        const ingredients = await userIngredientServices.getAll(req.userId as string);
 
         return res.json(ingredients);
     } catch (error) {
@@ -88,7 +88,7 @@ export const addIngredient = async (req: CustomRequest, res: Response<UserIngred
 
     try {
         const newIngredient =
-            await userIngredientOperations.addIngredient({
+            await userIngredientServices.addIngredient({
                 userId: req.userId as string,
                 ingredientId: ingredient.id,
                 name: ingredient.name,
@@ -147,7 +147,7 @@ export const addMultipleIngredients = async (req: CustomRequest, res: Response<U
     const ingredients: IngredientDocument[] = req.body;
 
     try {
-        const newIngredients = await userIngredientOperations.addMultiple(
+        const newIngredients = await userIngredientServices.addMultiple(
             req.userId as string,
             ingredients
         );
@@ -198,7 +198,7 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
     const id = req.params.id;
 
     try {
-        const message = await userIngredientOperations.deleteIngredient(req.userId as string, id);
+        const message = await userIngredientServices.deleteIngredient(req.userId as string, id);
 
         return res.json(message);
     } catch (error) {
@@ -235,7 +235,7 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
 
 export const deleteAllIngredients = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     try {
-        const message = await userIngredientOperations.deleteAll(req.userId as string);
+        const message = await userIngredientServices.deleteAll(req.userId as string);
 
         return res.json(message);
     } catch (error) {

@@ -6,11 +6,11 @@ import { IngredientType } from "../../interfaces";
 /**
  * @module ingredients.service
  * 
- * @description This module provides operations for managing user ingredients
- * @exports ingredientOperations
+ * @description This module provides Services for managing user ingredients
+ * @exports ingredientServices
  */
 
-const ingredientOperations = {
+const ingredientServices = {
     getByCategory: async (category: string): Promise<IngredientDocument[]> => {
         const ingredients = await getIngredientsByCategoryDB(category)
         return ingredients
@@ -25,4 +25,4 @@ const ingredientOperations = {
     },
 }
 
-export default ingredientOperations
+export default ingredientServices

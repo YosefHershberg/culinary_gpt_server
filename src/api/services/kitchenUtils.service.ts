@@ -4,11 +4,11 @@ import { getKitchenUtilsDB, toggleKitchenUtilDB } from "../data-access/kitchenUt
 /**
  * @module kitchenUtils.service
  * 
- * @description This module provides operations for managing user kitchen utensils
- * @exports kitchenUtilsOperations
+ * @description This module provides Services for managing user kitchen utensils
+ * @exports kitchenUtilsServices
  */
 
-const kitchenUtilsOperations = {
+const kitchenUtilsServices = {
     get: async (userId: string): Promise<KitchenUtils> => {
         const kitchenUtils = await getKitchenUtilsDB(userId);
 
@@ -22,4 +22,4 @@ const kitchenUtilsOperations = {
     }
 }
 
-export default kitchenUtilsOperations
+export default kitchenUtilsServices

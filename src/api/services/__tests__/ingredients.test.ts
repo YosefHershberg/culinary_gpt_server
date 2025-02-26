@@ -3,8 +3,8 @@ import { IngredientType } from "../../../interfaces";
 import { mockIngredients } from "../../../lib/mock/mockData";
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../../data-access/ingredient.da";
 import { getUserIngredientsDB, addUserIngredientDB, addMultipleUserIngredientsDB, deleteUserIngredientDB, deleteAllUserIngredientsDB } from "../../data-access/userIngredient.da";
-import ingredientOperations from "../ingredients.service";
-import userIngredientOperations from "../userIngredients.service";
+import ingredientServices from "../ingredients.service";
+import userIngredientServices from "../userIngredients.service";
 
 jest.mock('../../data-access/ingredient.da');
 jest.mock('../../data-access/userIngredient.da');
@@ -15,20 +15,20 @@ describe('ingredient services', () => {
     const category = ['Vegetables'];
     const type: IngredientType[] = ['food'];
 
-    describe('userIngredientOperations.getAll', () => {
+    describe('userIngredientServices.getAll', () => {
         it('should return all user ingredients', async () => {
             const mockIngredients = [{ id: ingredientId, name: 'testIngredient', category, type }];
 
             (getUserIngredientsDB as jest.Mock).mockResolvedValue(mockIngredients);
 
-            const result = await userIngredientOperations.getAll(userId);
+            const result = await userIngredientServices.getAll(userId);
 
             expect(getUserIngredientsDB).toHaveBeenCalledWith(userId);
             expect(result).toEqual(mockIngredients);
         });
     });
 
-    describe('userIngredientOperations.addIngredient', () => {
+    describe('userIngredientServices.addIngredient', () => {
         it('should add a new ingredient successfully', async () => {
             const name = 'testIngredient';
             const type: IngredientType[] = ['food'];
@@ -36,7 +36,7 @@ describe('ingredient services', () => {
 
             (addUserIngredientDB as jest.Mock).mockResolvedValue(mockNewIngredient);
 
-            const result = await userIngredientOperations.addIngredient({
+            const result = await userIngredientServices.addIngredient({
                 userId,
                 ingredientId,
                 name,
@@ -48,7 +48,7 @@ describe('ingredient services', () => {
         });
     });
 
-    describe('userIngredientOperations.addMultiple', () => {
+    describe('userIngredientServices.addMultiple', () => {
         it('should add multiple ingredients successfully', async () => {
             
             const mockUserIngredientDocs = mockIngredients.map((ingredient) => ({
@@ -66,7 +66,7 @@ describe('ingredient services', () => {
     
             (addMultipleUserIngredientsDB as jest.Mock).mockResolvedValue(mockNewIngredients);
     
-            const result = await userIngredientOperations.addMultiple(userId, mockIngredients);
+            const result = await userIngredientServices.addMultiple(userId, mockIngredients);
     
             expect(addMultipleUserIngredientsDB).toHaveBeenCalledWith(mockUserIngredientDocs);
             expect(result).toEqual(mockNewIngredients);
@@ -74,45 +74,45 @@ describe('ingredient services', () => {
     });
     
 
-    describe('userIngredientOperations.deleteIngredient', () => {
+    describe('userIngredientServices.deleteIngredient', () => {
         it('should delete the specified ingredient successfully', async () => {
 
             (deleteUserIngredientDB as jest.Mock).mockResolvedValue(undefined);
 
-            const result = await userIngredientOperations.deleteIngredient(userId, ingredientId);
+            const result = await userIngredientServices.deleteIngredient(userId, ingredientId);
 
             expect(deleteUserIngredientDB).toHaveBeenCalledWith(userId, ingredientId);
             expect(result).toEqual({ message: 'Ingredient deleted successfully' });
         });
     });
 
-    describe('userIngredientOperations.deleteAll', () => {
+    describe('userIngredientServices.deleteAll', () => {
         it('should delete all user ingredients successfully', async () => {
 
             (deleteAllUserIngredientsDB as jest.Mock).mockResolvedValue(undefined);
 
-            const result = await userIngredientOperations.deleteAll(userId);
+            const result = await userIngredientServices.deleteAll(userId);
 
             expect(deleteAllUserIngredientsDB).toHaveBeenCalledWith(userId);
             expect(result).toEqual({ message: 'All ingredients deleted successfully' });
         });
     });
 
-    describe('ingredientOperations.getByCategory', () => {
+    describe('ingredientServices.getByCategory', () => {
         it('should return ingredients by category successfully', async () => {
             const searchedCategory = 'Vegetables';
             const mockIngredients: IngredientDocument[] = [{ name: 'Carrot', category } as unknown as IngredientDocument];
 
             (getIngredientsByCategoryDB as jest.Mock).mockResolvedValue(mockIngredients);
 
-            const result = await ingredientOperations.getByCategory(searchedCategory);
+            const result = await ingredientServices.getByCategory(searchedCategory);
 
             expect(getIngredientsByCategoryDB).toHaveBeenCalledWith(searchedCategory);
             expect(result).toEqual(mockIngredients);
         });
     });
 
-    describe('ingredientOperations.search', () => {
+    describe('ingredientServices.search', () => {
         it('should return ingredients matching the query successfully', async () => {
             const query = { name: /Carrot/i };
             const type = 'food';
@@ -120,7 +120,7 @@ describe('ingredient services', () => {
 
             (searchIngredientsByQueryAndTypeDB as jest.Mock).mockResolvedValue(mockIngredients);
 
-            const result = await ingredientOperations.search(query, type);
+            const result = await ingredientServices.search(query, type);
 
             expect(searchIngredientsByQueryAndTypeDB).toHaveBeenCalledWith(query, type);
             expect(result).toEqual(mockIngredients);

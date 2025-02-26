@@ -2,9 +2,9 @@ import { NextFunction, Response } from 'express';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import recipeOperations from '../services/recipes.service';
-import createRecipeOperations from '../services/createRecipe.service';
-import createCocktailOperations from '../services/createCocktail.service';
+import recipeServices from '../services/recipes.service';
+import createRecipeServices from '../services/createRecipe.service';
+import createCocktailServices from '../services/createCocktail.service';
 
 import CustomRequest from '../../interfaces/CustomRequest';
 import MessageResponse from '../../interfaces/MessageResponse';
@@ -77,7 +77,7 @@ export const getRecipesSchema = z.object({
 export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
 
     try {
-        const recipes = await recipeOperations.getUserPageRecipes({
+        const recipes = await recipeServices.getUserPageRecipes({
             userId: req.userId as string,
             page: Number(req.query.page),
             limit: Number(req.query.limit),
@@ -141,7 +141,7 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
     const recipe = req.body;
 
     try {
-        const newRecipe = await recipeOperations.addRecipe({ ...recipe, userId: req.userId as string });
+        const newRecipe = await recipeServices.addRecipe({ ...recipe, userId: req.userId as string });
 
         return res.json(newRecipe);
     } catch (error) {
@@ -188,7 +188,7 @@ export const getRecipeById = async (req: CustomRequest, res: Response<RecipeDocu
     const id = req.params.id;
 
     try {
-        const recipe = await recipeOperations.getRecipeById(id);
+        const recipe = await recipeServices.getRecipeById(id);
 
         return res.json(recipe);
     } catch (error) {
@@ -235,7 +235,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
     const recipeId = req.params.id;
 
     try {
-        const message = await recipeOperations.deleteRecipe(recipeId);
+        const message = await recipeServices.deleteRecipe(recipeId);
 
         return res.json(message);
     } catch (error) {
@@ -325,7 +325,7 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
     res.flushHeaders(); // flush the headers to establish SSE with client
 
     try {
-        await createRecipeOperations.createRecipe(req.userId as string, req.body, res);
+        await createRecipeServices.createRecipe(req.userId as string, req.body, res);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(`Error creating recipe: ${error.message}`);
@@ -403,7 +403,7 @@ export const createCocktail = async (req: CustomRequest, res: Response, next: Ne
     res.flushHeaders(); // flush the headers to establish SSE with client
 
     try {
-        await createCocktailOperations.createCocktail(req.userId as string, req.body, res);
+        await createCocktailServices.createCocktail(req.userId as string, req.body, res);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);

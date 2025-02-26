@@ -1,5 +1,5 @@
 import { base64ToArrayBuffer, hashString } from "../../utils/helperFunctions";
-import firebaseStorageOperations from "./firebase.service";
+import firebaseStorageServices from "./firebase.service";
 
 import MessageResponse from "../../interfaces/MessageResponse";
 import { RecipeWithImage } from "../../interfaces";
@@ -10,11 +10,11 @@ import { RecipeDocument } from "../models/recipe.model";
 /**
  * @module recipes.service
  * 
- * @description This module provides operations for getting, adding and deleting recipes
- * @exports recipeOperations
+ * @description This module provides Services for getting, adding and deleting recipes
+ * @exports recipeServices
  */
 
-const recipeOperations = {
+const recipeServices = {
 
     /**
      * @description Get a page of recipes from the database. If there is a query, get recipes by query
@@ -50,7 +50,7 @@ const recipeOperations = {
         // Convert base64 to ArrayBuffer
         const imageBuffer = base64ToArrayBuffer(base64Image);
 
-        const image_url = await firebaseStorageOperations.uploadImage(imageBuffer, recipe.recipe.id);
+        const image_url = await firebaseStorageServices.uploadImage(imageBuffer, recipe.recipe.id);
 
         const newRecipe = await addRecipeDB({ ...recipe, image_url } as RecipeDocument)
 
@@ -70,7 +70,7 @@ const recipeOperations = {
         }
 
         await Promise.all([
-            firebaseStorageOperations.deleteImage(recipe.recipe.id),
+            firebaseStorageServices.deleteImage(recipe.recipe.id),
             deleteRecipeDB(recipeId)
         ]);
 
@@ -93,4 +93,4 @@ const recipeOperations = {
     },
 }
 
-export default recipeOperations
+export default recipeServices

@@ -1,21 +1,20 @@
-import firebaseStorageOperations from "./firebase.service";
-import recipeOperations from "./recipes.service";
+import firebaseStorageServices from "./firebase.service";
+import recipeServices from "./recipes.service";
 
 import { createUserDB, CreateUserDBProps, deleteUserDB, getUserBySubscriptionIdDB, getUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
 import { UserDocument } from "../models/user.model";
 import { createKitchenUtilsDB, deleteKitchenUtilsDB } from "../data-access/kitchenUtils.da";
 import { deleteUserRecipesDB } from "../data-access/recipe.da";
 import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
-import { subscribe, unsubscribe } from "diagnostics_channel";
 
 /**
  * @module user.service
  * 
- * @description This module provides operations for user
- * @exports userOperations
+ * @description This module provides Services for user
+ * @exports userServices
  */
 
-const userOperations = {
+const userServices = {
     /**
      * @description This function creates a user & kitchen utilities
      * @param userData 
@@ -35,7 +34,7 @@ const userOperations = {
      * @returns {UserDocument}
      */
     deleteUser: async (userId: string): Promise<UserDocument> => {
-        const recipes = await recipeOperations.getAllUserRecipes(userId);
+        const recipes = await recipeServices.getAllUserRecipes(userId);
 
         const [user] = await Promise.all([
             //delete user
@@ -51,9 +50,9 @@ const userOperations = {
             deleteAllUserIngredientsDB(userId),
 
             //delete recipe images from firebase storage
-            // TODO: batch these operations
+            // TODO: batch these Services
             recipes.map(recipe =>
-                firebaseStorageOperations.deleteImage(recipe.recipe.id)
+                firebaseStorageServices.deleteImage(recipe.recipe.id)
             ),
         ])
 
@@ -105,4 +104,4 @@ const userOperations = {
     }
 }
 
-export default userOperations
+export default userServices

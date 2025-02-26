@@ -5,14 +5,10 @@ import { v4 as uuid } from 'uuid';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
-import openai from '../../config/openai';
-import env from '../../utils/env';
-import logger from '../../config/logger';
-
-import { compressBase64string, isValidJSON, returnStreamData } from "../../utils/helperFunctions";
+import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
 import { UserIngredient, Recipe } from "../../interfaces";
-import aiOperations from './ai.service';
+import aiServices from './ai.service';
 
 export interface CreateRecipeProps {
     mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
@@ -26,13 +22,13 @@ const MAX_RETRIES = 3;
 /**
  * @module createRecipe.service
  * 
- * @description This module provides operations for creating a recipe
+ * @description This module provides services for creating a recipe
  * @note this service uses server sent events to stream data to the client. therefore, the response object is passed to the functions
  * 
- * @exports createRecipeOperations
+ * @exports createRecipeServices
  */
 
-const createRecipeOperations = {
+const createRecipeServices = {
 
     /**
      * @description This function creates a recipe and returns a valid JSON with image
@@ -57,17 +53,17 @@ const createRecipeOperations = {
 
         const recipeTitlePrompt = createRecipeTitlePrompt(userIngredients, recipeInput.prompt, kitchenUtils);
 
-        const { title: recipeTitle } = await aiOperations.openaiCreate<{ title: string }>(recipeTitlePrompt);
+        const { title: recipeTitle } = await aiServices.openaiCreate<{ title: string }>(recipeTitlePrompt);
 
         const imagePrompt = createRecipeImagePrompt(recipeTitle);
         const recipePrompt = createRecipePrompt({ ...recipeInput, userIngredients, recipeTitle, kitchenUtils });
 
         const [base64image] = await Promise.all([
             // Create the recipe image using GetimgAI API
-            aiOperations.createImageGetimgAI(imagePrompt),
+            aiServices.createImageGetimgAI(imagePrompt),
 
             // Create the recipe using OpenAI API
-            createRecipeOperations.createRecipeService(recipePrompt, res)
+            createRecipeServices.createRecipeService(recipePrompt, res)
         ]);
 
         // Compress the image
@@ -86,7 +82,7 @@ const createRecipeOperations = {
      * @returns {Recipe} recipe
      */
     createRecipeService: async (recipePrompt: string, res: Response): Promise<void> => {
-        let recipe = await aiOperations.openaiCreate<Recipe>(recipePrompt);
+        let recipe = await aiServices.openaiCreate<Recipe>(recipePrompt);
 
         // This is relevant for deleting the recipe
         recipe.id = uuid();
@@ -95,4 +91,4 @@ const createRecipeOperations = {
     },
 };
 
-export default createRecipeOperations
+export default createRecipeServices

@@ -1,15 +1,15 @@
 import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
 import { IngredientDocument } from "../models/ingredient.model";
-import aiOperations from "./ai.service";
+import aiServices from "./ai.service";
 
 /**
  * @module vision.service
  * 
- * @description This module provides operations for extracting text from images using the Google Cloud Vision API
- * @exports visionOperations
+ * @description This module provides Services for extracting text from images using the Google Cloud Vision API
+ * @exports visionServices
  */
 
-const imageDetectionOperations = {
+const imageDetectionServices = {
 
     /**
      * @description This function gets the ingredients from the image and return the ones that are DB
@@ -17,7 +17,7 @@ const imageDetectionOperations = {
      * @returns {IngredientDocument[]}
      */
     getIngredientsFromImage: async (base64image: string): Promise<IngredientDocument[]> => {
-        const labels = await aiOperations.detectLabels(base64image);
+        const labels = await aiServices.detectLabels(base64image);
 
         if (labels.length === 0) return [];
 
@@ -29,4 +29,4 @@ const imageDetectionOperations = {
     },
 }
 
-export default imageDetectionOperations;
+export default imageDetectionServices;

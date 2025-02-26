@@ -9,11 +9,11 @@ import { UserIngredientInterface } from "../models/UserIngredients.model";
 /**
  * @module ingredients.service
  * 
- * @description This module provides operations for managing user ingredients
- * @exports userIngredientOperations
+ * @description This module provides services for managing user ingredients
+ * @exports userIngredientServices
  */
 
-const userIngredientOperations = {
+const userIngredientServices = {
     getAll: async (userId: string): Promise<UserIngredient[]> => {
         const ingredients = await getUserIngredientsDB(userId);
         return ingredients;
@@ -47,4 +47,4 @@ const userIngredientOperations = {
     },
 }
 
-export default userIngredientOperations
+export default userIngredientServices
