@@ -328,7 +328,7 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
         await createRecipeOperations.createRecipe(req.userId as string, req.body, res);
     } catch (error) {
         if (error instanceof Error) {
-            logger.error(error.message);
+            logger.error(`Error creating recipe: ${error.message}`);
         }
         returnStreamData(res, {
             event: 'error',
@@ -404,7 +404,6 @@ export const createCocktail = async (req: CustomRequest, res: Response, next: Ne
 
     try {
         await createCocktailOperations.createCocktail(req.userId as string, req.body, res);
-
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);

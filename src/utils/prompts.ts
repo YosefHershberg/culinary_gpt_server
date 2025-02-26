@@ -59,11 +59,10 @@ export const createRecipePrompt = ({
 
 export const createRecipeImagePrompt = (
     recipeTitle: string,
-    userIngredients: string[]
 ) => {
     return `
-        A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}, made exclusively with these ingredients: ${userIngredients?.join(', ')}.
-        
+        A hyper-realistic and beautifully styled photo of a freshly prepared ${recipeTitle}.
+
         **Key Details:**
         - Do not show any raw ingredients in the image—only the final plated dish.
         - Ensure the dish looks like it was prepared in a high-end restaurant, with professional plating and presentation.
@@ -155,10 +154,9 @@ export const createCocktailPrompt = (
 
 export const createCocktailImagePrompt = (
     cocktailTitle: string,
-    userIngredients: string[]
 ) => {
     return `
-        A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail, made exclusively with these ingredients: ${userIngredients?.join(', ')}.
+        A hyper-realistic photograph of a beautifully presented ${cocktailTitle} cocktail.
         
         **Key Details:**
         - Do not show any raw ingredients in the image—only the final cocktail in a glass.

@@ -3,7 +3,11 @@ import crypto from "crypto";
 import { Response } from "express";
 
 export const returnStreamData = (res: Response, data: { event: string, payload: any }) => {
+  // console.log('before write');
+  
   res.write(`data: ${JSON.stringify(data)}\n\n`);
+
+  // console.log('after write');
 }
 
 export const mongooseVirtuals = {

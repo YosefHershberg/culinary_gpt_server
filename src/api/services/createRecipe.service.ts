@@ -60,7 +60,7 @@ const createRecipeOperations = {
         // Create a recipe title using OpenAI API
         const recipeTitle = await createRecipeOperations.createRecipeTitleOpenAI(recipeTitlePrompt);
 
-        const imagePrompt = createRecipeImagePrompt(recipeTitle, userIngredients);
+        const imagePrompt = createRecipeImagePrompt(recipeTitle);
         const recipePrompt = createRecipePrompt({ ...recipeInput, userIngredients, recipeTitle, kitchenUtils });
 
         const [base64image] = await Promise.all([
@@ -94,8 +94,6 @@ const createRecipeOperations = {
 
         let recipe = null;
 
-        logger.info(recipePrompt)
-
         while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
             try {
                 const completion = await openai.chat.completions.create({
@@ -112,6 +110,8 @@ const createRecipeOperations = {
 
                 if (isValidJson) {
                     recipe = JSON.parse(response);
+                    // This is relevant for deleting the recipe
+                    recipe.id = uuid();
                 }
             } catch (error) {
                 logger.error(error);
@@ -124,8 +124,6 @@ const createRecipeOperations = {
             throw new Error('No valid JSON response generated');
         }
 
-        // This is relevant for deleting the recipe
-        recipe.id = uuid();
 
         returnStreamData(res, { event: 'recipe', payload: recipe });
         return recipe
@@ -136,17 +134,23 @@ const createRecipeOperations = {
      * @param {string} imagePrompt
      * @returns {string} base64 image
      */
-    createImageGetimgAI: async (imagePrompt: string): Promise<string> => {
+    // createImageGetimgAI: async (imagePrompt: string): Promise<string> => {
+    createImageGetimgAI: async (imagePrompt: string): Promise<any> => {
         const url = 'https://api.getimg.ai/v1/flux-schnell/text-to-image';
         const headers = {
             Authorization: `Bearer ${env.GETIMGAI_API_KEY}`,
         };
 
-        const { data } = await axios.post(url, {
-            prompt: imagePrompt,
-        }, { headers });
+        logger.info(imagePrompt);
 
-        return data.image
+        try {
+            const { data } = await axios.post(url, {
+                prompt: imagePrompt,
+            }, { headers });
+            return data.image
+        } catch (error) {
+            logger.error(error);
+        }
     },
 
     /**
