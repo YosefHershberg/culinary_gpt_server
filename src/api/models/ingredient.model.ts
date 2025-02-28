@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { Ingredient } from '../schemas/ingredient.schema';
+import { Ingredient } from '../../types';
 
 export type IngredientDocument = Document & Ingredient
 

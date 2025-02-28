@@ -1,5 +1,5 @@
 import express from 'express';
-import MessageResponse from '../../types/MessageResponse';
+import { MessageResponse } from '../../types/http.types';
 import { imageIngredientDetector, imageIngredientDetectorSchema, ingredientSuggestions, ingredientSuggestionsSchema, searchIngredients, searchIngredientsSchema } from '../controllers/ingredients.controller';
 import { validate } from '../../middlewares';
 import { IngredientDocument } from '../models/ingredient.model';

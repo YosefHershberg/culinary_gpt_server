@@ -6,8 +6,7 @@ import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
-import { Recipe } from '../schemas/recipe.schema';
-import { UserIngredient } from "../../types";
+import { UserIngredient, Recipe } from "../../types";
 
 /**
  * @module createRecipe.service

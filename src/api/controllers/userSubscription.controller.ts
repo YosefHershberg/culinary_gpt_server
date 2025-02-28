@@ -1,9 +1,11 @@
 import { NextFunction, Response } from "express";
-import CustomRequest from "../../types/CustomRequest";
-import userServices from "../services/user.service";
-import { HttpError } from "../../lib/HttpError";
 import { HttpStatusCode } from "axios";
+
+import userServices from "../services/user.service";
 import logger from "../../config/logger";
+
+import { HttpError } from "../../lib/HttpError";
+import { CustomRequest } from "../../types";
 
 /**
  * @openapi

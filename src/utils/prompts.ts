@@ -1,5 +1,5 @@
 import { CreateRecipeProps } from "../api/services/createRecipe.service"
-import { KitchenUtils } from "../api/schemas/kitchenUtils.schema"
+import { KitchenUtils } from "../types"
 
 type CreateRecipePromptProps = CreateRecipeProps & {
     userIngredients: string[];

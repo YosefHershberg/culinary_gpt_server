@@ -1,5 +1,5 @@
 import KitchenUtils, { KitchenUtilsDocument } from "../models/kitchenUtils.model";
-import { KitchenUtils as KitchenUtilsType } from "../schemas/kitchenUtils.schema";
+import { KitchenUtils as KitchenUtilsType } from "../../types";
 
 export const getKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsType> => {
     const res = await KitchenUtils.findOne({ userId }).exec();

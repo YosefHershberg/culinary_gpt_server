@@ -6,8 +6,7 @@ import clerkClient from './config/clerkClient';
 import { HttpError } from './lib/HttpError';
 import env from './utils/env';
 
-import ErrorResponse from './types/ErrorResponse';
-import CustomRequest from './types/CustomRequest';
+import {ErrorResponse, CustomRequest} from './types/http.types';
 import logger from './config/logger';
 
 export const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {

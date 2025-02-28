@@ -3,8 +3,7 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as userIngredientControllers from '../controllers/userIngredients.controller';
-import { UserIngredient as UserIngredient } from '../../types';
-import MessageResponse from '../../types/MessageResponse';
+import { UserIngredient as UserIngredient, MessageResponse } from '../../types';
 import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();

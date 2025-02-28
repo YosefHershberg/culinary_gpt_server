@@ -3,9 +3,8 @@ import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPa
 import { base64ToArrayBuffer } from "../../utils/helperFunctions";
 
 import { RecipeDocument } from "../models/recipe.model";
-import MessageResponse from "../../types/MessageResponse";
-import { RecipeWithImage } from "../../types";
-import { getUserPageRecipesProps } from "../../types/ServiceTypes";
+import { MessageResponse, RecipeWithImage } from "../../types";
+import { getUserPageRecipesProps } from "../../types/service.types";
 
 /**
  * @module recipes.service
@@ -34,7 +33,7 @@ const recipeServices = {
      */
     getAllUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
         const recipes = await getAllRecipesDB(userId)
-        
+
         return recipes
     },
 
@@ -63,7 +62,7 @@ const recipeServices = {
      * @returns {MessageResponse}
      */
     deleteRecipe: async (recipeId: string): Promise<MessageResponse> => {
-        const recipe = await getRecipeDB(recipeId)        
+        const recipe = await getRecipeDB(recipeId)
 
         if (!recipe) {
             throw new Error('Recipe not found')

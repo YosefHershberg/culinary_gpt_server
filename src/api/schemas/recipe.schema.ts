@@ -1,4 +1,4 @@
-import { TypeOf, z } from "zod";
+import { z } from "zod";
 
 export const recipeSchema = z.object({
     title: z.string().min(3).max(100),
@@ -15,8 +15,6 @@ export const recipeSchema = z.object({
     type: z.enum(['recipe', 'cocktail']),
     id: z.string(),
 });
-
-export type Recipe = TypeOf<typeof recipeSchema>;
 
 /**
  * @openapi

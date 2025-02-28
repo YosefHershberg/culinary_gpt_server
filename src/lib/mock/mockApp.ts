@@ -5,7 +5,7 @@
 
 import express, { NextFunction, Response } from 'express';
 import api from '../../api/routes';
-import CustomRequest from '../../types/CustomRequest';
+import { CustomRequest } from '../../types/http.types';
 
 // Mock userId
 export const userId = 'user_2jxrTsY1k326x1dFgPFmr2OpMbV'

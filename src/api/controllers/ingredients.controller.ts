@@ -1,10 +1,9 @@
-import { Response,  NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { FilterQuery } from 'mongoose';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import CustomRequest from '../../types/CustomRequest';
-import { IngredientType } from '../../types';
+import { CustomRequest, IngredientType } from '../../types';
 
 import ingredientServices from '../services/ingredients.service';
 import { IngredientDocument } from '../models/ingredient.model';

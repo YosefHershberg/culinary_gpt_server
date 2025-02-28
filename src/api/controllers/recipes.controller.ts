@@ -6,9 +6,7 @@ import recipeServices from '../services/recipes.service';
 import createRecipeServices from '../services/createRecipe.service';
 import createCocktailServices from '../services/createCocktail.service';
 
-import CustomRequest from '../../types/CustomRequest';
-import MessageResponse from '../../types/MessageResponse';
-import { FilterOptions } from '../../types/ServiceTypes';
+import { CustomRequest, MessageResponse, FilterOptions } from '../../types';
 
 import { recipeSchema } from '../schemas/recipe.schema';
 import { RecipeDocument } from '../models/recipe.model';

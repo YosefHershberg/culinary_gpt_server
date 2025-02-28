@@ -1,6 +1,6 @@
 import { DeleteResult } from "mongodb"
-import { UserIngredient as UserIngredientRes, IngredientType } from "../../types"
 import UserIngredient, { UserIngredientType } from "../models/UserIngredients.model"
+import { UserIngredient as UserIngredientRes, IngredientType } from "../../types"
 
 export const addUserIngredientDB = async (userIngredient: UserIngredientType): Promise<UserIngredientRes> => {
     const ingredient = new UserIngredient(userIngredient)

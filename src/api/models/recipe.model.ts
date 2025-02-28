@@ -1,6 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { Recipe } from '../schemas/recipe.schema';
+import { Recipe } from '../../types';
 
 export type RecipeDocument = Document & {
     recipe: Recipe,

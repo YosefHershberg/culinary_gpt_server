@@ -1,5 +1,4 @@
-import logger from "../../config/logger";
-import { User as UserType } from "../../lib/types/user.type";
+import { User as UserType } from "../../types";
 import User, { UserDocument } from "../models/user.model";
 
 export const getUserDB = async (userId: string): Promise<UserDocument> => {

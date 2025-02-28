@@ -1,16 +1,14 @@
 import { HttpStatusCode } from "axios";
 import { Response, NextFunction } from "express";
-import logger from "../../config/logger";
+import { z } from "zod";
 
+import logger from "../../config/logger";
 import userIngredientServices from "../services/userIngredients.service";
 
-import CustomRequest from "../../types/CustomRequest";
-import { UserIngredient } from '../../types';
+import { CustomRequest, MessageResponse, UserIngredient } from "../../types";
 import { HttpError } from "../../lib/HttpError";
-import { z } from "zod";
 import { ingredientSchema } from "../schemas/ingredient.schema";
 import { IngredientDocument } from "../models/ingredient.model";
-import MessageResponse from "../../types/MessageResponse";
 
 /**
  * @openapi

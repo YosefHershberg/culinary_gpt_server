@@ -1,4 +1,4 @@
-import { TypeOf, z } from "zod";
+import { z } from "zod";
 
 /**
  * @description Ingredient schema
@@ -12,8 +12,6 @@ export const ingredientSchema = z.object({
     popularity: z.number(),
     type: z.array(z.enum(['food', 'drink'])),
 })
-
-export type Ingredient = TypeOf<typeof ingredientSchema>;
 
 /**
  * @openapi

@@ -3,11 +3,9 @@ import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
 import kitchenUtilsServices from '../services/kitchenUtils.service';
-import { KitchenUtils } from '../schemas/kitchenUtils.schema';
-import CustomRequest from '../../types/CustomRequest';
-
-import { HttpError } from '../../lib/HttpError';
+import { KitchenUtils, CustomRequest } from '../../types';
 import logger from '../../config/logger';
+import { HttpError } from '../../lib/HttpError';
 
 /**
  * @openapi

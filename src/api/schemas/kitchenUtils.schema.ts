@@ -1,4 +1,4 @@
-import { TypeOf, z } from "zod";
+import { z } from "zod";
 
 export const kitchenUtilsSchema = z.object({
     "Stove Top": z.boolean(),
@@ -11,8 +11,6 @@ export const kitchenUtilsSchema = z.object({
     "BBQ": z.boolean(),
     "Grill": z.boolean(),
 });
-
-export type KitchenUtils = TypeOf<typeof kitchenUtilsSchema>;
 
 /**
  * @openapi

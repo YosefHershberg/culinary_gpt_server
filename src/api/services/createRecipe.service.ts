@@ -7,8 +7,7 @@ import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
-import { UserIngredient } from "../../types";
-import { Recipe } from '../schemas/recipe.schema';
+import { UserIngredient, Recipe } from "../../types";
 
 export type CreateRecipeProps = {
     mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';

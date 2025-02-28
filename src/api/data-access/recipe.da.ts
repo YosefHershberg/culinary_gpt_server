@@ -1,6 +1,6 @@
-import { getUserPageRecipesProps } from "../../types/ServiceTypes";
-import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { DeleteResult } from "mongodb";
+import Recipe, { RecipeDocument } from "../models/recipe.model";
+import { getUserPageRecipesProps } from "../../types";
 
 export const getRecipesPageDB = async ({ userId, page, limit, filter, query }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
     let dbQuery: any = { userId };
