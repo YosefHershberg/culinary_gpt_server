@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import logger from "../../config/logger";
 import openai from "../../config/openai";
 import env from "../../utils/env";
@@ -35,13 +36,12 @@ const aiServices = {
             } catch (error) {
                 logger.error(error);
             } finally {
-                console.log('Attempts: ', attempts);
                 attempts++;
             }
         }
 
         if (!isValidJson) {
-            throw new Error('No valid JSON response generated for cocktail recipe');
+            throw new Error('No valid JSON response generated');
         }
 
         return result!;
@@ -53,7 +53,6 @@ const aiServices = {
      * @returns {string}
      */
     detectLabels: async (base64image: string): Promise<string[]> => {
-        const MAX_RETRIES = 3;
         let attempts = 0;
         let isValidJson = false;
 
@@ -120,11 +119,18 @@ const aiServices = {
             Authorization: `Bearer ${env.GETIMGAI_API_KEY}`,
         };
 
-        const { data } = await axios.post(url, {
-            prompt: imagePrompt,
-        }, { headers });
+        let base64Image = '';
+        
+        try {
+            const { data } = await axios.post(url, {
+                prompt: imagePrompt,
+            }, { headers });
+            base64Image = data.image;
+        } catch (error) {
+            logger.error(error);
+        }
 
-        return data.image;
+        return base64Image;
     }
 }
 

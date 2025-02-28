@@ -1,11 +1,11 @@
-import firebaseStorageServices from "./firebase.service";
-import recipeServices from "./recipes.service";
-
 import { createUserDB, CreateUserDBProps, deleteUserDB, getUserBySubscriptionIdDB, getUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
-import { UserDocument } from "../models/user.model";
 import { createKitchenUtilsDB, deleteKitchenUtilsDB } from "../data-access/kitchenUtils.da";
 import { deleteUserRecipesDB } from "../data-access/recipe.da";
 import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
+
+import firebaseStorageServices from "./firebase.service";
+import recipeServices from "./recipes.service";
+import { UserDocument } from "../models/user.model";
 
 /**
  * @module user.service

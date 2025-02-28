@@ -1,13 +1,11 @@
 import sharp from "sharp";
-import crypto from "crypto";
 import { Response } from "express";
 
-export const returnStreamData = (res: Response, data: { event: string, payload: any }) => {
-  // console.log('before write');
-  
+export const returnStreamData = (
+  res: Response,
+  data: { event: string, payload: any }
+) => {
   res.write(`data: ${JSON.stringify(data)}\n\n`);
-
-  // console.log('after write');
 }
 
 export const mongooseVirtuals = {
@@ -70,17 +68,13 @@ export const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
   return bytes.buffer;
 }
 
-export const hashString = (str: string): string => {
-  return crypto.createHash('sha256').update(str).digest('hex')
-}
-
 export const getStringSizeInKB = (str: string): number => {
   // Convert the string to a byte array
   const bytes = new TextEncoder().encode(str);
-  
+
   // Get the size in bytes
   const sizeInBytes = bytes.length;
-  
+
   // Convert bytes to kilobytes (1 KB = 1024 bytes)
   const sizeInKB = sizeInBytes / 1024;
 
