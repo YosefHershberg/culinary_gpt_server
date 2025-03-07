@@ -6,7 +6,7 @@ import recipeServices from '../services/recipes.service';
 import createRecipeServices from '../services/createRecipe.service';
 import createCocktailServices from '../services/createCocktail.service';
 
-import { CustomRequest, MessageResponse, FilterOptions } from '../../types';
+import { CustomRequest, MessageResponse, FilterOptions, SortOptions } from '../../types';
 
 import { recipeSchema } from '../schemas/recipe.schema';
 import { RecipeDocument } from '../models/recipe.model';
@@ -48,6 +48,13 @@ import { returnStreamData } from '../../utils/helperFunctions';
  *           type: string
  *           enum: [recipes, cocktails, all]
  *           description: Filter recipes by type.
+ *       - in: query
+ *         name: sort
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: ['newest', 'oldest', 'a-z', 'z-a']
+ *           description: Filter recipes by type.
  *     responses:
  *       200:
  *         description: A paginated list of recipes belonging to the user.
@@ -65,11 +72,12 @@ import { returnStreamData } from '../../utils/helperFunctions';
 
 export const getRecipesSchema = z.object({
     query: z.object({
-        page: z.number(),
-        limit: z.number(),
+        page: z.coerce.number(),
+        limit: z.coerce.number(),
         query: z.string().optional(),
-        filter: z.enum(['recipes', 'cocktails', 'all'])
-    })
+        filter: z.enum(['recipes', 'cocktails', 'all']),
+        sort: z.enum(['newest', 'oldest', 'a-z', 'z-a']),
+    }),
 });
 
 export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
@@ -80,7 +88,8 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocumen
             page: Number(req.query.page),
             limit: Number(req.query.limit),
             query: req.query.query as string,
-            filter: req.query.filter as FilterOptions
+            filter: req.query.filter as FilterOptions,
+            sort: req.query.sort as SortOptions
         });
 
         return res.json(recipes);

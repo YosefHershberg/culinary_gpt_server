@@ -9,13 +9,6 @@ import { compressBase64string, returnStreamData } from "../../utils/helperFuncti
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
 import { UserIngredient, Recipe } from "../../types";
 
-export type CreateRecipeProps = {
-    mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
-    selectedTime: number;
-    prompt: string;
-    numOfPeople: number;
-}
-
 /**
  * @module createRecipe.service
  * 
@@ -24,6 +17,13 @@ export type CreateRecipeProps = {
  * 
  * @exports createRecipeServices
  */
+
+export type CreateRecipeProps = {
+    mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert';
+    selectedTime: number;
+    prompt: string;
+    numOfPeople: number;
+}
 
 const createRecipeServices = {
 

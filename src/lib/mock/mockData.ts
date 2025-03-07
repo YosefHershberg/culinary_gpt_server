@@ -1,8 +1,7 @@
 import { CreateUserDBProps } from "../../api/data-access/user.da";
 import { IngredientDocument } from "../../api/models/ingredient.model";
 import { UserDocument } from "../../api/models/user.model";
-import { RecipeWithImage } from "../../types/data.types";
-import { KitchenUtils } from "../../api/schemas/kitchenUtils.schema";
+import { RecipeWithImage, KitchenUtils } from "../../types";
 
 export const mockRecipe: RecipeWithImage = {
     image_url: "https://example.com/recipe-image.jpg",

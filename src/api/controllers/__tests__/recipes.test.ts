@@ -4,7 +4,7 @@ import recipeServices from '../../services/recipes.service';
 import createRecipeServices from '../../services/createRecipe.service';
 import { HttpStatusCode } from 'axios';
 import { mockRecipe } from '../../../lib/mock/mockData';
-import { FilterOptions } from '../../../types/service.types';
+import { FilterOptions, SortOptions } from '../../../types';
 
 jest.mock('../../services/recipes.service');
 jest.mock('../../services/createRecipe.service');
@@ -18,14 +18,15 @@ describe('Recipe Controller', () => {
 
             const response = await request(app)
                 .get('/api/user/recipes')
-                .query({ page: 1, limit: 10 });
+                .query({ page: 1, limit: 10, filter: 'all', sort: 'newest' });
 
             const props = {
                 userId,
                 page: 1,
                 limit: 10,
-                query: undefined,
-                filter: 'all' as FilterOptions
+                query: '',
+                filter: 'all' as FilterOptions,
+                sort: 'newest' as SortOptions,
             };
 
             const recipes = await recipeServices.getUserPageRecipes(props);

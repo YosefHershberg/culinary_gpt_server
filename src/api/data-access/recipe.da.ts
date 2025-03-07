@@ -2,8 +2,15 @@ import { DeleteResult } from "mongodb";
 import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { getUserPageRecipesProps } from "../../types";
 
-export const getRecipesPageDB = async ({ userId, page, limit, filter, query }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
-    let dbQuery: any = { userId };
+export const getRecipesPageDB = async ({
+    userId,
+    page,
+    limit,
+    filter,
+    query,
+    sort,
+}: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
+    let dbQuery: Record<string, any> = { userId };
 
     if (filter !== 'all') {
         if (filter === 'recipes') {
@@ -17,7 +24,27 @@ export const getRecipesPageDB = async ({ userId, page, limit, filter, query }: g
         dbQuery['recipe.title'] = { $regex: query, $options: 'i' };
     }
 
+    let sortQuery: Record<string, any> = {};
+    switch (sort) {
+        case 'newest':
+            sortQuery = { createdAt: -1 };
+            break;
+        case 'oldest':
+            sortQuery = { createdAt: 1 };
+            break;
+        case 'a-z':
+            sortQuery = { 'recipe.title': 1 };
+            break;
+        case 'z-a':
+            sortQuery = { 'recipe.title': -1 };
+            break;
+        default:
+            sortQuery = { createdAt: -1 };
+            break;
+    }
+
     const recipes = await Recipe.find(dbQuery)
+        .sort(sortQuery)
         .skip((page - 1) * limit)
         .limit(limit)
         .exec();
@@ -27,7 +54,7 @@ export const getRecipesPageDB = async ({ userId, page, limit, filter, query }: g
     }
 
     return recipes;
-}
+};
 
 export const getAllRecipesDB = async (userId: string): Promise<RecipeDocument[]> => {
     const recipes = await Recipe.find({ userId }).exec();

@@ -24,7 +24,8 @@ describe('recipeServices', () => {
                 userId,
                 page: 1,
                 limit: 10,
-                filter: 'recipes'
+                filter: 'recipes',
+                sort: 'a-z'
             });
 
             expect(result).toEqual(mockRecipes);

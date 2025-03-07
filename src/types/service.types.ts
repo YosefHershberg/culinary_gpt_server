@@ -5,7 +5,10 @@ export type getUserPageRecipesProps = {
     limit: number;
     query?: string;
     filter: FilterOptions;
+    sort: SortOptions;
 }
 
 export type FilterOptions = 'recipes' | 'cocktails' | 'all';
+
+export type SortOptions = 'newest' | 'oldest' | 'a-z' | 'z-a'
 

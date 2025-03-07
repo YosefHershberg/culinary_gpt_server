@@ -24,6 +24,7 @@ router.post(
 
 router.get<{}, RecipeDocument[] | MessageResponse>(
     '/',
+    validate(recipesController.getRecipesSchema),
     recipesController.getRecipes
 );
 

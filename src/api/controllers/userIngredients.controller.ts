@@ -36,7 +36,7 @@ import { IngredientDocument } from "../models/ingredient.model";
 export const getAllIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
     try {
         const ingredients = await userIngredientServices.getAll(req.userId as string);
-
+        
         return res.json(ingredients);
     } catch (error) {
         if (error instanceof Error) {
