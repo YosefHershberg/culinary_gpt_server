@@ -1,4 +1,4 @@
-import { KitchenUtils } from "../../api/schemas/kitchenUtils.schema";
+import { KitchenUtils } from "../../types";
 
 export const kitchenUtils: KitchenUtils = {
     "Stove Top": true,
