@@ -25,19 +25,16 @@ describe('kitchenUtilsServices', () => {
 
     describe('toggle', () => {
         it('should update the kitchen utility and return the updated kitchen utilities', async () => {
-            const updatedKitchenUtils = { ...mockKitchenUtils, Microwave: true }; // Expected result after toggle
-
-            const mockResponse = { kitchenUtils: updatedKitchenUtils };
 
             // Mock the toggleKitchenUtilDB function
-            (toggleKitchenUtilDB as jest.Mock).mockResolvedValue(mockResponse);
+            (toggleKitchenUtilDB as jest.Mock).mockResolvedValue(mockKitchenUtils);
 
             const utilityName = 'Microwave';
 
             const result = await kitchenUtilsServices.toggle(userId, utilityName);
 
             expect(toggleKitchenUtilDB).toHaveBeenCalledWith(userId, utilityName);
-            expect(result).toEqual(updatedKitchenUtils);
+            expect(result).toEqual(mockKitchenUtils);
         });
     });
 });

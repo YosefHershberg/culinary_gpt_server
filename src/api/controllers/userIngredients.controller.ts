@@ -8,7 +8,7 @@ import userIngredientServices from "../services/userIngredients.service";
 import { CustomRequest, MessageResponse, UserIngredient } from "../../types";
 import { HttpError } from "../../lib/HttpError";
 import { ingredientSchema } from "../schemas/ingredient.schema";
-import { IngredientDocument } from "../models/ingredient.model";
+import { Ingredient } from "../../types";
 
 /**
  * @openapi
@@ -144,7 +144,7 @@ export const addMultipleIngredientsSchema = z.object({
 });
 
 export const addMultipleIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
-    const ingredients: IngredientDocument[] = req.body;
+    const ingredients: Ingredient[] = req.body;
 
     try {
         const newIngredients = await userIngredientServices.addMultiple(

@@ -6,10 +6,9 @@ import recipeServices from '../services/recipes.service';
 import createRecipeServices from '../services/createRecipe.service';
 import createCocktailServices from '../services/createCocktail.service';
 
-import { CustomRequest, MessageResponse, FilterOptions, SortOptions } from '../../types';
+import { CustomRequest, MessageResponse, FilterOptions, SortOptions, RecipeWithImage } from '../../types';
 
 import { recipeSchema } from '../schemas/recipe.schema';
-import { RecipeDocument } from '../models/recipe.model';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 import { returnStreamData } from '../../utils/helperFunctions';
@@ -80,7 +79,7 @@ export const getRecipesSchema = z.object({
     }),
 });
 
-export const getRecipes = async (req: CustomRequest, res: Response<RecipeDocument[] | MessageResponse>, next: NextFunction) => {
+export const getRecipes = async (req: CustomRequest, res: Response<RecipeWithImage[] | MessageResponse>, next: NextFunction) => {
 
     try {
         const recipes = await recipeServices.getUserPageRecipes({
@@ -144,7 +143,7 @@ export const addRecipeSchema = z.object({
     })
 });
 
-export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument>, next: NextFunction) => {
+export const addRecipe = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
     const recipe = req.body;
 
     try {
@@ -191,7 +190,7 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeDocument
  *         description: An error occurred while fetching the recipe
  */
 
-export const getRecipeById = async (req: CustomRequest, res: Response<RecipeDocument>, next: NextFunction) => {
+export const getRecipeById = async (req: CustomRequest, res: Response<RecipeWithImage>, next: NextFunction) => {
     const id = req.params.id;
 
     try {

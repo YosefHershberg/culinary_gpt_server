@@ -2,24 +2,24 @@ import express from 'express';
 import { MessageResponse } from '../../types/http.types';
 import { imageIngredientDetector, imageIngredientDetectorSchema, ingredientSuggestions, ingredientSuggestionsSchema, searchIngredients, searchIngredientsSchema } from '../controllers/ingredients.controller';
 import { validate } from '../../middlewares';
-import { IngredientDocument } from '../models/ingredient.model';
+import { Ingredient } from '../../types';
 
 const router = express.Router();
 
-router.get<{}, IngredientDocument[] | MessageResponse>(
+router.get<{}, Ingredient[] | MessageResponse>(
     '/suggestions/:category',
     validate(ingredientSuggestionsSchema),
     ingredientSuggestions
 );
 
 
-router.get<{}, IngredientDocument[] | MessageResponse>(
+router.get<{}, Ingredient[] | MessageResponse>(
     '/search',
     validate(searchIngredientsSchema),
     searchIngredients
 );
 
-router.post<{}, IngredientDocument[] | MessageResponse>(
+router.post<{}, Ingredient[] | MessageResponse>(
     '/image-detect',
     validate(imageIngredientDetectorSchema),
     imageIngredientDetector

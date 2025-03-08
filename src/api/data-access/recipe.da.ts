@@ -1,10 +1,10 @@
 import { DeleteResult } from "mongodb";
-import Recipe, { RecipeDocument } from "../models/recipe.model";
-import { getUserPageRecipesProps } from "../../types";
+import Recipe from "../models/recipe.model";
+import { getUserPageRecipesProps, RecipeWithImage } from "../../types";
 
 export const getRecipesPageDB = async ({
     userId, page, limit, filter, query, sort,
-}: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
+}: getUserPageRecipesProps): Promise<RecipeWithImage[]> => {
     let dbQuery: Record<string, any> = { userId };
 
     if (filter !== 'all') {
@@ -48,10 +48,12 @@ export const getRecipesPageDB = async ({
         throw new Error('Recipes not found');
     }
 
+    console.log(recipes[0]);
+
     return recipes;
 };
 
-export const getAllRecipesDB = async (userId: string): Promise<RecipeDocument[]> => {
+export const getAllRecipesDB = async (userId: string): Promise<RecipeWithImage[]> => {
     const recipes = await Recipe.find({ userId }).exec();
 
     if (!recipes) {
@@ -61,13 +63,13 @@ export const getAllRecipesDB = async (userId: string): Promise<RecipeDocument[]>
     return recipes;
 }
 
-export const addRecipeDB = async (recipe: RecipeDocument): Promise<RecipeDocument> => {
+export const addRecipeDB = async (recipe: RecipeWithImage): Promise<RecipeWithImage> => {
     const newRecipe = new Recipe(recipe);
     const savedRecipe = await newRecipe.save();
     return savedRecipe;
 }
 
-export const getRecipeDB = async (recipeId: string): Promise<RecipeDocument> => {
+export const getRecipeDB = async (recipeId: string): Promise<RecipeWithImage> => {
     const recipe = await Recipe.findById(recipeId).exec();
 
     if (!recipe) {
@@ -77,7 +79,7 @@ export const getRecipeDB = async (recipeId: string): Promise<RecipeDocument> => 
     return recipe;
 }
 
-export const deleteRecipeDB = async (recipeId: string): Promise<RecipeDocument> => {
+export const deleteRecipeDB = async (recipeId: string): Promise<RecipeWithImage> => {
     const deletedRecipe = await Recipe.findByIdAndDelete(recipeId).exec();
 
     if (!deletedRecipe) {

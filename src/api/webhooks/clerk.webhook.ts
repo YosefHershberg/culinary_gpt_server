@@ -31,13 +31,13 @@ const clerkWebhook = async (req: Request, res: Response) => {
                     isSubscribed: false,
                 });
 
-                logger.info('User created:', createdUser.id);
+                logger.info('User created:', createdUser.clerkId);
                 message = "Webhook received and user created successfully.";
                 break;
 
             case 'user.deleted':
                 const deletedUser = await userServices.deleteUser(evt.data.id as string);
-                logger.info('User deleted. clerk id:', deletedUser.id);
+                logger.info('User deleted. clerk id:', deletedUser.clerkId);
                 message = "Webhook received and user deleted successfully.";
                 break;
 
@@ -48,7 +48,7 @@ const clerkWebhook = async (req: Request, res: Response) => {
                     email: evt.data.email_addresses[0].email_address
                 });
 
-                logger.info('User updated:', updatedUser.id);
+                logger.info('User updated:', updatedUser.clerkId);
                 message = "Webhook received and user updated successfully.";
                 break;
 

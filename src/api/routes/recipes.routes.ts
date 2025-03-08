@@ -4,8 +4,7 @@ import { validate } from '../../middlewares';
 
 import * as recipesController from '../controllers/recipes.controller';
 
-import { MessageResponse } from '../../types/http.types';
-import { RecipeDocument } from '../models/recipe.model';
+import { MessageResponse, RecipeWithImage } from '../../types';
 import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();
@@ -22,19 +21,19 @@ router.post(
     recipesController.createCocktail
 );
 
-router.get<{}, RecipeDocument[] | MessageResponse>(
+router.get<{}, RecipeWithImage[] | MessageResponse>(
     '/',
     validate(recipesController.getRecipesSchema),
     recipesController.getRecipes
 );
 
-router.post<{}, RecipeDocument | MessageResponse>(
+router.post<{}, RecipeWithImage | MessageResponse>(
     '/',
     validate(recipesController.addRecipeSchema),
     recipesController.addRecipe
 );
 
-router.get<{ id: string }, RecipeDocument | MessageResponse>(
+router.get<{ id: string }, RecipeWithImage | MessageResponse>(
     '/:id',
     validate(doSomethingByIdSchema),
     recipesController.getRecipeById

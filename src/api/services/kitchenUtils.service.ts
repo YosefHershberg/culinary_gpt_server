@@ -18,7 +18,7 @@ const kitchenUtilsServices = {
     toggle: async (userId: string, name: string): Promise<KitchenUtils> => {
         const kitchenUtils = await toggleKitchenUtilDB(userId, name);
 
-        return kitchenUtils.kitchenUtils;
+        return kitchenUtils;
     }
 }
 

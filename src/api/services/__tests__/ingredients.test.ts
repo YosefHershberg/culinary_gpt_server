@@ -1,5 +1,4 @@
-import { IngredientDocument } from "../../models/ingredient.model";
-import { IngredientType } from "../../../types";
+import { IngredientType, Ingredient } from "../../../types";
 import { mockIngredients } from "../../../lib/mock/mockData";
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../../data-access/ingredient.da";
 import { getUserIngredientsDB, addUserIngredientDB, addMultipleUserIngredientsDB, deleteUserIngredientDB, deleteAllUserIngredientsDB } from "../../data-access/userIngredient.da";
@@ -101,7 +100,7 @@ describe('ingredient services', () => {
     describe('ingredientServices.getByCategory', () => {
         it('should return ingredients by category successfully', async () => {
             const searchedCategory = 'Vegetables';
-            const mockIngredients: IngredientDocument[] = [{ name: 'Carrot', category } as unknown as IngredientDocument];
+            const mockIngredients: Ingredient[] = [{ name: 'Carrot', category } as unknown as Ingredient];
 
             (getIngredientsByCategoryDB as jest.Mock).mockResolvedValue(mockIngredients);
 
@@ -116,7 +115,7 @@ describe('ingredient services', () => {
         it('should return ingredients matching the query successfully', async () => {
             const query = { name: /Carrot/i };
             const type = 'food';
-            const mockIngredients: IngredientDocument[] = [{ name: 'Carrot', category: ['Vegetables'] } as unknown as IngredientDocument];
+            const mockIngredients: Ingredient[] = [{ name: 'Carrot', category: ['Vegetables'] } as unknown as Ingredient];
 
             (searchIngredientsByQueryAndTypeDB as jest.Mock).mockResolvedValue(mockIngredients);
 

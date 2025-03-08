@@ -1,8 +1,7 @@
-import { IngredientDocument } from "../models/ingredient.model";
 import { UserIngredientType } from "../models/UserIngredients.model";
 import { addMultipleUserIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/userIngredient.da";
 
-import { UserIngredient as UserIngredient, MessageResponse } from "../../types";
+import { UserIngredient as UserIngredient, MessageResponse, Ingredient } from "../../types";
 
 /**
  * @module ingredients.service
@@ -27,7 +26,7 @@ const userIngredientServices = {
         return { message: "Ingredient deleted successfully" };
     },
 
-    addMultiple: async (userId: string, userIngredients: IngredientDocument[]): Promise<UserIngredient[]> => {
+    addMultiple: async (userId: string, userIngredients: Ingredient[]): Promise<UserIngredient[]> => {
         const userIngredientDocs: UserIngredientType[] = userIngredients.map((ingredient) => ({
             userId,
             ingredientId: ingredient.id,

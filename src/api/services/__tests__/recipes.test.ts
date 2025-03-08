@@ -1,6 +1,6 @@
 import recipeServices from '../../services/recipes.service';
 import firebaseStorageServices from '../firebase.service';
-import { RecipeDocument } from '../../models/recipe.model';
+import { RecipeWithImage } from '../../../types';
 import { mockRecipe } from '../../../lib/mock/mockData';
 import { base64ToArrayBuffer } from '../../../utils/helperFunctions';
 import {MessageResponse} from '../../../types/http.types';
@@ -11,13 +11,14 @@ jest.mock('../../data-access/recipe.da');
 jest.mock('../firebase.service');
 jest.mock('../../../utils/helperFunctions');
 
+const mockRecipes: RecipeWithImage[] = [
+    mockRecipe
+];
+
 describe('recipeServices', () => {
 
     describe('getUserPageRecipes', () => {
         it('should return the correct recipes for a given user ID', async () => {
-            const mockRecipes: RecipeDocument[] = [
-                { ...mockRecipe, userId, createdAt: new Date() } as RecipeDocument
-            ];
             (getRecipesPageDB as jest.Mock).mockResolvedValueOnce(mockRecipes);
 
             const result = await recipeServices.getUserPageRecipes({
@@ -34,9 +35,6 @@ describe('recipeServices', () => {
 
     describe('getAllUserRecipes', () => {
         it('should return the all recipes for a given user ID', async () => {
-            const mockRecipes: RecipeDocument[] = [
-                { ...mockRecipe, userId: 'recipeId', createdAt: new Date() } as RecipeDocument
-            ];
             (getAllRecipesDB as jest.Mock).mockResolvedValue(mockRecipes);
 
             const result = await recipeServices.getAllUserRecipes('userId');

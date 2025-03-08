@@ -5,7 +5,7 @@ import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
 
 import firebaseStorageServices from "./firebase.service";
 import recipeServices from "./recipes.service";
-import { UserDocument } from "../models/user.model";
+import { User } from "../../types";
 
 /**
  * @module user.service
@@ -18,9 +18,9 @@ const userServices = {
     /**
      * @description This function creates a user & kitchen utilities
      * @param userData 
-     * @returns 
+     * @returns {User}
      */
-    createUser: async (userData: CreateUserDBProps): Promise<UserDocument> => {
+    createUser: async (userData: CreateUserDBProps): Promise<User> => {
         const [user, _kitchenUtils] = await Promise.all([
             createUserDB(userData),
             createKitchenUtilsDB(userData.clerkId)
@@ -31,9 +31,9 @@ const userServices = {
     /**
      * @description This function deletes a user & user-recipes & recipe images from firebase storage & user ingredients
      * @param {string} userId 
-     * @returns {UserDocument}
+     * @returns {User}
      */
-    deleteUser: async (userId: string): Promise<UserDocument> => {
+    deleteUser: async (userId: string): Promise<User> => {
         const recipes = await recipeServices.getAllUserRecipes(userId);
 
         const [user] = await Promise.all([
@@ -63,9 +63,9 @@ const userServices = {
      * @description This function updates a user
      * @param {string} userId 
      * @param {UpdateUserDBProps} update 
-     * @returns {UserDocument}
+     * @returns {User}
      */
-    updateUser: async (userId: string, update: UpdateUserDBProps): Promise<UserDocument> => {
+    updateUser: async (userId: string, update: UpdateUserDBProps): Promise<User> => {
         const user = await updateUserDB(userId, update);
         return user;
     },
@@ -75,9 +75,9 @@ const userServices = {
      * @param {string} userId
      * @param {string} stripeCustomerId
      * @param {string} stripeSubscriptionId
-     * @returns {UserDocument}
+     * @returns {User}
      */
-    subscribe: async (userId: string, stripeCustomerId: string, stripeSubscriptionId: string): Promise<UserDocument> => {
+    subscribe: async (userId: string, stripeCustomerId: string, stripeSubscriptionId: string): Promise<User> => {
         const user = await updateUserDB(userId, {
             isSubscribed: true,
             stripeCustomerId,
@@ -86,7 +86,7 @@ const userServices = {
         return user;
     },
 
-    unsubscribe: async (subscriptionId: string): Promise<UserDocument> => {
+    unsubscribe: async (subscriptionId: string): Promise<User> => {
         const user = await getUserBySubscriptionIdDB(subscriptionId);
 
         const newUser = await updateUserDB(user.clerkId, {

@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose";
 import { mongooseVirtuals } from '../../utils/helperFunctions';
 import { Recipe } from '../../types';
 
-export type RecipeDocument = Document & {
+type RecipeDocument = Document & {
     recipe: Recipe,
     image_url: string;
     userId: string;

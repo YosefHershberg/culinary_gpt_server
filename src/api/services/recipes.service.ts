@@ -2,7 +2,6 @@ import firebaseStorageServices from "./firebase.service";
 import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageDB } from "../data-access/recipe.da";
 import { base64ToArrayBuffer } from "../../utils/helperFunctions";
 
-import { RecipeDocument } from "../models/recipe.model";
 import { MessageResponse, RecipeWithImage } from "../../types";
 import { getUserPageRecipesProps } from "../../types/service.types";
 
@@ -18,9 +17,9 @@ const recipeServices = {
     /**
      * @description Get a page of recipes from the database. If there is a query, get recipes by query
      * @param props 
-     * @returns {RecipeDocument[]} 
+     * @returns {RecipeWithImage[]} 
      */
-    getUserPageRecipes: async (props: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
+    getUserPageRecipes: async (props: getUserPageRecipesProps): Promise<RecipeWithImage[]> => {
         const recipes = await getRecipesPageDB(props)
 
         return recipes
@@ -29,9 +28,9 @@ const recipeServices = {
     /**
      * @description Get all recipes from the database
      * @param userId 
-     * @returns {RecipeDocument[]} 
+     * @returns {RecipeWithImage[]} 
      */
-    getAllUserRecipes: async (userId: string): Promise<RecipeDocument[]> => {
+    getAllUserRecipes: async (userId: string): Promise<RecipeWithImage[]> => {
         const recipes = await getAllRecipesDB(userId)
 
         return recipes
@@ -40,9 +39,9 @@ const recipeServices = {
     /**
      * @description Converts the base64 image to an ArrayBuffer and uploads it to Firebase Storage and saves the link to it in the recipe to the DB
      * @param recipe
-     * @returns {RecipeDocument}
+     * @returns {RecipeWithImage}
      */
-    addRecipe: async (recipe: RecipeWithImage): Promise<RecipeDocument> => {
+    addRecipe: async (recipe: RecipeWithImage): Promise<RecipeWithImage> => {
         // Extract the base64 part
         const base64Image = recipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, '');
 
@@ -51,7 +50,7 @@ const recipeServices = {
 
         const image_url = await firebaseStorageServices.uploadImage(imageBuffer, recipe.recipe.id);
 
-        const newRecipe = await addRecipeDB({ ...recipe, image_url } as RecipeDocument)
+        const newRecipe = await addRecipeDB({ ...recipe, image_url } as RecipeWithImage)
 
         return newRecipe
     },
@@ -79,9 +78,9 @@ const recipeServices = {
     /**
      * @description Get a recipe by its id
      * @param recipeId 
-     * @returns {RecipeDocument}
+     * @returns {RecipeWithImage}
      */
-    getRecipeById: async (recipeId: string): Promise<RecipeDocument> => {
+    getRecipeById: async (recipeId: string): Promise<RecipeWithImage> => {
         const recipe = await getRecipeDB(recipeId)
 
         if (!recipe) {

@@ -11,7 +11,7 @@ export const getKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsTyp
     return res.kitchenUtils;
 }
 
-export const createKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsDocument> => {
+export const createKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsType> => {
     const kitchenUtils = new KitchenUtils({
         kitchenUtils: {
             "Stove Top": true,
@@ -27,12 +27,13 @@ export const createKitchenUtilsDB = async (userId: string): Promise<KitchenUtils
         userId
     });
 
-    const newKitchenUtils = await kitchenUtils.save();
+    const newKitchenUtilsDoc = await kitchenUtils.save();
+    const newKitchenUtils = newKitchenUtilsDoc.toObject();
 
-    return newKitchenUtils;
+    return newKitchenUtils.kitchenUtils;
 }
 
-export const toggleKitchenUtilDB = async (userId: string, name: string): Promise<KitchenUtilsDocument> => {
+export const toggleKitchenUtilDB = async (userId: string, name: string): Promise<KitchenUtilsType> => {
     const kitchenUtils = await KitchenUtils.findOne({ userId }).exec();
 
     if (!kitchenUtils) {
@@ -41,17 +42,19 @@ export const toggleKitchenUtilDB = async (userId: string, name: string): Promise
 
     //@ts-expect-error
     kitchenUtils.kitchenUtils[name] = !kitchenUtils.kitchenUtils[name];
-    await kitchenUtils.save();
 
-    return kitchenUtils;
+    const newKitchenUtilsDoc = await kitchenUtils.save();
+    const newKitchenUtils = newKitchenUtilsDoc.toObject();
+
+    return newKitchenUtils.kitchenUtils;
 }
 
-export const deleteKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsDocument> => {
+export const deleteKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsType> => {
     const kitchenUtils = await KitchenUtils.findOneAndDelete({ userId }).exec();
 
     if (!kitchenUtils) {
         throw new Error('Kitchen utilities not found');
     }
 
-    return kitchenUtils;
+    return kitchenUtils.kitchenUtils;
 }

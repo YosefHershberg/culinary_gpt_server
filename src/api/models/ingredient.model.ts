@@ -2,7 +2,7 @@ import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
 import { Ingredient } from '../../types';
 
-export type IngredientDocument = Document & Ingredient
+type IngredientDocument = Document & Ingredient
 
 const ingredientSchema = new mongoose.Schema<IngredientDocument>({
     name: {

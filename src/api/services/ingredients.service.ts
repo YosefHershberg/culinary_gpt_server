@@ -1,5 +1,5 @@
 import { FilterQuery } from "mongoose";
-import { IngredientDocument } from "../models/ingredient.model";
+import { Ingredient } from "../../types";
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../data-access/ingredient.da";
 import { IngredientType } from "../../types";
 
@@ -11,15 +11,15 @@ import { IngredientType } from "../../types";
  */
 
 const ingredientServices = {
-    getByCategory: async (category: string): Promise<IngredientDocument[]> => {
+    getByCategory: async (category: string): Promise<Ingredient[]> => {
         const ingredients = await getIngredientsByCategoryDB(category)
         return ingredients
     },
 
     search: async (
-        query: FilterQuery<IngredientDocument>,
+        query: FilterQuery<Ingredient>,
         type: IngredientType
-    ): Promise<IngredientDocument[]> => {
+    ): Promise<Ingredient[]> => {
         const ingredients = await searchIngredientsByQueryAndTypeDB(query, type)
         return ingredients
     },

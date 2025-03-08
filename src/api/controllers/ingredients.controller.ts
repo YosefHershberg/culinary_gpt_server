@@ -6,7 +6,7 @@ import { HttpStatusCode } from 'axios';
 import { CustomRequest, IngredientType } from '../../types';
 
 import ingredientServices from '../services/ingredients.service';
-import { IngredientDocument } from '../models/ingredient.model';
+import { Ingredient } from '../../types';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 import imageDetectionServices from '../services/imageDetection.service';
@@ -48,7 +48,7 @@ export const ingredientSuggestionsSchema = z.object({
     }),
 });
 
-export const ingredientSuggestions = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction) => {
+export const ingredientSuggestions = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
     const { category } = req.params;
 
     try {
@@ -112,12 +112,12 @@ export const searchIngredientsSchema = z.object({
     })
 });
 
-export const searchIngredients = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction) => {
+export const searchIngredients = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
     const { query, type } = req.query;
 
     try {
         const ingredients = await ingredientServices.search(
-            query as FilterQuery<IngredientDocument>,
+            query as FilterQuery<Ingredient>,
             type as IngredientType
         );
 
@@ -173,7 +173,7 @@ export const imageIngredientDetectorSchema = z.object({
     })
 });
 
-export const imageIngredientDetector = async (req: CustomRequest, res: Response<IngredientDocument[]>, next: NextFunction): Promise<void> => {
+export const imageIngredientDetector = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction): Promise<void> => {
     try {
         const { imageUrl } = req.body;
 

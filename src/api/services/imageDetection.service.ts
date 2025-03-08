@@ -1,6 +1,6 @@
 import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
-import { IngredientDocument } from "../models/ingredient.model";
 import aiServices from "./ai.service";
+import { Ingredient } from "../../types";
 
 /**
  * @module vision.service
@@ -14,9 +14,9 @@ const imageDetectionServices = {
     /**
      * @description This function gets the ingredients from the image and return the ones that are DB
      * @param base64image 
-     * @returns {IngredientDocument[]}
+     * @returns {Ingredient[]}
      */
-    getIngredientsFromImage: async (base64image: string): Promise<IngredientDocument[]> => {
+    getIngredientsFromImage: async (base64image: string): Promise<Ingredient[]> => {
         const labels = await aiServices.detectLabels(base64image);
 
         if (labels.length === 0) return [];

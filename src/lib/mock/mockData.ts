@@ -1,10 +1,11 @@
 import { CreateUserDBProps } from "../../api/data-access/user.da";
-import { IngredientDocument } from "../../api/models/ingredient.model";
 import { UserDocument } from "../../api/models/user.model";
-import { RecipeWithImage, KitchenUtils } from "../../types";
+import { RecipeWithImage, KitchenUtils, Ingredient } from "../../types";
+import { userId } from "./mockApp";
 
 export const mockRecipe: RecipeWithImage = {
     image_url: "https://example.com/recipe-image.jpg",
+    userId,
     recipe: {
         title: "Classic Spaghetti Carbonara",
         description: "A creamy and savory Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
@@ -29,7 +30,7 @@ export const mockRecipe: RecipeWithImage = {
         time: "20 minutes",
         level: "Easy",
         type: "recipe",
-        id: "recipe123"
+        id: "recipe123",
     }
 };
 
@@ -71,7 +72,7 @@ export const mockIngredient = {
     category: ['spice'],
     popularity: 5,
     type: ['food'],
-} as IngredientDocument; //Typed like this because IngredientDocument extends mongoose.Document
+} as Ingredient;
 
 export const mockIngredients = [mockIngredient];
 
