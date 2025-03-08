@@ -48,8 +48,6 @@ export const getRecipesPageDB = async ({
         throw new Error('Recipes not found');
     }
 
-    console.log(recipes[0]);
-
     return recipes;
 };
 

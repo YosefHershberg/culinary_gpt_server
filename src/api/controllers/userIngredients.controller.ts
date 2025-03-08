@@ -84,8 +84,6 @@ export const addIngredientSchema = z.object({
 export const addIngredient = async (req: CustomRequest, res: Response<UserIngredient>, next: NextFunction) => {
     const ingredient = req.body;
 
-    console.log(ingredient);
-
     try {
         const newIngredient =
             await userIngredientServices.addIngredient({
