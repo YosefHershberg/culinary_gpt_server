@@ -42,9 +42,7 @@ export function errorHandler(err: Error, _req: Request, res: Response<ErrorRespo
   }
   
   // catching errors that are not HttpError
-  const statusCode = res.statusCode !== HttpStatusCode.Ok ? res.statusCode : HttpStatusCode.Ok;
-  res.status(statusCode);
-  return res.json({
+  return res.status(HttpStatusCode.InternalServerError).json({
     message: err.message,
     stack: env.NODE_ENV === 'production' ? '🥞' : err.stack,
   });
