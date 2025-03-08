@@ -3,12 +3,7 @@ import Recipe, { RecipeDocument } from "../models/recipe.model";
 import { getUserPageRecipesProps } from "../../types";
 
 export const getRecipesPageDB = async ({
-    userId,
-    page,
-    limit,
-    filter,
-    query,
-    sort,
+    userId, page, limit, filter, query, sort,
 }: getUserPageRecipesProps): Promise<RecipeDocument[]> => {
     let dbQuery: Record<string, any> = { userId };
 
