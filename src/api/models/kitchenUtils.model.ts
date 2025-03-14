@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { KitchenUtils } from '../../types';
+import { type KitchenUtils } from '../../types';
 
 export type KitchenUtilsDocument = Document & {
   kitchenUtils: KitchenUtils,

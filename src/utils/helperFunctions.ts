@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { Response } from "express";
+import { type Response } from "express";
 
 export const returnStreamData = (
   res: Response,

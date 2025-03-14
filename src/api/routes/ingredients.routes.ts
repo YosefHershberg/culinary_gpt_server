@@ -1,28 +1,27 @@
 import express from 'express';
-import { MessageResponse } from '../../types/http.types';
-import { imageIngredientDetector, imageIngredientDetectorSchema, ingredientSuggestions, ingredientSuggestionsSchema, searchIngredients, searchIngredientsSchema } from '../controllers/ingredients.controller';
+import * as ingredientControllers from '../controllers/ingredients.controller';
 import { validate } from '../../middlewares';
-import { Ingredient } from '../../types';
+import { type Ingredient, type MessageResponse } from '../../types';
 
 const router = express.Router();
 
 router.get<{}, Ingredient[] | MessageResponse>(
     '/suggestions/:category',
-    validate(ingredientSuggestionsSchema),
-    ingredientSuggestions
+    validate(ingredientControllers.ingredientSuggestionsSchema),
+    ingredientControllers.ingredientSuggestions
 );
 
 
 router.get<{}, Ingredient[] | MessageResponse>(
     '/search',
-    validate(searchIngredientsSchema),
-    searchIngredients
+    validate(ingredientControllers.searchIngredientsSchema),
+    ingredientControllers.searchIngredients
 );
 
 router.post<{}, Ingredient[] | MessageResponse>(
     '/image-detect',
-    validate(imageIngredientDetectorSchema),
-    imageIngredientDetector
+    validate(ingredientControllers.imageIngredientDetectorSchema),
+    ingredientControllers.imageIngredientDetector
 )
 
 export default router;

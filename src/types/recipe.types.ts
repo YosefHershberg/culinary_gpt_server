@@ -1,4 +1,4 @@
-import { TypeOf } from "zod";
+import { type TypeOf } from "zod";
 import { recipeSchema } from "../api/schemas/recipe.schema";
 
 export type Recipe = TypeOf<typeof recipeSchema>;

@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
 import logger from "../../config/logger";
 import userServices from "../services/user.service";
 import Stripe from "stripe";
 import stripe from "../../config/stripe";
 import env from "../../utils/env";
+
+import { type Request, type Response } from "express";
 
 const stripeWebhook = async (req: Request, res: Response) => {
     const signature = req.headers['stripe-signature'] as string;

@@ -1,5 +1,5 @@
 import { getKitchenUtilsDB, toggleKitchenUtilDB } from "../data-access/kitchenUtils.da";
-import { KitchenUtils } from "../../types";
+import { type KitchenUtils } from "../../types";
 
 /**
  * @module kitchenUtils.service

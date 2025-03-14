@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose"
 import IngredientModel from "../models/ingredient.model"
-import { Ingredient, IngredientType } from "../../types"
+import { type Ingredient, type IngredientType } from "../../types"
 
 export const getIngredientsByCategoryDB = async (category: string): Promise<Ingredient[]> => {
     const ingredients = await IngredientModel.find({ category }).exec()

@@ -1,10 +1,10 @@
 import { DeleteResult } from "mongodb";
 import Recipe from "../models/recipe.model";
-import { getUserPageRecipesProps, RecipeWithImage } from "../../types";
+import { type GetUserPageRecipesProps, type RecipeWithImage } from "../../types";
 
 export const getRecipesPageDB = async ({
     userId, page, limit, filter, query, sort,
-}: getUserPageRecipesProps): Promise<RecipeWithImage[]> => {
+}: GetUserPageRecipesProps): Promise<RecipeWithImage[]> => {
     let dbQuery: Record<string, any> = { userId };
 
     if (filter !== 'all') {

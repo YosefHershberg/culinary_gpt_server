@@ -1,5 +1,5 @@
 
-export type getUserPageRecipesProps = {
+export type GetUserPageRecipesProps = {
     userId: string;
     page: number;
     limit: number;

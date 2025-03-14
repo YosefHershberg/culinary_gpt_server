@@ -1,11 +1,10 @@
-import { NextFunction, Response } from "express";
 import { HttpStatusCode } from "axios";
-
 import userServices from "../services/user.service";
 import logger from "../../config/logger";
-
 import { HttpError } from "../../lib/HttpError";
-import { CustomRequest } from "../../types";
+
+import { type NextFunction, type Response } from "express";
+import { type CustomRequest } from "../../types";
 
 /**
  * @openapi
@@ -32,11 +31,11 @@ import { CustomRequest } from "../../types";
  *           description: Internal server error
  */
 
-export type isSubscriptionActive = {
+export type IsSubscriptionActive = {
     subscriptionActive: boolean;
 }
 
-export const getUserSubscription = async (req: CustomRequest, res: Response<isSubscriptionActive>, next: NextFunction) => {
+export const getUserSubscription = async (req: CustomRequest, res: Response<IsSubscriptionActive>, next: NextFunction) => {
     const { userId } = req
 
     try {

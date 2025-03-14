@@ -1,4 +1,4 @@
-import { KitchenUtils } from "../../types";
+import { type KitchenUtils } from "../../types";
 
 export const kitchenUtils: KitchenUtils = {
     "Stove Top": true,

@@ -1,6 +1,6 @@
 import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
 import aiServices from "./ai.service";
-import { Ingredient } from "../../types";
+import { type Ingredient } from "../../types";
 
 /**
  * @module vision.service
@@ -18,6 +18,8 @@ const imageDetectionServices = {
      */
     getIngredientsFromImage: async (base64image: string): Promise<Ingredient[]> => {
         const labels = await aiServices.detectLabels(base64image);
+
+        console.log(labels);
 
         if (labels.length === 0) return [];
 

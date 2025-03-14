@@ -1,12 +1,11 @@
-import { Response, NextFunction } from 'express';
-import { FilterQuery } from 'mongoose';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import { CustomRequest, IngredientType } from '../../types';
+import { type Response, type NextFunction } from 'express';
+import { type FilterQuery } from 'mongoose';
+import { type CustomRequest, type IngredientType, type Ingredient } from '../../types';
 
 import ingredientServices from '../services/ingredients.service';
-import { Ingredient } from '../../types';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
 import imageDetectionServices from '../services/imageDetection.service';

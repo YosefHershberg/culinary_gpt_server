@@ -2,8 +2,7 @@ import firebaseStorageServices from "./firebase.service";
 import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageDB } from "../data-access/recipe.da";
 import { base64ToArrayBuffer } from "../../utils/helperFunctions";
 
-import { MessageResponse, RecipeWithImage } from "../../types";
-import { getUserPageRecipesProps } from "../../types/service.types";
+import { type MessageResponse, type RecipeWithImage, type GetUserPageRecipesProps } from "../../types";
 
 /**
  * @module recipes.service
@@ -19,7 +18,7 @@ const recipeServices = {
      * @param props 
      * @returns {RecipeWithImage[]} 
      */
-    getUserPageRecipes: async (props: getUserPageRecipesProps): Promise<RecipeWithImage[]> => {
+    getUserPageRecipes: async (props: GetUserPageRecipesProps): Promise<RecipeWithImage[]> => {
         const recipes = await getRecipesPageDB(props)
 
         return recipes

@@ -1,14 +1,14 @@
 import { HttpStatusCode } from "axios";
-import { Response, NextFunction } from "express";
 import { z } from "zod";
 
 import logger from "../../config/logger";
 import userIngredientServices from "../services/userIngredients.service";
 
-import { CustomRequest, MessageResponse, UserIngredient } from "../../types";
+import { Response, NextFunction } from "express";
+import { type CustomRequest, type MessageResponse, type UserIngredient, type Ingredient } from "../../types";
+
 import { HttpError } from "../../lib/HttpError";
 import { ingredientSchema } from "../schemas/ingredient.schema";
-import { Ingredient } from "../../types";
 
 /**
  * @openapi
@@ -36,7 +36,7 @@ import { Ingredient } from "../../types";
 export const getAllIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
     try {
         const ingredients = await userIngredientServices.getAll(req.userId as string);
-        
+
         return res.json(ingredients);
     } catch (error) {
         if (error instanceof Error) {

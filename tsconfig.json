@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": "src",
     "sourceMap": true,
-    "target": "esnext",
+    "target": "ES6",
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -12,8 +13,9 @@
     "resolveJsonModule": true
   },
   "include": [
-    "./*.js",
     "src/**/*.ts",
-    "test/**/*.ts",
   ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,12 +1,11 @@
-import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
-
 import aiServices from './ai.service';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
-
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
-import { UserIngredient, Recipe } from "../../types";
+
+import { type Response } from 'express';
+import { type UserIngredient, type Recipe } from "../../types";
 
 /**
  * @module createRecipe.service

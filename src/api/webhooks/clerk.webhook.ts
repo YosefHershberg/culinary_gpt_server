@@ -1,10 +1,11 @@
-import { WebhookEvent } from "@clerk/clerk-sdk-node";
-import { Request, Response } from "express";
 import { HttpStatusCode } from "axios";
 
 import userServices from "../services/user.service";
 import verifyCvixHeaders from "../../lib/verifyCvixHeaders";
 import logger from "../../config/logger";
+
+import { type WebhookEvent } from "@clerk/clerk-sdk-node";
+import { type Request, type Response } from "express";
 
 const clerkWebhook = async (req: Request, res: Response) => {
     let evt: WebhookEvent;

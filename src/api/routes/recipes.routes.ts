@@ -2,47 +2,47 @@ import express from 'express';
 
 import { validate } from '../../middlewares';
 
-import * as recipesController from '../controllers/recipes.controller';
+import * as recipesControllers from '../controllers/recipes.controller';
 
-import { MessageResponse, RecipeWithImage } from '../../types';
+import { type MessageResponse, type RecipeWithImage } from '../../types';
 import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();
 
 router.post(
     '/create',
-    validate(recipesController.createRecipeSchema),
-    recipesController.createRecipe
+    validate(recipesControllers.createRecipeSchema),
+    recipesControllers.createRecipe
 );
 
 router.post(
     '/create-cocktail',
-    validate(recipesController.createCocktailSchema),
-    recipesController.createCocktail
+    validate(recipesControllers.createCocktailSchema),
+    recipesControllers.createCocktail
 );
 
 router.get<{}, RecipeWithImage[] | MessageResponse>(
     '/',
-    validate(recipesController.getRecipesSchema),
-    recipesController.getRecipes
+    validate(recipesControllers.getRecipesSchema),
+    recipesControllers.getRecipes
 );
 
 router.post<{}, RecipeWithImage | MessageResponse>(
     '/',
-    validate(recipesController.addRecipeSchema),
-    recipesController.addRecipe
+    validate(recipesControllers.addRecipeSchema),
+    recipesControllers.addRecipe
 );
 
 router.get<{ id: string }, RecipeWithImage | MessageResponse>(
     '/:id',
     validate(doSomethingByIdSchema),
-    recipesController.getRecipeById
+    recipesControllers.getRecipeById
 );
 
 router.delete<{ id: string }, MessageResponse>(
     '/:id',
     validate(doSomethingByIdSchema),
-    recipesController.deleteRecipe
+    recipesControllers.deleteRecipe
 );
 
 export default router;

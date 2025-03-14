@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-import { IngredientType } from '../../types';
+import { type IngredientType } from '../../types';
 
 export type UserIngredientType = {
     userId: string;

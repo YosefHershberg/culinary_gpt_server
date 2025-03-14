@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
 import { ZodError, ZodSchema } from 'zod';
 import { HttpStatusCode } from 'axios';
 
 import clerkClient from './config/clerkClient';
 import { HttpError } from './lib/HttpError';
 import env from './utils/env';
-
-import {ErrorResponse, CustomRequest} from './types/http.types';
 import logger from './config/logger';
+
+import { type NextFunction, type Request, type Response } from 'express';
+import { type ErrorResponse, type CustomRequest } from './types';
 
 export const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -40,7 +40,7 @@ export function errorHandler(err: Error, _req: Request, res: Response<ErrorRespo
   if (err instanceof HttpError) {
     return res.status(err.statusCode).json({ message: err.message });
   }
-  
+
   // catching errors that are not HttpError
   return res.status(HttpStatusCode.InternalServerError).json({
     message: err.message,

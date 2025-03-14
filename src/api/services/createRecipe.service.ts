@@ -1,4 +1,3 @@
-import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
 
 import aiServices from './ai.service';
@@ -7,7 +6,9 @@ import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
-import { UserIngredient, Recipe } from "../../types";
+
+import { type Response } from 'express';
+import { type UserIngredient, type Recipe } from "../../types";
 
 /**
  * @module createRecipe.service

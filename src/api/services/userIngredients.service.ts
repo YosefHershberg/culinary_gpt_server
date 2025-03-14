@@ -1,7 +1,7 @@
 import { UserIngredientType } from "../models/UserIngredients.model";
 import { addMultipleUserIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/userIngredient.da";
 
-import { UserIngredient as UserIngredient, MessageResponse, Ingredient } from "../../types";
+import { type UserIngredient as UserIngredient, type MessageResponse, type Ingredient } from "../../types";
 
 /**
  * @module ingredients.service

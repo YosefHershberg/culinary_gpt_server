@@ -1,4 +1,4 @@
-import { User as UserType } from "../../types";
+import { type User as UserType } from "../../types";
 import User from "../models/user.model";
 
 export const getUserDB = async (userId: string): Promise<UserType> => {

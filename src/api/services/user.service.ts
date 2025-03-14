@@ -5,7 +5,7 @@ import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
 
 import firebaseStorageServices from "./firebase.service";
 import recipeServices from "./recipes.service";
-import { User } from "../../types";
+import { type User } from "../../types";
 
 /**
  * @module user.service
