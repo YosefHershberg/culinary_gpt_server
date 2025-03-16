@@ -1,6 +1,6 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import { type Express, type Request, type Response } from 'express';
+import type { Express, Request, Response } from 'express';
 
 import { swaggerOptions } from '../config/swaggerOptions';
 import logger from '../config/logger';

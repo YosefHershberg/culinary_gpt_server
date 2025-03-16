@@ -1,6 +1,6 @@
 import { DeleteResult } from "mongodb";
 import Recipe from "../models/recipe.model";
-import { type GetUserPageRecipesProps, type RecipeWithImage } from "../../types";
+import type { GetUserPageRecipesProps, RecipeWithImage } from "../../types";
 
 export const getRecipesPageDB = async ({
     userId, page, limit, filter, query, sort,

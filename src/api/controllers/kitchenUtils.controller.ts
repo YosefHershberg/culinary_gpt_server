@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import { type NextFunction, type Response } from 'express';
-import { type KitchenUtils, type CustomRequest } from '../../types';
+import type { NextFunction, Response } from 'express';
+import type { KitchenUtils, CustomRequest } from '../../types';
 
 import kitchenUtilsServices from '../services/kitchenUtils.service';
 import logger from '../../config/logger';

@@ -4,8 +4,8 @@ import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 
-import { type Response } from 'express';
-import { type UserIngredient, type Recipe } from "../../types";
+import type { Response } from 'express';
+import type { Recipe, UserIngredientResponse } from "../../types";
 
 /**
  * @module createRecipe.service
@@ -34,7 +34,7 @@ const createCocktailServices = {
             throw new Error('Not enough ingredients to create a recipe');
         }
 
-        const userIngredients = ingredients.map((ingredient: UserIngredient) => ingredient.name);
+        const userIngredients = ingredients.map((ingredient: UserIngredientResponse) => ingredient.name);
 
         const cocktailTitlePrompt = createCocktailTitlePrompt(userIngredients, prompt);
 

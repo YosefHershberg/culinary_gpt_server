@@ -3,7 +3,7 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as kitchenUtilsControllers from '../controllers/kitchenUtils.controller';
-import { type KitchenUtils, type MessageResponse } from '../../types';
+import type { KitchenUtils, MessageResponse } from '../../types';
 
 const router = express.Router();
 

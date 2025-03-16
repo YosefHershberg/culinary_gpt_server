@@ -7,8 +7,8 @@ import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
 
-import { type Response } from 'express';
-import { type UserIngredient, type Recipe } from "../../types";
+import type { Response } from 'express';
+import type { Recipe, UserIngredientResponse } from "../../types";
 
 /**
  * @module createRecipe.service
@@ -47,7 +47,7 @@ const createRecipeServices = {
             throw new Error('Not enough ingredients to create a recipe');
         }
 
-        const userIngredients = ingredients.map((ingredient: UserIngredient) => ingredient.name);
+        const userIngredients = ingredients.map((ingredient: UserIngredientResponse) => ingredient.name);
 
         const recipeTitlePrompt = createRecipeTitlePrompt(userIngredients, recipeInput.prompt, kitchenUtils);
 

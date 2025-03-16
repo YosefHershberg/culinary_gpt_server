@@ -1,14 +1,7 @@
 import mongoose, { Document } from 'mongoose';
-import { type IngredientType } from '../../types';
+import type { UserIngredient } from '../../types';
 
-export type UserIngredientType = {
-    userId: string;
-    ingredientId: string;
-    name: string;
-    type: IngredientType[];
-}
-
-export type UserIngredientDocument = UserIngredientType & Document & {
+export type UserIngredientDocument = UserIngredient & Document & {
     id: string;
 }
 

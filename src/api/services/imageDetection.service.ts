@@ -1,6 +1,6 @@
 import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
 import aiServices from "./ai.service";
-import { type Ingredient } from "../../types";
+import type { Ingredient } from "../../types";
 
 /**
  * @module vision.service

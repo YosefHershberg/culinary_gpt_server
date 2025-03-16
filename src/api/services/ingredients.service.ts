@@ -1,6 +1,6 @@
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../data-access/ingredient.da";
-import { type Ingredient, type IngredientType } from "../../types";
-import { type FilterQuery } from "mongoose";
+import type { Ingredient, IngredientType } from "../../types";
+import type { FilterQuery } from "mongoose";
 
 /**
  * @module ingredients.service

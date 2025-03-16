@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import { mongooseVirtuals } from '../../utils/helperFunctions';
-import { type User as UserType } from '../../types';
+import type { User as UserType } from '../../types';
 
 export type UserDocument = UserType & Document;
 

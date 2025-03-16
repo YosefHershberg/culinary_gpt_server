@@ -4,7 +4,7 @@ import { validate } from '../../middlewares';
 
 import * as recipesControllers from '../controllers/recipes.controller';
 
-import { type MessageResponse, type RecipeWithImage } from '../../types';
+import type { MessageResponse, RecipeWithImage } from '../../types';
 import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();

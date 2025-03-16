@@ -1,7 +1,7 @@
 import express from 'express';
 import * as ingredientControllers from '../controllers/ingredients.controller';
 import { validate } from '../../middlewares';
-import { type Ingredient, type MessageResponse } from '../../types';
+import type { Ingredient, MessageResponse } from '../../types';
 
 const router = express.Router();
 

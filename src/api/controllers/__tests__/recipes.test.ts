@@ -1,10 +1,10 @@
 import request from 'supertest';
+import { HttpStatusCode } from 'axios';
 import app, { userId } from '../../../lib/mock/mockApp';
 import recipeServices from '../../services/recipes.service';
 import createRecipeServices from '../../services/createRecipe.service';
-import { HttpStatusCode } from 'axios';
 import { mockRecipe } from '../../../lib/mock/mockData';
-import { FilterOptions, SortOptions } from '../../../types';
+import type { FilterOptions, SortOptions } from '../../../types';
 
 jest.mock('../../services/recipes.service');
 jest.mock('../../services/createRecipe.service');

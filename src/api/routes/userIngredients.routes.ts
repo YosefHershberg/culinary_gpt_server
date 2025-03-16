@@ -3,23 +3,23 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as userIngredientControllers from '../controllers/userIngredients.controller';
-import { type UserIngredient as UserIngredient, type MessageResponse } from '../../types';
+import type { UserIngredientResponse, MessageResponse } from '../../types';
 import { doSomethingByIdSchema } from '../schemas';
 
 const router = express.Router();
 
-router.get<{}, UserIngredient[] | MessageResponse>(
+router.get<{}, UserIngredientResponse[] | MessageResponse>(
     '/',
     userIngredientControllers.getAllIngredients
 );
 
-router.post<{}, UserIngredient | MessageResponse>(
+router.post<{}, UserIngredientResponse | MessageResponse>(
     '/',
     validate(userIngredientControllers.addIngredientSchema),
     userIngredientControllers.addIngredient
 );
 
-router.post<{}, UserIngredient[] | MessageResponse>(
+router.post<{}, UserIngredientResponse[] | MessageResponse>(
     '/multiple',
     validate(userIngredientControllers.addMultipleIngredientsSchema),
     userIngredientControllers.addMultipleIngredients

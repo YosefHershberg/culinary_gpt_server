@@ -1,6 +1,6 @@
 import express from 'express';
 import * as userSubscriptionControllers from '../controllers/userSubscription.controller';
-import { type MessageResponse } from '../../types/http.types';
+import type { MessageResponse } from '../../types/http.types';
 
 const router = express.Router();
 

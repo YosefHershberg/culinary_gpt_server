@@ -2,7 +2,7 @@ import firebaseStorageServices from "./firebase.service";
 import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageDB } from "../data-access/recipe.da";
 import { base64ToArrayBuffer } from "../../utils/helperFunctions";
 
-import { type MessageResponse, type RecipeWithImage, type GetUserPageRecipesProps } from "../../types";
+import type { MessageResponse, RecipeWithImage, GetUserPageRecipesProps } from "../../types";
 
 /**
  * @module recipes.service

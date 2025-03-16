@@ -3,8 +3,8 @@ import userServices from "../services/user.service";
 import logger from "../../config/logger";
 import { HttpError } from "../../lib/HttpError";
 
-import { type NextFunction, type Response } from "express";
-import { type CustomRequest } from "../../types";
+import type { NextFunction, Response } from "express";
+import type { CustomRequest } from "../../types";
 
 /**
  * @openapi

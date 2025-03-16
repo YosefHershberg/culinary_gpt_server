@@ -1,5 +1,5 @@
 import KitchenUtils from "../models/kitchenUtils.model";
-import { type KitchenUtils as KitchenUtilsType } from "../../types";
+import type { KitchenUtils as KitchenUtilsType } from "../../types";
 
 export const getKitchenUtilsDB = async (userId: string): Promise<KitchenUtilsType> => {
     const res = await KitchenUtils.findOne({ userId }).exec();

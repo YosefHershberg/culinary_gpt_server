@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import { type Response, type NextFunction } from 'express';
-import { type FilterQuery } from 'mongoose';
-import { type CustomRequest, type IngredientType, type Ingredient } from '../../types';
+import type { Response, NextFunction } from 'express';
+import type { FilterQuery } from 'mongoose';
+import type { CustomRequest, IngredientType, Ingredient } from '../../types';
 
 import ingredientServices from '../services/ingredients.service';
 import { HttpError } from '../../lib/HttpError';

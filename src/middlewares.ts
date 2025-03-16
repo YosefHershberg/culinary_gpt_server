@@ -6,8 +6,8 @@ import { HttpError } from './lib/HttpError';
 import env from './utils/env';
 import logger from './config/logger';
 
-import { type NextFunction, type Request, type Response } from 'express';
-import { type ErrorResponse, type CustomRequest } from './types';
+import type { NextFunction, Request, Response } from 'express';
+import type{ ErrorResponse, CustomRequest } from './types';
 
 export const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(' ')[1];

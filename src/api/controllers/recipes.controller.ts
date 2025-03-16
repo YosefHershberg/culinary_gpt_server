@@ -5,8 +5,8 @@ import recipeServices from '../services/recipes.service';
 import createRecipeServices from '../services/createRecipe.service';
 import createCocktailServices from '../services/createCocktail.service';
 
-import { type NextFunction, type Response } from 'express';
-import { type CustomRequest, type MessageResponse, type FilterOptions, type SortOptions, type RecipeWithImage } from '../../types';
+import type { NextFunction, Response } from 'express';
+import type { CustomRequest, MessageResponse, FilterOptions, SortOptions, RecipeWithImage } from '../../types';
 
 import { recipeSchema } from '../schemas/recipe.schema';
 import { HttpError } from '../../lib/HttpError';

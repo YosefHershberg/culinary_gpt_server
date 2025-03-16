@@ -5,7 +5,7 @@ import logger from "../../config/logger";
 import userIngredientServices from "../services/userIngredients.service";
 
 import { Response, NextFunction } from "express";
-import { type CustomRequest, type MessageResponse, type UserIngredient, type Ingredient } from "../../types";
+import type { CustomRequest, MessageResponse, UserIngredientResponse, Ingredient } from "../../types";
 
 import { HttpError } from "../../lib/HttpError";
 import { ingredientSchema } from "../schemas/ingredient.schema";
@@ -33,7 +33,7 @@ import { ingredientSchema } from "../schemas/ingredient.schema";
  *         description: Internal server error
  */
 
-export const getAllIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
+export const getAllIngredients = async (req: CustomRequest, res: Response<UserIngredientResponse[]>, next: NextFunction) => {
     try {
         const ingredients = await userIngredientServices.getAll(req.userId as string);
 
@@ -81,7 +81,7 @@ export const addIngredientSchema = z.object({
     body: ingredientSchema
 });
 
-export const addIngredient = async (req: CustomRequest, res: Response<UserIngredient>, next: NextFunction) => {
+export const addIngredient = async (req: CustomRequest, res: Response<UserIngredientResponse>, next: NextFunction) => {
     const ingredient = req.body;
 
     try {
@@ -141,7 +141,7 @@ export const addMultipleIngredientsSchema = z.object({
     body: z.array(ingredientSchema)
 });
 
-export const addMultipleIngredients = async (req: CustomRequest, res: Response<UserIngredient[]>, next: NextFunction) => {
+export const addMultipleIngredients = async (req: CustomRequest, res: Response<UserIngredientResponse[]>, next: NextFunction) => {
     const ingredients: Ingredient[] = req.body;
 
     try {
