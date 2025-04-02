@@ -1,7 +1,9 @@
 import { v4 as uuid } from 'uuid';
+
 import aiServices from './ai.service';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
-import { createCocktailImagePrompt, createCocktailPrompt, createCocktailTitlePrompt } from '../../utils/prompts';
+
+import { createCocktailPrompt, createCocktailSchema, createCocktailImagePrompt, createCocktailTitlePrompt, createTitleSchema } from '../../utils/prompts&schemas/createCocktail';
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
 
 import type { Response } from 'express';
@@ -38,7 +40,9 @@ const createCocktailServices = {
 
         const cocktailTitlePrompt = createCocktailTitlePrompt(userIngredients, prompt);
 
-        const { title: cocktailTitle } = await aiServices.openaiCreate<{ title: string }>(cocktailTitlePrompt);
+        const { title: cocktailTitle } = await aiServices.geminiCreate<{
+            title: string, 
+        }>(cocktailTitlePrompt, createTitleSchema);
 
         const imagePrompt = createCocktailImagePrompt(cocktailTitle);
         const cocktailPrompt = createCocktailPrompt(userIngredients, prompt, cocktailTitle);
@@ -67,7 +71,7 @@ const createCocktailServices = {
      * @returns {Recipe} recipe
      */
     createCocktailService: async (cocktailPrompt: string, res: Response): Promise<void> => {
-        let recipe = await aiServices.openaiCreate<Recipe>(cocktailPrompt);
+        let recipe = await aiServices.geminiCreate<Recipe>(cocktailPrompt, createCocktailSchema);
 
         // This is relevant for deleting the recipe
         recipe.id = uuid();

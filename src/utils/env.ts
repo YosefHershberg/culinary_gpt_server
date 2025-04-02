@@ -11,6 +11,7 @@ const envSchema = z.object({
     WEBHOOK_SECRET: z.string(),
     OPENAI_API_KEY: z.string(),
     GETIMGAI_API_KEY: z.string(),
+    GEMINI_API_KEY: z.string(),
     CORS_ORIGIN: z.string().url(),
     FIREBASE_API_KEY: z.string(),
     FIREBASE_AUTH_DOMAIN: z.string(),

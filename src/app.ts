@@ -19,6 +19,8 @@ app.use(helmet());
 
 swagger(app);
 
+app.set('trust proxy', 1);
+
 app.use(cors({
   origin: env.NODE_ENV === 'production' ? env.CORS_ORIGIN : true,
 }));

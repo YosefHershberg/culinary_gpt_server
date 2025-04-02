@@ -24,6 +24,8 @@ const clerkWebhook = async (req: Request, res: Response) => {
     try {
         switch (evt.type) {
             case 'user.created':
+                console.log('User:', evt.data.id);
+                
                 const createdUser = await userServices.createUser({
                     clerkId: evt.data.id,
                     first_name: evt.data.first_name as string,

@@ -5,7 +5,7 @@ import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
 import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
-import { createRecipeImagePrompt, createRecipePrompt, createRecipeTitlePrompt } from '../../utils/prompts';
+import { createRecipePrompt, createRecipeSchema, createRecipeTitlePrompt, createTitleSchema, createRecipeImagePrompt } from '../../utils/prompts&schemas/createRecipe';
 
 import type { Response } from 'express';
 import type { Recipe, UserIngredientResponse } from "../../types";
@@ -37,6 +37,7 @@ const createRecipeServices = {
      * @returns {RecipeWithImage}
      */
     createRecipe: async (userId: string, recipeInput: CreateRecipeProps, res: Response): Promise<void> => {
+
         const [ingredients, kitchenUtils] = await Promise.all([
             getUserIngredientsByTypeDB(userId, 'food'),
             getKitchenUtilsDB(userId)
@@ -51,7 +52,9 @@ const createRecipeServices = {
 
         const recipeTitlePrompt = createRecipeTitlePrompt(userIngredients, recipeInput.prompt, kitchenUtils);
 
-        const { title: recipeTitle } = await aiServices.openaiCreate<{ title: string }>(recipeTitlePrompt);
+        const { title: recipeTitle } = await aiServices.geminiCreate<{
+            title: string
+        }>(recipeTitlePrompt, createTitleSchema);
 
         const imagePrompt = createRecipeImagePrompt(recipeTitle);
         const recipePrompt = createRecipePrompt({ ...recipeInput, userIngredients, recipeTitle, kitchenUtils });
@@ -80,7 +83,7 @@ const createRecipeServices = {
      * @returns {Recipe} recipe
      */
     createRecipeService: async (recipePrompt: string, res: Response): Promise<void> => {
-        let recipe = await aiServices.openaiCreate<Recipe>(recipePrompt);
+        let recipe = await aiServices.geminiCreate<Recipe>(recipePrompt, createRecipeSchema);
 
         // This is relevant for deleting the recipe
         recipe.id = uuid();

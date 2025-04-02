@@ -4,47 +4,39 @@ import logger from "../../config/logger";
 import openai from "../../config/openai";
 import env from "../../utils/env";
 import { isValidJSON } from "../../utils/helperFunctions";
+import gemini from "../../config/gemini";
+import { type Schema } from "@google/genai";
 
 const MAX_RETRIES = 5;
 
 const aiServices = {
 
-    openaiCreate: async <TResponse>(prompt: string): Promise<TResponse> => {
-        let attempts = 0;
-        let isValidJson = false;
+    /**
+     * @description This function creates a object with the gemini api
+     * @param prompt 
+     * @param schema 
+     * @returns {TResponse}
+     */
+    geminiCreate: async <TResponse>(prompt: string, schema: Schema): Promise<TResponse> => {
+
         let result: TResponse;
 
-        while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
-            try {
-                const completion = await openai.chat.completions.create({
-                    messages: [
-                        { role: "system", content: "Your responses must always be a valid JSON object without any additional text or explanations." },
-                        {
-                            role: "user",
-                            content: prompt
-                        }],
-                    model: "gpt-3.5-turbo",
-                });
+        try {
+            const response = await gemini.models.generateContent({
+                model: 'gemini-2.0-flash',
+                contents: prompt,
+                config: {
+                    responseMimeType: 'application/json',
+                    responseSchema: schema,
+                },
+            });
 
-                const response = completion.choices[0].message.content as string;
-
-                isValidJson = isValidJSON(response);
-
-                if (isValidJson) {
-                    result = JSON.parse(response);
-                }
-            } catch (error) {
-                logger.error(error);
-            } finally {
-                attempts++;
-            }
+            result = JSON.parse(response.text as string);
+        } catch (error) {
+            logger.error(error);
         }
 
-        if (!isValidJson) {
-            throw new Error('No valid JSON response generated');
-        }
-
-        return result!;
+        return result! as TResponse;
     },
 
     /**
@@ -120,7 +112,7 @@ const aiServices = {
         };
 
         let base64Image = '';
-        
+
         try {
             const { data } = await axios.post(url, {
                 prompt: imagePrompt,
