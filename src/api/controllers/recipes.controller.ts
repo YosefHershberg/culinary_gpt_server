@@ -257,7 +257,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
  * /api/user/recipes/create:
  *   get:
  *     summary: Create a new recipe
- *     description: Generate a new recipe based on user input using OpenAI API.
+ *     description: Generate a new recipe based on user input using Gemini API.
  *     tags:
  *       - User Recipes
  *     requestBody:
@@ -356,7 +356,7 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
  * /api/user/recipes/create-cocktail:
  *   post:
  *     summary: Create a new cocktail recipe
- *     description: Generate a new cocktail recipe based on user input using OpenAI API.
+ *     description: Generate a new cocktail recipe based on user input using Gemini API.
  *     tags:
  *       - User Recipes
  *     requestBody:

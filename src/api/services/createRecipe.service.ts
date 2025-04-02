@@ -63,7 +63,7 @@ const createRecipeServices = {
             // Create the recipe image using GetimgAI API
             aiServices.createImageGetimgAI(imagePrompt),
 
-            // Create the recipe using OpenAI API
+            // Create the recipe using Gemini API
             createRecipeServices.createRecipeService(recipePrompt, res)
         ]);
 
@@ -77,7 +77,7 @@ const createRecipeServices = {
     },
 
     /**
-     * @description This function creates a recipe using OpenAI API and returns a valid JSON
+     * @description This function creates a recipe using Gemini API and returns a valid JSON
      * @param {string} recipePrompt
      * @param {Response} res
      * @returns {Recipe} recipe

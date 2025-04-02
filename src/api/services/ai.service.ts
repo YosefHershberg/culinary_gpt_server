@@ -1,11 +1,9 @@
 import axios from "axios";
 
 import logger from "../../config/logger";
-import openai from "../../config/openai";
 import env from "../../utils/env";
-import { isValidJSON } from "../../utils/helperFunctions";
 import gemini from "../../config/gemini";
-import { type Schema } from "@google/genai";
+import { createUserContent, type Schema, Type } from "@google/genai";
 
 const MAX_RETRIES = 5;
 
@@ -45,59 +43,43 @@ const aiServices = {
      * @returns {string}
      */
     detectLabels: async (base64image: string): Promise<string[]> => {
-        let attempts = 0;
-        let isValidJson = false;
 
-        let result: string[] = [];
+        const imageParts = [
+            {
+                inlineData: {
+                    mimeType: "image/jpeg",
+                    data: base64image.split(",")[1], // Remove the data URL prefix
+                },
+            },
+        ];
 
-        while (attempts < MAX_RETRIES && !isValidJson) { // Retry until a valid JSON is generated
-            try {
-                const completion = await openai.chat.completions.create({
-                    model: "gpt-4o-mini",
-                    messages: [
-                        {
-                            role: "user",
-                            content: [
-                                {
-                                    type: "text",
-                                    text: `Send me the ingredients of this image.
-                                            respond with a json in this format without backticks: 
-                                            [
-                                                "ingredient1", "ingredient2", "ingredient3"
-                                            ]
-                                            Note: make the ingredients first letter uppercase.
-                                            Note: remove irrelevant words. (like "vanilla" from "vanilla ice cream")`
-                                },
-                                {
-                                    type: "image_url",
-                                    image_url: {
-                                        "url": base64image,
-                                    },
-                                }
-                            ],
-                        },
-                    ],
-                    max_tokens: 100,
-                });
-                const response = completion.choices[0].message.content as string;
-
-                isValidJson = isValidJSON(response);
-
-                if (isValidJson) {
-                    result = JSON.parse(response);
-                }
-            } catch (error) {
-                logger.error(error);
-            } finally {
-                attempts++;
-            }
-
-            if (!isValidJson) {
-                throw new Error('No valid JSON response generated for cocktail recipe');
-            }
+        let response
+        try {
+            response = await gemini.models.generateContent({
+                model: 'gemini-2.0-flash',
+                contents: createUserContent([
+                    `Send me the ingredients of this image.
+                    Note: make the ingredients first letter uppercase.
+                    Note: remove irrelevant words. (like "vanilla" from "vanilla ice cream")`,
+                    ...imageParts,
+                ]),
+                config: {
+                    responseMimeType: 'application/json',
+                    responseSchema: {
+                        type: Type.ARRAY,
+                        items: { type: Type.STRING },
+                    },
+                },
+            });
+        } catch (error) {
+            logger.error(error);
         }
 
-        return result
+        if (!response?.text) {
+            throw new Error("Response text is undefined");
+        }
+
+        return JSON.parse(response.text);
     },
 
     /**

@@ -9,7 +9,6 @@ const envSchema = z.object({
     CLERK_PUBLISHABLE_KEY: z.string(),
     MONGODB_URI: z.string(),
     WEBHOOK_SECRET: z.string(),
-    OPENAI_API_KEY: z.string(),
     GETIMGAI_API_KEY: z.string(),
     GEMINI_API_KEY: z.string(),
     CORS_ORIGIN: z.string().url(),

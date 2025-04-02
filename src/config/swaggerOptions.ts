@@ -7,7 +7,7 @@ export const swaggerOptions: swaggerJsdoc.Options = {
         info: {
             title: 'CulinaryGPT',
             version,
-            description: `This is a Node.js Express server application built with TypeScript that generates recipes using the OpenAI API.
+            description: `This is a Node.js Express server application built with TypeScript that generates recipes using the Gemini API.
                 It uses MongoDB as the main database, firebase for image storage, zod for validation and Clerk for authentication.`,
         },
         servers: [

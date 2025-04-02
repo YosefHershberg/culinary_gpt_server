@@ -2,15 +2,15 @@
 
 ## Description
 
-This is a Node.js Express server application that generates recipes using the OpenAI API. It uses MongoDB as the main database, firebase for image storage, zod for validation and Clerk for authentication. 
+This is a Node.js Express server application that generates recipes using the Gemini API. It uses MongoDB as the main database, firebase for image storage, zod for validation and Clerk for authentication. 
 This application is build in a layered and clean architecture to allow easy maintainability, scalability, team-work etc.
 This application is deployed on AWS with a CI/CD pipeline with Github Actions and tested with jest (controllers & services).
 
 ## Features
 
 - User authentication and authorization using Clerk
-- Recipe generation using the OpenAI API
-- Image detection using the OpenAI API
+- Recipe generation using the Gemini API
+- Image detection using the Gemini API
 - CRUD Services for managing user-generated recipes
 - MongoDB for storing recipes and user data
 - Image storage with firebase

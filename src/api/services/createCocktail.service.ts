@@ -51,7 +51,7 @@ const createCocktailServices = {
             // Create the cocktail image using GetimgAI API
             aiServices.createImageGetimgAI(imagePrompt),
 
-            // Create the cocktail recipe using OpenAI API
+            // Create the cocktail recipe using Gemini API
             createCocktailServices.createCocktailService(cocktailPrompt, res)
         ]);
 
@@ -65,7 +65,7 @@ const createCocktailServices = {
     },
 
     /**
-     * @description This function creates a cocktail recipe using OpenAI API and returns a valid JSON
+     * @description This function creates a cocktail recipe using gemini API and returns a valid JSON
      * @param {string} cocktailPrompt
      * @param {Response} res
      * @returns {Recipe} recipe
