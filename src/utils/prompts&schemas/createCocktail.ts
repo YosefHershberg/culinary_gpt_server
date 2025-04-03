@@ -138,14 +138,25 @@ export const createTitleSchema: SchemaUnion = {
 export const createCocktailTitlePrompt = (
     userIngredients: string[],
     prompt: string
-) => {
+): string => {
+    const ingredientsList = userIngredients?.join(', ') || 'available ingredients';
+    
     return `
-        Create a creative and engaging cocktail title using the following ingredients: ${userIngredients?.join(', ')}.
-        
-        **Rules:**
-        1. The title should reflect the character of the cocktail.
-        2. If possible, provide the title of an existing cocktail that matches the ingredients.
-        3. You do not need to use all the ingredients in the title.
-        4. Take into account this additional prompt: ${prompt}.
+        Generate a cocktail name based on these ingredients: ${ingredientsList}.  
+        The title should reference a well-known classic cocktail if possible, or creatively adapt one.  
+
+        **Rules:**  
+        1. **Classic First:** Prefer established cocktail names (e.g., "Margarita," "Old Fashioned," "Mojito").  
+        2. **Adapt if Needed:** If no exact match exists, modify a classic (e.g., "Spicy Ginger Margarita").  
+        3. **Character-Driven:** The name should reflect the cocktail’s flavor profile (e.g., "Smoky," "Tropical," "Citrus-Forward").  
+        4. **Brevity:** Aim for 1-4 words unless a longer name is iconic (e.g., "Espresso Martini").  
+        5. **Additional Context:** Consider: ${prompt}.  
+
+        **Examples:**  
+        - With lime, tequila, triple sec → **"Margarita"**  
+        - With rum, mint, lime, soda → **"Mojito"**  
+        - With vodka, coffee liqueur → **"Espresso Martini"**  
+        - With bourbon, lemon, honey → **"Whiskey Sour"**  
+        - With gin, cucumber, elderflower → **"Cucumber Elderflower Gin Fizz"**  
     `;
 };
