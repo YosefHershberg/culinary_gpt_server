@@ -153,13 +153,21 @@ export const createRecipeTitlePrompt = (
     kitchenUtils: KitchenUtils
 ) => {
     return `
-        Create a catchy and descriptive recipe title using the following ingredients: ${userIngredients?.join(', ')}.
-        The recipe should be made using the following kitchen utilities: ${kitchenUtils}.
-        
-        **Rules:**
-        1. The title should not exceed 7 words.
-        2. If possible, provide the title of an existing dish that matches the ingredients.
-        3. You do not need to use all the ingredients in the title.
-        4. Take into account this additional prompt: ${prompt}.
+        Generate an appealing recipe title based on these ingredients: ${userIngredients}
+        and kitchen tools: ${kitchenUtils}.
+
+        Requirements:
+        1. Maximum 7 words
+        2. Prefer existing dish names that match the ingredients
+        3. May use a subset of ingredients
+        4. Consider additional context: ${prompt}
+        5. Prioritize well-known dishes when applicable
+        6. Make the title descriptive of the final dish
+        7. don't use these words - "Ultimate", "Kitchen", "Sink"
+
+        Examples of good titles:
+        - "Creamy Garlic Mushroom Pasta"
+        - "Quick Chicken Stir-Fry"
+        - "Roasted Vegetable Medley"
     `;
 };
