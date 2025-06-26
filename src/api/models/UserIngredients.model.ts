@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose';
-import type { UserIngredient } from '../../types';
+import type { UserIngredient as UserIngredientType } from '../../types';
 
-export type UserIngredientDocument = UserIngredient & Document & {
+export type UserIngredientDocument = UserIngredientType & Document & {
     id: string;
 }
 
@@ -51,6 +51,4 @@ const userIngredientSchema = new mongoose.Schema<UserIngredientDocument>({
     }
 });
 
-const UserIngredient = mongoose.model<UserIngredientDocument>('UserIngredient', userIngredientSchema);
-
-export default UserIngredient;
+export const UserIngredient = mongoose.model<UserIngredientDocument>('UserIngredient', userIngredientSchema);
