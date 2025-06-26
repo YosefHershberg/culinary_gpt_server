@@ -1,4 +1,5 @@
 import UserIngredient from "../models/userIngredients.model"
+
 import type { DeleteResult } from "mongodb"
 import type { UserIngredientResponse, IngredientType, UserIngredient as UserIngredientType } from "../../types"
 
