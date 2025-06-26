@@ -4,11 +4,11 @@ import { z } from "zod";
 import logger from "../../config/logger";
 import userIngredientServices from "../services/userIngredients.service";
 
-import { Response, NextFunction } from "express";
-import type { CustomRequest, MessageResponse, UserIngredientResponse, Ingredient } from "../../types";
-
 import { HttpError } from "../../lib/HttpError";
 import { ingredientSchema } from "../schemas/ingredient.schema";
+
+import { type Response, type NextFunction } from "express";
+import type { CustomRequest, MessageResponse, UserIngredientResponse, Ingredient } from "../../types";
 
 /**
  * @openapi
@@ -85,13 +85,12 @@ export const addIngredient = async (req: CustomRequest, res: Response<UserIngred
     const ingredient = req.body;
 
     try {
-        const newIngredient =
-            await userIngredientServices.addIngredient({
-                userId: req.userId as string,
-                ingredientId: ingredient.id,
-                name: ingredient.name,
-                type: ingredient.type,
-            });
+        const newIngredient = await userIngredientServices.addIngredient({
+            userId: req.userId as string,
+            ingredientId: ingredient.id,
+            name: ingredient.name,
+            type: ingredient.type,
+        });
 
         return res.json(newIngredient);
     } catch (error) {

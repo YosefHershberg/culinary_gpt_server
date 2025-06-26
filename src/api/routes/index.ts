@@ -14,7 +14,7 @@ import userSubscriptionRoutes from './userSubscription.routes';
 
 const router = express.Router();
 
-router.use(
+router.use( 
     '/user/ingredients',
     userIngredientRoutes
 )
