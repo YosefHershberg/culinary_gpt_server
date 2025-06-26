@@ -4,14 +4,14 @@ on:
   push:
     branches: [ "main" ]
 
-env:
-  AWS_REGION: eu-central-1
-  ECR_REPOSITORY: culinary-gpt-server
-  ECS_SERVICE: arn:aws:ecs:eu-central-1:879381237613:service/culinary-gpt-cluster/culinary-gpt-service                 
-  ECS_CLUSTER: arn:aws:ecs:eu-central-1:879381237613:cluster/culinary-gpt-cluster
-  ECS_TASK_DEFINITION: c-gpt-task-def.json
+# env:
+#   AWS_REGION: eu-central-1
+#   ECR_REPOSITORY: culinary-gpt-server
+#   ECS_SERVICE: arn:aws:ecs:eu-central-1:879381237613:service/culinary-gpt-cluster/culinary-gpt-service                 
+#   ECS_CLUSTER: arn:aws:ecs:eu-central-1:879381237613:cluster/culinary-gpt-cluster
+#   ECS_TASK_DEFINITION: c-gpt-task-def.json
                                               
-  CONTAINER_NAME: culinary-gpt-server-container
+#   CONTAINER_NAME: culinary-gpt-server-container
                                               
 jobs:
   test:
@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      # - run: npm ci
+      - run: npm ci
       - run: |
           touch .env
           echo "${{ secrets.PROD_ENV_FILE }}" > .env
