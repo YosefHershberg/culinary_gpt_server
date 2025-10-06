@@ -5,8 +5,6 @@ import env from "../../utils/env";
 import gemini from "../../config/gemini";
 import { createUserContent, type Schema, Type } from "@google/genai";
 
-const MAX_RETRIES = 5;
-
 const aiServices = {
 
     /**

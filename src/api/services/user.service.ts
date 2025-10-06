@@ -34,9 +34,12 @@ const userServices = {
      * @returns {User}
      */
     deleteUser: async (userId: string): Promise<User> => {
+        
         const recipes = await recipeServices.getAllUserRecipes(userId);
 
+        // TODO: Create one transaction for all these operations
         const [user] = await Promise.all([
+
             //delete user
             deleteUserDB(userId),
 
