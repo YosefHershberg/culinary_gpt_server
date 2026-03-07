@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(node:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm outdated:*)",
+      "Bash(npm view:*)",
+      "Bash(npm install:*)",
+      "Bash(npx patch-package:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(npm:*)",
+      "Bash(npx tsc:*)",
+      "Bash(timeout 15 npx ts-node:*)"
+    ]
+  }
+}
