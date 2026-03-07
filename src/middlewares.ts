@@ -1,7 +1,7 @@
 import { ZodError, ZodSchema } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import clerkClient from './config/clerkClient';
+import { verifyToken } from '@clerk/express';
 import { HttpError } from './lib/HttpError';
 import env from './utils/env';
 import logger from './config/logger';
@@ -18,9 +18,11 @@ export const authMiddleware = async (req: CustomRequest, res: Response, next: Ne
   }
 
   try {
-    const client = await clerkClient.verifyToken(token as string);
+    const payload = await verifyToken(token as string, {
+      secretKey: env.CLERK_SECRET_KEY,
+    });
 
-    if (!req.userId) req.userId = client.sub;
+    if (!req.userId) req.userId = payload.sub;
     next()
   } catch (error) {
     logger.error(error);

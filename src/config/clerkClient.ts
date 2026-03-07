@@ -1,4 +1,4 @@
-import { createClerkClient } from "@clerk/clerk-sdk-node";
+import { createClerkClient } from "@clerk/express";
 import env from "../utils/env";
 
 const clerkClient = createClerkClient({

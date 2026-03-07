@@ -4,7 +4,7 @@ import userServices from "../services/user.service";
 import verifyCvixHeaders from "../../lib/verifyCvixHeaders";
 import logger from "../../config/logger";
 
-import { type WebhookEvent } from "@clerk/clerk-sdk-node";
+import { type WebhookEvent } from "@clerk/express";
 import { type Request, type Response } from "express";
 
 const clerkWebhook = async (req: Request, res: Response) => {

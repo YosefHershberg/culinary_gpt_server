@@ -1,7 +1,7 @@
 import { Webhook } from "svix";
 import env from "../utils/env";
 import logger from "../config/logger";
-import { type WebhookEvent } from "@clerk/clerk-sdk-node";
+import { type WebhookEvent } from "@clerk/express";
 import { type Request } from "express"
 
 const verifyCvixHeaders = (req: Request) => {
