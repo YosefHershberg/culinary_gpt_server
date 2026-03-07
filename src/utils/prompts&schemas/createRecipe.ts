@@ -1,10 +1,10 @@
-import { Type, SchemaUnion } from "@google/genai";
+import { Type, type Schema } from "@google/genai";
 import { CreateRecipeProps } from "../../api/services/createRecipe.service";
 import { KitchenUtils } from "../../types";
 
 // Create recipe -------------------------------------------
 
-export const createRecipeSchema: SchemaUnion = {
+export const createRecipeSchema: Schema = {
     type: Type.OBJECT,
     properties: {
         title: {
@@ -135,7 +135,7 @@ export const createRecipeImagePrompt = (
 
 // create recipe title ---------------------------------------------------
 
-export const createTitleSchema: SchemaUnion = {
+export const createTitleSchema: Schema = {
     type: Type.OBJECT,
     properties: {
         'title': {

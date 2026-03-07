@@ -1,8 +1,8 @@
-import { Type, type SchemaUnion } from "@google/genai";
+import { Type, type Schema } from "@google/genai";
 
 // Create cocktail -------------------------------------------
 
-export const createCocktailSchema: SchemaUnion = {
+export const createCocktailSchema: Schema = {
     type: Type.OBJECT,
     properties: {
         title: {
@@ -121,7 +121,7 @@ export const createCocktailImagePrompt = (
 
 // create cocktail title ---------------------------------------------------
 
-export const createTitleSchema: SchemaUnion = {
+export const createTitleSchema: Schema = {
     type: Type.OBJECT,
     properties: {
         title: {
