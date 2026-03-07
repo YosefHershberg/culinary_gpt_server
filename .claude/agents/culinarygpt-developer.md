@@ -1,7 +1,7 @@
 ---
 name: culinarygpt-developer
 description: "Use this agent when you need to add features, fix bugs, or write code for the CulinaryGPT server project. This includes implementing new endpoints, modifying existing business logic, fixing issues in controllers/services/data-access layers, adding validation schemas, updating models, writing tests, or any general development task on this Node.js/Express/TypeScript codebase.\\n\\nExamples:\\n\\n- User: \"Add a endpoint that lets users favorite recipes\"\\n  Assistant: \"I'll use the culinarygpt-developer agent to implement the favorite recipes feature, including the model, data access layer, service, controller, route, and validation schema.\"\\n\\n- User: \"The cocktail generation is failing when users have exactly 4 ingredients\"\\n  Assistant: \"I'll use the culinarygpt-developer agent to investigate and fix the cocktail generation bug with the minimum ingredient count.\"\\n\\n- User: \"We need to add a transaction to the user deletion flow to fix the atomicity issue\"\\n  Assistant: \"I'll use the culinarygpt-developer agent to wrap the cascading user deletion in a MongoDB transaction.\"\\n\\n- User: \"Add pagination to the user ingredients endpoint\"\\n  Assistant: \"I'll use the culinarygpt-developer agent to add pagination support to the GET /api/user/ingredients endpoint.\"\\n\\n- User: \"Write tests for the kitchen utils controller\"\\n  Assistant: \"I'll use the culinarygpt-developer agent to create comprehensive tests for the kitchen utils controller using Jest and supertest.\""
-model: sonnet
+model: opus
 memory: project
 ---
 
