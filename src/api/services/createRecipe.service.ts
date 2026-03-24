@@ -4,10 +4,9 @@ import aiServices from './ai.service';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { getKitchenUtilsDB } from '../data-access/kitchenUtils.da';
 
-import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
+import { compressBase64string } from "../../utils/helperFunctions";
 import { createRecipePrompt, createRecipeSchema, createRecipeTitlePrompt, createTitleSchema, createRecipeImagePrompt } from '../../utils/prompts&schemas/createRecipe';
 
-import type { Response } from 'express';
 import type { Recipe, UserIngredientResponse } from "../../types";
 
 /**
@@ -33,10 +32,10 @@ const createRecipeServices = {
      * @note We create the title first and then the recipe and image simultaneously. This way is faster.
      * @param {string} userId
      * @param {CreateRecipeProps} recipeInput
-     * @param {Response} res
+     * @param {(data: { event: string, payload: any }) => void} streamData
      * @returns {RecipeWithImage}
      */
-    createRecipe: async (userId: string, recipeInput: CreateRecipeProps, res: Response): Promise<void> => {
+    createRecipe: async (userId: string, recipeInput: CreateRecipeProps, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
 
         const [ingredients, kitchenUtils] = await Promise.all([
             getUserIngredientsByTypeDB(userId, 'food'),
@@ -64,7 +63,7 @@ const createRecipeServices = {
             aiServices.createImageGetimgAI(imagePrompt),
 
             // Create the recipe using Gemini API
-            createRecipeServices.createRecipeService(recipePrompt, res)
+            createRecipeServices.createRecipeService(recipePrompt, streamData)
         ]);
 
         // Compress the image
@@ -73,22 +72,22 @@ const createRecipeServices = {
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${compressedBase64Image}`;
 
-        return returnStreamData(res, { event: 'image', payload: base64DataUrl });
+        return streamData({ event: 'image', payload: base64DataUrl });
     },
 
     /**
      * @description This function creates a recipe using Gemini API and returns a valid JSON
      * @param {string} recipePrompt
-     * @param {Response} res
+     * @param {(data: { event: string, payload: any }) => void} streamData
      * @returns {Recipe} recipe
      */
-    createRecipeService: async (recipePrompt: string, res: Response): Promise<void> => {
+    createRecipeService: async (recipePrompt: string, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
         let recipe = await aiServices.geminiCreate<Recipe>(recipePrompt, createRecipeSchema);
 
         // This is relevant for deleting the recipe
         recipe.id = uuid();
 
-        return returnStreamData(res, { event: 'recipe', payload: recipe });
+        return streamData({ event: 'recipe', payload: recipe });
     },
 };
 

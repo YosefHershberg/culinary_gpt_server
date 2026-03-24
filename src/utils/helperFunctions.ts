@@ -1,12 +1,4 @@
 import sharp from "sharp";
-import type { Response } from "express";
-
-export const returnStreamData = (
-  res: Response,
-  data: { event: string, payload: any }
-) => {
-  res.write(`data: ${JSON.stringify(data)}\n\n`);
-}
 
 export const mongooseVirtuals = {
   toJSON: {

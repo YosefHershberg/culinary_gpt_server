@@ -109,7 +109,7 @@ describe('Recipe Controller', () => {
                 .send(mockRecipeInput);
 
             expect(response.status).toBe(HttpStatusCode.Ok);
-            expect(createRecipeServices.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput, expect.any(Object));
+            expect(createRecipeServices.createRecipe).toHaveBeenCalledWith(userId, mockRecipeInput, expect.any(Function));
         });
     });
 

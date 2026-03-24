@@ -8,7 +8,6 @@ import createCocktailServices from '../services/createCocktail.service';
 import { recipeSchema } from '../schemas/recipe.schema';
 import { HttpError } from '../../lib/HttpError';
 import logger from '../../config/logger';
-import { returnStreamData } from '../../utils/helperFunctions';
 
 import { type NextFunction, type Response } from 'express';
 import type { CustomRequest, MessageResponse, FilterOptions, SortOptions, RecipeWithImage } from '../../types';
@@ -331,13 +330,19 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders(); // flush the headers to establish SSE with client
 
+    const streamData = (
+      data: { event: string, payload: any }
+    ) => {
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    }
+
     try {
-        await createRecipeServices.createRecipe(req.userId as string, req.body, res);
+        await createRecipeServices.createRecipe(req.userId as string, req.body, streamData);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(`Error creating recipe: ${error.message}`);
         }
-        returnStreamData(res, {
+        streamData({
             event: 'error',
             payload: error
         });
@@ -409,13 +414,19 @@ export const createCocktail = async (req: CustomRequest, res: Response, next: Ne
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders(); // flush the headers to establish SSE with client
 
+    const streamData = (
+      data: { event: string, payload: any }
+    ) => {
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    }
+
     try {
-        await createCocktailServices.createCocktail(req.userId as string, req.body, res);
+        await createCocktailServices.createCocktail(req.userId as string, req.body, streamData);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);
         }
-        returnStreamData(res, {
+        streamData({
             event: 'error',
             payload: error
         });

@@ -4,7 +4,7 @@ import aiServices from './ai.service';
 import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 
 import { createCocktailPrompt, createCocktailSchema, createCocktailImagePrompt, createCocktailTitlePrompt, createTitleSchema } from '../../utils/prompts&schemas/createCocktail';
-import { compressBase64string, returnStreamData } from "../../utils/helperFunctions";
+import { compressBase64string } from "../../utils/helperFunctions";
 
 import type { Response } from 'express';
 import type { Recipe, UserIngredientResponse } from "../../types";
@@ -28,7 +28,7 @@ const createCocktailServices = {
      * @param {Response} res
      * @returns {RecipeWithImage}
      */
-    createCocktail: async (userId: string, prompt: string, res: Response): Promise<void> => {
+    createCocktail: async (userId: string, prompt: string, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
         const ingredients = await getUserIngredientsByTypeDB(userId, 'drink');
 
         // Check if there are enough ingredients to create a recipe
@@ -52,7 +52,7 @@ const createCocktailServices = {
             aiServices.createImageGetimgAI(imagePrompt),
 
             // Create the cocktail recipe using Gemini API
-            createCocktailServices.createCocktailService(cocktailPrompt, res)
+            createCocktailServices.createCocktailService(cocktailPrompt, streamData)
         ]);
 
         // Compress the image
@@ -61,7 +61,7 @@ const createCocktailServices = {
         // for an image tag
         const base64DataUrl = `data:image/jpeg;base64,${compressedBase64Image}`;
 
-        return returnStreamData(res, { event: 'image', payload: base64DataUrl });
+        return streamData({ event: 'image', payload: base64DataUrl });
     },
 
     /**
@@ -70,13 +70,13 @@ const createCocktailServices = {
      * @param {Response} res
      * @returns {Recipe} recipe
      */
-    createCocktailService: async (cocktailPrompt: string, res: Response): Promise<void> => {
+    createCocktailService: async (cocktailPrompt: string, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
         let recipe = await aiServices.geminiCreate<Recipe>(cocktailPrompt, createCocktailSchema);
 
         // This is relevant for deleting the recipe
         recipe.id = uuid();
 
-        return returnStreamData(res, { event: 'recipe', payload: recipe });
+        return streamData({ event: 'recipe', payload: recipe });
     },
 };
 
