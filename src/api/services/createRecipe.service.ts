@@ -84,7 +84,7 @@ const createRecipeServices = {
     createRecipeService: async (recipePrompt: string, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
         let recipe = await aiServices.geminiCreate<Recipe>(recipePrompt, createRecipeSchema);
 
-        // This is relevant for deleting the recipe
+        /** @description Unique identifier used as the Firebase Storage filename for the recipe image. Used for uploading and deleting the image. */
         recipe.id = uuid();
 
         return streamData({ event: 'recipe', payload: recipe });
