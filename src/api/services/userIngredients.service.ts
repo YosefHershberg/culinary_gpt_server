@@ -1,6 +1,7 @@
 import { addMultipleUserIngredientsDB, addUserIngredientDB, deleteAllUserIngredientsDB, deleteUserIngredientDB, getUserIngredientsDB } from "../data-access/userIngredient.da";
 
-import type { UserIngredient, UserIngredientResponse, MessageResponse, Ingredient } from "../../types";
+import type { IngredientModel } from "../../generated/prisma/models";
+import type { UserIngredientResponse, MessageResponse } from "../../types";
 
 /**
  * @module ingredients.service
@@ -15,7 +16,7 @@ const userIngredientServices = {
         return ingredients;
     },
 
-    addIngredient: async (userIngredient: UserIngredient): Promise<UserIngredientResponse> => {
+    addIngredient: async (userIngredient: { userId: string; ingredientId: string; name: string; type: string[] }): Promise<UserIngredientResponse> => {
         const newIngredient = await addUserIngredientDB(userIngredient);
         return newIngredient;
     },
@@ -25,8 +26,8 @@ const userIngredientServices = {
         return { message: "Ingredient deleted successfully" };
     },
 
-    addMultiple: async (userId: string, userIngredients: Ingredient[]): Promise<UserIngredientResponse[]> => {
-        const userIngredientDocs: UserIngredient[] = userIngredients.map((ingredient) => ({
+    addMultiple: async (userId: string, userIngredients: IngredientModel[]): Promise<UserIngredientResponse[]> => {
+        const userIngredientDocs = userIngredients.map((ingredient) => ({
             userId,
             ingredientId: ingredient.id,
             name: ingredient.name,

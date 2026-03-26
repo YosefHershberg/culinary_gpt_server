@@ -1,5 +1,5 @@
 import { getKitchenUtilsDB, toggleKitchenUtilDB } from "../data-access/kitchenUtils.da";
-import type { KitchenUtils } from "../../types";
+import type { KitchenUtilsModel } from "../../generated/prisma/models";
 
 /**
  * @module kitchenUtils.service
@@ -9,13 +9,13 @@ import type { KitchenUtils } from "../../types";
  */
 
 const kitchenUtilsServices = {
-    get: async (userId: string): Promise<KitchenUtils> => {
+    get: async (userId: string): Promise<KitchenUtilsModel> => {
         const kitchenUtils = await getKitchenUtilsDB(userId);
 
         return kitchenUtils;
     },
 
-    toggle: async (userId: string, name: string): Promise<KitchenUtils> => {
+    toggle: async (userId: string, name: string): Promise<KitchenUtilsModel> => {
         const kitchenUtils = await toggleKitchenUtilDB(userId, name);
 
         return kitchenUtils;

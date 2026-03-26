@@ -4,7 +4,7 @@
 
 CulinaryGPT is an AI-powered recipe generation platform. Users manage their kitchen inventory (ingredients and equipment), and the system generates personalized recipes and cocktails using Google Gemini AI, constrained to the user's available ingredients and tools. Generated dishes include AI-created images and are saved to the user's recipe collection.
 
-**Tech Stack:** Node.js, Express, TypeScript, MongoDB (Mongoose), Google Gemini AI, Firebase Storage, Clerk Auth, Stripe Payments, GetImg.ai
+**Tech Stack:** Node.js, Express, TypeScript, MongoDB (Mongoose), Google Gemini AI, Supabase Storage, Clerk Auth, Stripe Payments, GetImg.ai
 
 ---
 
@@ -38,7 +38,7 @@ src/
 │   ├── routes/                  # Express route definitions (6 route files)
 │   ├── schemas/                 # Zod validation schemas
 │   └── webhooks/                # Clerk & Stripe webhook handlers
-├── config/                      # DB, logger, rate limiter, Firebase, Stripe, Gemini
+├── config/                      # DB, logger, rate limiter, Supabase, Stripe, Gemini
 ├── utils/
 │   ├── env.ts                   # Environment variable validation (Zod)
 │   ├── helperFunctions.ts       # Utility functions
@@ -74,7 +74,7 @@ src/
 |---|---|---|
 | Google Gemini (`@google/genai`) | Recipe/cocktail/title generation, image-based ingredient detection | SDK, structured JSON output with schema validation |
 | GetImg.ai (Flux Schnell) | AI food & cocktail image generation | REST API via Axios |
-| Firebase Storage | Persistent image storage | Client SDK, resumable uploads |
+| Supabase Storage | Persistent image storage | Supabase JS SDK |
 | Clerk | User authentication | JWT verification, webhooks for user lifecycle |
 | Stripe | Subscription payments | Webhooks for checkout & cancellation events |
 | MongoDB | Primary database | Mongoose ODM |
@@ -119,7 +119,7 @@ src/
 | recipe.level | Enum | 'easy', 'medium', 'hard' |
 | recipe.type | Enum | 'recipe', 'cocktail' |
 | recipe.id | String | UUID for deletion tracking |
-| image_url | String | Firebase download URL |
+| image_url | String | Supabase Storage public URL |
 | userId | String | Reference to User |
 | createdAt | Date | Auto, default now |
 
@@ -248,7 +248,7 @@ Generates an AI recipe using the user's ingredients and kitchen equipment. Retur
 
 **Response:** `RecipeWithImage`
 
-**Business Logic:** Decodes base64 image, uploads to Firebase Storage, stores Firebase URL in MongoDB.
+**Business Logic:** Decodes base64 image, uploads to Supabase Storage, stores public URL in MongoDB.
 
 #### GET `/api/user/recipes/:id` - Get Recipe by ID
 
@@ -258,7 +258,7 @@ Generates an AI recipe using the user's ingredients and kitchen equipment. Retur
 
 **Response:** `{ message: string }`
 
-**Business Logic:** Deletes recipe from MongoDB and image from Firebase in parallel.
+**Business Logic:** Deletes recipe from MongoDB and image from Supabase Storage in parallel.
 
 ---
 
@@ -460,7 +460,7 @@ Interactive OpenAPI documentation.
 - Paginated browsing with filtering (recipes/cocktails/all) and sorting (date/alphabetical)
 - Text search by recipe title
 - Individual recipe view and deletion
-- Images stored persistently in Firebase Storage
+- Images stored persistently in Supabase Storage
 
 ### 6.6 Subscription Management
 
@@ -473,7 +473,7 @@ Interactive OpenAPI documentation.
 
 - Clerk-managed authentication (JWT)
 - Webhook-driven user creation: creates MongoDB user + initializes kitchen utils
-- Webhook-driven user deletion: cascading cleanup of all user data (recipes, ingredients, kitchen utils, Firebase images)
+- Webhook-driven user deletion: cascading cleanup of all user data (recipes, ingredients, kitchen utils, storage images)
 - Profile updates synced from Clerk via webhooks
 
 ---
@@ -543,7 +543,7 @@ Client opens POST request
 - **Framework:** Jest with ts-jest preset
 - **HTTP testing:** Supertest for endpoint assertions
 - **Database:** mongodb-memory-server for isolated in-memory MongoDB
-- **Mocking:** External services (Firebase, data access, AI) mocked with `jest.mock()`
+- **Mocking:** External services (storage, data access, AI) mocked with `jest.mock()`
 - **Test locations:** `__tests__/` directories alongside source files
 - **Coverage:** Controller tests (3) and service tests (4)
 
@@ -585,13 +585,6 @@ All validated at startup via Zod (`src/utils/env.ts`). Server fails fast on miss
 | `CLERK_PUBLISHABLE_KEY` | Clerk frontend key |
 | `WEBHOOK_SECRET` | Clerk webhook signing secret |
 | `CORS_ORIGIN` | Allowed CORS origin URL |
-| `FIREBASE_API_KEY` | Firebase API key |
-| `FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
-| `FIREBASE_PROJECT_ID` | Firebase project ID |
-| `FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
-| `FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender |
-| `FIREBASE_APP_ID` | Firebase app ID |
-| `FIREBASE_MEASUREMENT_ID` | Firebase measurement ID |
 | `STRIPE_SECRET_KEY` | Stripe API secret |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
 
@@ -613,8 +606,8 @@ All validated at startup via Zod (`src/utils/env.ts`). Server fails fast on miss
 
 ## 13. Known TODOs & Technical Debt
 
-1. **User deletion atomicity:** Cascading delete operations (user, recipes, ingredients, kitchen utils, Firebase images) lack a MongoDB transaction - partial failures possible
-2. **Firebase batch deletes:** Recipe image deletions during user removal are individual operations; should be batched
+1. **User deletion atomicity:** Cascading delete operations (user, recipes, ingredients, kitchen utils, storage images) lack a transaction - partial failures possible
+2. **Storage batch deletes:** Recipe image deletions during user removal are individual operations; should be batched
 3. **Subscription error handling:** `getUserBySubscriptionIdDB` has an unresolved error handling issue
 4. **Type safety:** `toggleKitchenUtilDB` uses `@ts-expect-error` for dynamic property access on kitchen util names
 5. **Stripe subscription deletion:** `customer.subscription.deleted` event handler noted as not fully tested

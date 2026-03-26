@@ -8,7 +8,8 @@ import { HttpError } from "../../lib/HttpError";
 import { ingredientSchema } from "../schemas/ingredient.schema";
 
 import { type Response, type NextFunction } from "express";
-import type { CustomRequest, MessageResponse, UserIngredientResponse, Ingredient } from "../../types";
+import type { IngredientModel } from "../../generated/prisma/models";
+import type { CustomRequest, MessageResponse, UserIngredientResponse } from "../../types";
 
 /**
  * @openapi
@@ -35,7 +36,7 @@ import type { CustomRequest, MessageResponse, UserIngredientResponse, Ingredient
 
 export const getAllIngredients = async (req: CustomRequest, res: Response<UserIngredientResponse[]>, next: NextFunction) => {
     try {
-        const ingredients = await userIngredientServices.getAll(req.userId as string);
+        const ingredients = await userIngredientServices.getAll(req.user!.id);
 
         return res.json(ingredients);
     } catch (error) {
@@ -86,7 +87,7 @@ export const addIngredient = async (req: CustomRequest, res: Response<UserIngred
 
     try {
         const newIngredient = await userIngredientServices.addIngredient({
-            userId: req.userId as string,
+            userId: req.user!.id,
             ingredientId: ingredient.id,
             name: ingredient.name,
             type: ingredient.type,
@@ -141,11 +142,11 @@ export const addMultipleIngredientsSchema = z.object({
 });
 
 export const addMultipleIngredients = async (req: CustomRequest, res: Response<UserIngredientResponse[]>, next: NextFunction) => {
-    const ingredients: Ingredient[] = req.body;
+    const ingredients: IngredientModel[] = req.body;
 
     try {
         const newIngredients = await userIngredientServices.addMultiple(
-            req.userId as string,
+            req.user!.id,
             ingredients
         );
 
@@ -195,7 +196,7 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
     const id = req.params.id;
 
     try {
-        const message = await userIngredientServices.deleteIngredient(req.userId as string, id);
+        const message = await userIngredientServices.deleteIngredient(req.user!.id, id);
 
         return res.json(message);
     } catch (error) {
@@ -232,7 +233,7 @@ export const deleteIngredient = async (req: CustomRequest, res: Response<Message
 
 export const deleteAllIngredients = async (req: CustomRequest, res: Response<MessageResponse>, next: NextFunction) => {
     try {
-        const message = await userIngredientServices.deleteAll(req.userId as string);
+        const message = await userIngredientServices.deleteAll(req.user!.id);
 
         return res.json(message);
     } catch (error) {

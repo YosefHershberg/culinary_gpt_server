@@ -36,10 +36,8 @@ export type IsSubscriptionActive = {
 }
 
 export const getUserSubscription = async (req: CustomRequest, res: Response<IsSubscriptionActive>, next: NextFunction) => {
-    const { userId } = req
-
     try {
-        const isSubscribed = await userServices.isSubscribed(userId as string);
+        const isSubscribed = await userServices.isSubscribed(req.user!.id);
 
         return res.status(200).json({ subscriptionActive: isSubscribed });
     } catch (error) {

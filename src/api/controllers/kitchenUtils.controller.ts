@@ -6,7 +6,8 @@ import logger from '../../config/logger';
 import { HttpError } from '../../lib/HttpError';
 
 import type { NextFunction, Response } from 'express';
-import type { KitchenUtils, CustomRequest } from '../../types';
+import type { KitchenUtilsModel } from '../../generated/prisma/models';
+import type { CustomRequest } from '../../types';
 
 /**
  * @openapi
@@ -28,9 +29,9 @@ import type { KitchenUtils, CustomRequest } from '../../types';
  *         description: Bad request
  */
 
-export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
+export const getKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtilsModel>, next: NextFunction) => {
     try {
-        const kitchenUtils = await kitchenUtilsServices.get(req.userId as string);
+        const kitchenUtils = await kitchenUtilsServices.get(req.user!.id);
 
         return res.json(kitchenUtils);
     } catch (error) {
@@ -88,12 +89,12 @@ export const toggleKitchenUtilsSchema = z.object({
     })
 });
 
-export const toggleKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtils>, next: NextFunction) => {
+export const toggleKitchenUtils = async (req: CustomRequest, res: Response<KitchenUtilsModel>, next: NextFunction) => {
     const { name } = req.body;
 
     try {
         const message =
-            await kitchenUtilsServices.toggle(req.userId as string, name);
+            await kitchenUtilsServices.toggle(req.user!.id, name);
 
         return res.json(message);
     } catch (error) {

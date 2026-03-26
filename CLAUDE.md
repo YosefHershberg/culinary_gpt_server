@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-CulinaryGPT Server is a Node.js/Express REST API that generates recipes using Google Gemini AI. It uses MongoDB with Mongoose, Firebase for image storage, Clerk for authentication, and Stripe for payments.
+CulinaryGPT Server is a Node.js/Express REST API that generates recipes using Google Gemini AI. It uses MongoDB with Mongoose, Supabase for image storage, Clerk for authentication, and Stripe for payments.
 
 ## Commands
 
@@ -62,7 +62,7 @@ Clerk JWT tokens via Bearer header. The `authMiddleware` verifies tokens and att
 
 - **Google Gemini** (`@google/genai`) - Recipe/ingredient generation, image detection
 - **GetImg.ai** - AI image generation via REST
-- **Firebase** - Image storage
+- **Supabase Storage** - Image storage
 - **Clerk** - User authentication
 - **Stripe** - Payment processing
 - **Google Cloud Vision** - Image analysis
@@ -86,4 +86,4 @@ Jest with ts-jest preset. Tests use `supertest` for HTTP assertions and `mongodb
 
 ## Environment Variables
 
-Validated at startup via Zod in `src/utils/env.ts`. Required: `MONGODB_URI`, `GEMINI_API_KEY`, `CLERK_*`, `STRIPE_*`, Firebase credentials.
+Validated at startup via Zod in `src/utils/env.ts`. Required: `MONGODB_URI`, `GEMINI_API_KEY`, `CLERK_*`, `STRIPE_*`, Supabase credentials.

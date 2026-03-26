@@ -1,93 +1,108 @@
-import { DeleteResult } from "mongodb";
-import Recipe from "../models/recipe.model";
+import prisma from "../../config/prisma";
+import type { RecipeModel } from "../../generated/prisma/models";
+import type { Prisma } from "../../generated/prisma/client";
 import type { GetUserPageRecipesProps, RecipeWithImage } from "../../types";
 
 export const getRecipesPageDB = async ({
     userId, page, limit, filter, query, sort,
 }: GetUserPageRecipesProps): Promise<RecipeWithImage[]> => {
-    let dbQuery: Record<string, any> = { userId };
+    const where: Prisma.RecipeWhereInput = { userId };
 
     if (filter !== 'all') {
-        if (filter === 'recipes') {
-            dbQuery['recipe.type'] = 'recipe';
-        } else {
-            dbQuery['recipe.type'] = 'cocktail';
-        }
+        where.type = filter === 'recipes' ? 'recipe' : 'cocktail';
     }
 
     if (query) {
-        dbQuery['recipe.title'] = { $regex: query, $options: 'i' };
+        where.title = { contains: query, mode: 'insensitive' };
     }
 
-    let sortQuery: Record<string, any> = {};
+    let orderBy: Prisma.RecipeOrderByWithRelationInput;
     switch (sort) {
         case 'newest':
-            sortQuery = { createdAt: -1 };
+            orderBy = { createdAt: 'desc' };
             break;
         case 'oldest':
-            sortQuery = { createdAt: 1 };
+            orderBy = { createdAt: 'asc' };
             break;
         case 'a-z':
-            sortQuery = { 'recipe.title': 1 };
+            orderBy = { title: 'asc' };
             break;
         case 'z-a':
-            sortQuery = { 'recipe.title': -1 };
+            orderBy = { title: 'desc' };
             break;
         default:
-            sortQuery = { createdAt: -1 };
+            orderBy = { createdAt: 'desc' };
             break;
     }
 
-    const recipes = await Recipe.find(dbQuery)
-        .sort(sortQuery)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
+    const recipes = await prisma.recipe.findMany({
+        where,
+        orderBy,
+        skip: (page - 1) * limit,
+        take: limit,
+    });
 
-    if (!recipes) {
-        throw new Error('Recipes not found');
-    }
-
-    return recipes;
+    return recipes.map(toRecipeResponse);
 };
 
 export const getAllRecipesDB = async (userId: string): Promise<RecipeWithImage[]> => {
-    const recipes = await Recipe.find({ userId }).exec();
-
-    if (!recipes) {
-        throw new Error('Recipes not found');
-    }
-
-    return recipes;
+    const recipes = await prisma.recipe.findMany({ where: { userId } });
+    return recipes.map(toRecipeResponse);
 }
 
 export const addRecipeDB = async (recipe: RecipeWithImage): Promise<RecipeWithImage> => {
-    const newRecipe = new Recipe(recipe);
-    const savedRecipe = await newRecipe.save();
-    return savedRecipe;
+    const created = await prisma.recipe.create({
+        data: {
+            title: recipe.recipe.title,
+            description: recipe.recipe.description,
+            ingredients: recipe.recipe.ingredients as Prisma.InputJsonValue,
+            steps: recipe.recipe.steps as Prisma.InputJsonValue,
+            time: recipe.recipe.time,
+            level: recipe.recipe.level,
+            type: recipe.recipe.type,
+            recipeId: recipe.recipe.id,
+            imageUrl: recipe.image_url,
+            userId: recipe.userId,
+        },
+    });
+
+    return toRecipeResponse(created);
 }
 
 export const getRecipeDB = async (recipeId: string): Promise<RecipeWithImage> => {
-    const recipe = await Recipe.findById(recipeId).exec();
+    const recipe = await prisma.recipe.findUnique({ where: { id: recipeId } });
 
     if (!recipe) {
         throw new Error('Recipe not found');
     }
 
-    return recipe;
+    return toRecipeResponse(recipe);
 }
 
 export const deleteRecipeDB = async (recipeId: string): Promise<RecipeWithImage> => {
-    const deletedRecipe = await Recipe.findByIdAndDelete(recipeId).exec();
-
-    if (!deletedRecipe) {
-        throw new Error('Recipe not found');
-    }
-
-    return deletedRecipe;
+    const deleted = await prisma.recipe.delete({ where: { id: recipeId } });
+    return toRecipeResponse(deleted);
 }
 
-export const deleteUserRecipesDB = async (userId: string): Promise<DeleteResult> => {
-    const deletedRecipes = await Recipe.deleteMany({ userId }).exec();
-    return deletedRecipes;
+export const deleteUserRecipesDB = async (userId: string) => {
+    return prisma.recipe.deleteMany({ where: { userId } });
+}
+
+function toRecipeResponse(row: RecipeModel): RecipeWithImage {
+    return {
+        id: row.id,
+        image_url: row.imageUrl,
+        recipe: {
+            title: row.title,
+            description: row.description,
+            ingredients: row.ingredients as { ingredient: string }[],
+            steps: row.steps as { step: string; time: string }[],
+            time: row.time,
+            level: row.level,
+            type: row.type as 'recipe' | 'cocktail',
+            id: row.recipeId,
+        },
+        userId: row.userId,
+        createdAt: row.createdAt,
+    };
 }

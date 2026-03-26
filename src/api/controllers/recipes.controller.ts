@@ -12,6 +12,7 @@ import logger from '../../config/logger';
 import { type NextFunction, type Response } from 'express';
 import type { CustomRequest, MessageResponse, FilterOptions, SortOptions, RecipeWithImage } from '../../types';
 
+
 /**
  * @openapi
  * /api/user/recipes:
@@ -83,7 +84,7 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeWithIma
 
     try {
         const recipes = await recipeServices.getUserPageRecipes({
-            userId: req.userId as string,
+            userId: req.user!.id,
             page: Number(req.query.page),
             limit: Number(req.query.limit),
             query: req.query.query as string,
@@ -147,7 +148,7 @@ export const addRecipe = async (req: CustomRequest, res: Response<RecipeWithImag
     const recipe = req.body;
 
     try {
-        const newRecipe = await recipeServices.addRecipe({ ...recipe, userId: req.userId as string });
+        const newRecipe = await recipeServices.addRecipe({ ...recipe, userId: req.user!.id });
 
         return res.json(newRecipe);
     } catch (error) {
@@ -337,7 +338,7 @@ export const createRecipe = async (req: CustomRequest, res: Response, next: Next
     }
 
     try {
-        await createRecipeServices.createRecipe(req.userId as string, req.body, streamData);
+        await createRecipeServices.createRecipe(req.user!.id, req.body, streamData);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(`Error creating recipe: ${error.message}`);
@@ -421,7 +422,7 @@ export const createCocktail = async (req: CustomRequest, res: Response, next: Ne
     }
 
     try {
-        await createCocktailServices.createCocktail(req.userId as string, req.body, streamData);
+        await createCocktailServices.createCocktail(req.user!.id, req.body, streamData);
     } catch (error) {
         if (error instanceof Error) {
             logger.error(error.message);

@@ -1,5 +1,5 @@
 import recipeServices from '../../services/recipes.service';
-import firebaseStorageServices from '../firebase.service';
+import storageServices from '../storage.service';
 import { RecipeWithImage } from '../../../types';
 import { mockRecipe } from '../../../lib/mock/mockData';
 import { base64ToArrayBuffer } from '../../../utils/helperFunctions';
@@ -8,7 +8,7 @@ import { addRecipeDB, deleteRecipeDB, getRecipeDB, getAllRecipesDB, getRecipesPa
 import { userId } from '../../../lib/mock/mockApp';
 
 jest.mock('../../data-access/recipe.da');
-jest.mock('../firebase.service');
+jest.mock('../storage.service');
 jest.mock('../../../utils/helperFunctions');
 
 const mockRecipes: RecipeWithImage[] = [
@@ -50,14 +50,14 @@ describe('recipeServices', () => {
             const mockImageUrl = 'mockImageUrl';
 
             (base64ToArrayBuffer as jest.Mock).mockReturnValue(mockImageBuffer);
-            (firebaseStorageServices.uploadImage as jest.Mock).mockResolvedValue(mockImageUrl);
+            (storageServices.uploadImage as jest.Mock).mockResolvedValue(mockImageUrl);
             (addRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
 
             const result = await recipeServices.addRecipe(mockRecipe);
 
             expect(result).toEqual(mockRecipe);
             expect(base64ToArrayBuffer).toHaveBeenCalledWith(mockRecipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, ''));
-            expect(firebaseStorageServices.uploadImage).toHaveBeenCalledWith(mockImageBuffer, 'recipe123');
+            expect(storageServices.uploadImage).toHaveBeenCalledWith(mockImageBuffer, 'recipe123');
             expect(addRecipeDB).toHaveBeenCalledWith({ ...mockRecipe, image_url: mockImageUrl });
         });
     });
@@ -66,14 +66,14 @@ describe('recipeServices', () => {
         it('should delete the recipe and its associated image from storage', async () => {
 
             (getRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
-            (firebaseStorageServices.deleteImage as jest.Mock).mockResolvedValue(undefined);
+            (storageServices.deleteImage as jest.Mock).mockResolvedValue(undefined);
             (deleteRecipeDB as jest.Mock).mockResolvedValue(undefined);
 
             const result: MessageResponse = await recipeServices.deleteRecipe('recipeId');
 
             expect(result).toEqual({ message: 'Recipe deleted successfully' });
             expect(getRecipeDB).toHaveBeenCalledWith('recipeId');
-            expect(firebaseStorageServices.deleteImage).toHaveBeenCalledWith(mockRecipe.recipe.id);
+            expect(storageServices.deleteImage).toHaveBeenCalledWith(mockRecipe.recipe.id);
             expect(deleteRecipeDB).toHaveBeenCalledWith('recipeId');
         });
     });

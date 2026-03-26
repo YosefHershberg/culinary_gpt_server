@@ -1,6 +1,6 @@
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../data-access/ingredient.da";
-import type { Ingredient, IngredientType } from "../../types";
-import type { FilterQuery } from "mongoose";
+import type { IngredientModel } from "../../generated/prisma/models";
+import type { IngredientType } from "../../types";
 
 /**
  * @module ingredients.service
@@ -10,15 +10,15 @@ import type { FilterQuery } from "mongoose";
  */
 
 const ingredientServices = {
-    getByCategory: async (category: string): Promise<Ingredient[]> => {
+    getByCategory: async (category: string): Promise<IngredientModel[]> => {
         const ingredients = await getIngredientsByCategoryDB(category)
         return ingredients
     },
 
     search: async (
-        query: FilterQuery<Ingredient>,
+        query: string,
         type: IngredientType
-    ): Promise<Ingredient[]> => {
+    ): Promise<IngredientModel[]> => {
         const ingredients = await searchIngredientsByQueryAndTypeDB(query, type)
         return ingredients
     },

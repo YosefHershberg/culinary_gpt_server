@@ -1,32 +1,24 @@
 /**
  * @module mockDatabase
- * @description Mock database to simulate the database for running tests
+ * @description Mock database utilities for running tests with Prisma
  */
 
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-
-let mongoServer: MongoMemoryServer;
+import prisma from '../../config/prisma';
 
 export const connectToDatabase = async (): Promise<void> => {
-    mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
-
-    await mongoose.connect(mongoUri).then(() => {
-        console.log('Connected to in-memory database');
-    });
+    await prisma.$connect();
+    console.log('Connected to test database');
 };
 
 export const closeDatabase = async (): Promise<void> => {
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
-    await mongoServer.stop().then(() => {
-        console.log('Disconnected & closed in-memory database');
-    });
+    await prisma.$disconnect();
+    console.log('Disconnected from test database');
 };
 
 export const clearDatabase = async (): Promise<void> => {
-    const collections = mongoose.connection.collections;
-    const promises = Object.values(collections).map(collection => collection.deleteMany({}));
-    await Promise.all(promises);
+    await prisma.userIngredient.deleteMany();
+    await prisma.kitchenUtils.deleteMany();
+    await prisma.recipe.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.ingredient.deleteMany();
 };

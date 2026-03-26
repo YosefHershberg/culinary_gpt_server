@@ -1,11 +1,9 @@
 import { createUserDB, CreateUserDBProps, deleteUserDB, getUserBySubscriptionIdDB, getUserDB, updateUserDB, UpdateUserDBProps } from "../data-access/user.da";
-import { createKitchenUtilsDB, deleteKitchenUtilsDB } from "../data-access/kitchenUtils.da";
-import { deleteUserRecipesDB } from "../data-access/recipe.da";
-import { deleteAllUserIngredientsDB } from "../data-access/userIngredient.da";
+import { createKitchenUtilsDB } from "../data-access/kitchenUtils.da";
 
-import firebaseStorageServices from "./firebase.service";
+import storageServices from "./storage.service";
 import recipeServices from "./recipes.service";
-import type { User } from "../../types";
+import type { UserModel } from "../../generated/prisma/models";
 
 /**
  * @module user.service
@@ -20,44 +18,29 @@ const userServices = {
      * @param userData 
      * @returns {User}
      */
-    createUser: async (userData: CreateUserDBProps): Promise<User> => {
-        const [user, _kitchenUtils] = await Promise.all([
+    createUser: async (userData: CreateUserDBProps): Promise<UserModel> => {
+        const [user] = await Promise.all([
             createUserDB(userData),
-            createKitchenUtilsDB(userData.clerkId)
-        ])
+            createKitchenUtilsDB(userData.userId),
+        ]);
         return user;
     },
 
     /**
-     * @description This function deletes a user & user-recipes & recipe images from firebase storage & user ingredients
+     * @description This function deletes a user & user-recipes & recipe images from storage & user ingredients
      * @param {string} userId 
      * @returns {User}
      */
-    deleteUser: async (userId: string): Promise<User> => {
-        
+    deleteUser: async (userId: string): Promise<UserModel> => {
         const recipes = await recipeServices.getAllUserRecipes(userId);
 
-        // TODO: Create one transaction for all these operations
+        // DB cascade handles recipes, kitchen utils, and user ingredients
         const [user] = await Promise.all([
-
-            //delete user
             deleteUserDB(userId),
-
-            //delete user recipes
-            deleteUserRecipesDB(userId),
-
-            //delete user kitchen utilities
-            deleteKitchenUtilsDB(userId),
-
-            //delete user ingredients
-            deleteAllUserIngredientsDB(userId),
-
-            //delete recipe images from firebase storage
-            // TODO: batch these Services
-            recipes.map(recipe =>
-                firebaseStorageServices.deleteImage(recipe.recipe.id)
+            ...recipes.map(recipe =>
+                storageServices.deleteImage(recipe.recipe.id)
             ),
-        ])
+        ]);
 
         return user;
     },
@@ -68,7 +51,7 @@ const userServices = {
      * @param {UpdateUserDBProps} update 
      * @returns {User}
      */
-    updateUser: async (userId: string, update: UpdateUserDBProps): Promise<User> => {
+    updateUser: async (userId: string, update: UpdateUserDBProps): Promise<UserModel> => {
         const user = await updateUserDB(userId, update);
         return user;
     },
@@ -80,7 +63,7 @@ const userServices = {
      * @param {string} stripeSubscriptionId
      * @returns {User}
      */
-    subscribe: async (userId: string, stripeCustomerId: string, stripeSubscriptionId: string): Promise<User> => {
+    subscribe: async (userId: string, stripeCustomerId: string, stripeSubscriptionId: string): Promise<UserModel> => {
         const user = await updateUserDB(userId, {
             isSubscribed: true,
             stripeCustomerId,
@@ -89,10 +72,10 @@ const userServices = {
         return user;
     },
 
-    unsubscribe: async (subscriptionId: string): Promise<User> => {
+    unsubscribe: async (subscriptionId: string): Promise<UserModel> => {
         const user = await getUserBySubscriptionIdDB(subscriptionId);
 
-        const newUser = await updateUserDB(user.clerkId, {
+        const newUser = await updateUserDB(user.id, {
             isSubscribed: false,
             stripeCustomerId: null,
             stripeSubscriptionId: null,

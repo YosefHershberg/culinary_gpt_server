@@ -7,8 +7,8 @@ import logger from '../../config/logger';
 import imageDetectionServices from '../services/imageDetection.service';
 
 import type { Response, NextFunction } from 'express';
-import type { FilterQuery } from 'mongoose';
-import type { CustomRequest, IngredientType, Ingredient } from '../../types';
+import type { IngredientModel } from '../../generated/prisma/models';
+import type { CustomRequest, IngredientType } from '../../types';
 
 /**
  * @openapi
@@ -47,7 +47,7 @@ export const ingredientSuggestionsSchema = z.object({
     }),
 });
 
-export const ingredientSuggestions = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
+export const ingredientSuggestions = async (req: CustomRequest, res: Response<IngredientModel[]>, next: NextFunction) => {
     const { category } = req.params;
 
     try {
@@ -111,12 +111,12 @@ export const searchIngredientsSchema = z.object({
     })
 });
 
-export const searchIngredients = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction) => {
+export const searchIngredients = async (req: CustomRequest, res: Response<IngredientModel[]>, next: NextFunction) => {
     const { query, type } = req.query;
 
     try {
         const ingredients = await ingredientServices.search(
-            query as FilterQuery<Ingredient>,
+            query as string,
             type as IngredientType
         );
 
@@ -172,7 +172,7 @@ export const imageIngredientDetectorSchema = z.object({
     })
 });
 
-export const imageIngredientDetector = async (req: CustomRequest, res: Response<Ingredient[]>, next: NextFunction): Promise<void> => {
+export const imageIngredientDetector = async (req: CustomRequest, res: Response<IngredientModel[]>, next: NextFunction): Promise<void> => {
     try {
         const { imageUrl } = req.body;
 

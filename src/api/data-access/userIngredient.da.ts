@@ -1,49 +1,71 @@
-import UserIngredient from "../models/userIngredient.model"
-import type { DeleteResult } from "mongodb"
-import type { UserIngredientResponse, IngredientType, UserIngredient as UserIngredientType } from "../../types"
+import prisma from "../../config/prisma";
+import type { UserIngredientModel } from "../../generated/prisma/models";
+import type { UserIngredientResponse, IngredientType } from "../../types";
 
-export const addUserIngredientDB = async (userIngredient: UserIngredientType): Promise<UserIngredientResponse> => {
-    const ingredient = new UserIngredient(userIngredient)
-    const newIngredient = await ingredient.save()
-    return newIngredient
+export const addUserIngredientDB = async (userIngredient: Pick<UserIngredientModel, 'userId' | 'ingredientId' | 'name' | 'type'>): Promise<UserIngredientResponse> => {
+    const created = await prisma.userIngredient.create({
+        data: {
+            userId: userIngredient.userId,
+            ingredientId: userIngredient.ingredientId,
+            name: userIngredient.name,
+            type: userIngredient.type,
+        },
+    });
+
+    return toUserIngredientResponse(created);
 }
 
-export const addMultipleUserIngredientsDB = async (userIngredientDocs: UserIngredientType[]): Promise<UserIngredientResponse[]> => {
-    const createdUserIngredients = await UserIngredient.insertMany(userIngredientDocs);
+export const addMultipleUserIngredientsDB = async (userIngredientDocs: Pick<UserIngredientModel, 'userId' | 'ingredientId' | 'name' | 'type'>[]): Promise<UserIngredientResponse[]> => {
+    await prisma.userIngredient.createMany({
+        data: userIngredientDocs.map(doc => ({
+            userId: doc.userId,
+            ingredientId: doc.ingredientId,
+            name: doc.name,
+            type: doc.type,
+        })),
+    });
 
-    return createdUserIngredients;
+    // createMany doesn't return records, so fetch them
+    const created = await prisma.userIngredient.findMany({
+        where: {
+            userId: userIngredientDocs[0].userId,
+            ingredientId: { in: userIngredientDocs.map(d => d.ingredientId) },
+        },
+    });
+
+    return created.map(toUserIngredientResponse);
 }
 
 export const deleteUserIngredientDB = async (userId: string, ingredientId: string): Promise<UserIngredientResponse> => {
-    const ingredient = await UserIngredient.findOneAndDelete({ userId, ingredientId }).exec()
+    const deleted = await prisma.userIngredient.delete({
+        where: {
+            userId_ingredientId: { userId, ingredientId },
+        },
+    });
 
-    if (!ingredient) {
-        throw new Error('Ingredient not found')
-    }
-
-    return ingredient
+    return toUserIngredientResponse(deleted);
 }
 
 export const getUserIngredientsDB = async (userId: string): Promise<UserIngredientResponse[]> => {
-    const ingredients = await UserIngredient.find({ userId }).exec()
-
-    if (!ingredients) {
-        throw new Error('Ingredients not found')
-    }
-
-    return ingredients
+    const ingredients = await prisma.userIngredient.findMany({ where: { userId } });
+    return ingredients.map(toUserIngredientResponse);
 }
 
 export const getUserIngredientsByTypeDB = async (userId: string, type: IngredientType): Promise<UserIngredientResponse[]> => {
-    const ingredients = await UserIngredient.find({ userId, type }).exec()
-
-    if (!ingredients) {
-        throw new Error('Ingredients not found')
-    }
-
-    return ingredients
+    const ingredients = await prisma.userIngredient.findMany({
+        where: { userId, type: { has: type } },
+    });
+    return ingredients.map(toUserIngredientResponse);
 }
 
-export const deleteAllUserIngredientsDB = async (userId: string): Promise<DeleteResult> => {
-    return await UserIngredient.deleteMany({ userId }).exec()
+export const deleteAllUserIngredientsDB = async (userId: string) => {
+    return prisma.userIngredient.deleteMany({ where: { userId } });
+}
+
+function toUserIngredientResponse(row: UserIngredientModel): UserIngredientResponse {
+    return {
+        id: row.ingredientId,
+        name: row.name,
+        type: row.type,
+    };
 }

@@ -1,27 +1,18 @@
-import User from "../models/user.model";
-import type { User as UserType } from "../../types";
+import prisma from "../../config/prisma";
+import type { UserModel } from "../../generated/prisma/models";
 
-export const getUserDB = async (userId: string): Promise<UserType> => {
-    const user = await User.findOne({ clerkId: userId }).exec();
+export type CreateUserDBProps = {
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isSubscribed: boolean;
+};
 
-    if (!user) {
-        throw new Error('User not found');
-    }
+export type UpdateUserDBProps = Partial<Omit<UserModel, 'id' | 'createdAt' | 'updatedAt'>>;
 
-    return user;
-}
-
-export type CreateUserDBProps = Omit<UserType, 'createdAt' | 'updatedAt'>;
-
-export const createUserDB = async (userData: CreateUserDBProps): Promise<UserType> => {
-    const user = new User(userData);
-    const newUser = await user.save()
-
-    return newUser;
-}
-
-export const deleteUserDB = async (userId: string): Promise<UserType> => {
-    const user = await User.findOneAndDelete({ clerkId: userId }).exec();
+export const getUserDB = async (userId: string): Promise<UserModel> => {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
 
     if (!user) {
         throw new Error('User not found');
@@ -30,30 +21,41 @@ export const deleteUserDB = async (userId: string): Promise<UserType> => {
     return user;
 }
 
-export type UpdateUserDBProps = Partial<UserType>;
+export const createUserDB = async (userData: CreateUserDBProps): Promise<UserModel> => {
+    const user = await prisma.user.create({
+        data: {
+            id: userData.userId,
+            email: userData.email,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            isSubscribed: userData.isSubscribed,
+        },
+    });
 
-export const updateUserDB = async (userId: string, update: UpdateUserDBProps): Promise<UserType> => {
-    const updatedUser = await User.findOneAndUpdate(
-        { clerkId: userId },
-        update,
-        { new: true, runValidators: true }
-    ).exec();
+    return user;
+}
 
-    if (!updatedUser) {
+export const deleteUserDB = async (userId: string): Promise<UserModel> => {
+    const user = await prisma.user.delete({ where: { id: userId } });
+
+    return user;
+}
+
+export const updateUserDB = async (userId: string, update: UpdateUserDBProps): Promise<UserModel> => {
+    const user = await prisma.user.update({
+        where: { id: userId },
+        data: update,
+    });
+
+    return user;
+}
+
+export const getUserBySubscriptionIdDB = async (stripeSubscriptionId: string): Promise<UserModel> => {
+    const user = await prisma.user.findFirst({ where: { stripeSubscriptionId } });
+
+    if (!user) {
         throw new Error('User not found');
     }
 
-    return updatedUser;
-}
-
-export const getUserBySubscriptionIdDB = async (stripeSubscriptionId: string): Promise<UserType> => {
-    const user = await User.findOne({ stripeSubscriptionId }).exec();
-
-    // if (!user) {
-    //     throw new Error('User not found');
-    // }
-
-    //TODO: Fix this, for some reason the error is thrown although the user is found
-
-    return user as UserType;
+    return user;
 }

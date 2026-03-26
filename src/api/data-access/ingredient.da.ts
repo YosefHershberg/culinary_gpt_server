@@ -1,39 +1,27 @@
-import { FilterQuery } from "mongoose"
-import IngredientModel from "../models/ingredient.model"
-import type { Ingredient, IngredientType } from "../../types"
+import prisma from "../../config/prisma";
+import type { IngredientModel } from "../../generated/prisma/models";
+import type { IngredientType } from "../../types";
 
-export const getIngredientsByCategoryDB = async (category: string): Promise<Ingredient[]> => {
-    const ingredients = await IngredientModel.find({ category }).exec()
-
-    if (!ingredients) {
-        throw new Error('Ingredients not found')
-    }
-
-    return ingredients
+export const getIngredientsByCategoryDB = async (category: string): Promise<IngredientModel[]> => {
+    return prisma.ingredient.findMany({
+        where: { category: { has: category } },
+    });
 }
 
 export const searchIngredientsByQueryAndTypeDB = async (
-    query: FilterQuery<Ingredient>,
+    query: string,
     type: IngredientType
-): Promise<Ingredient[]> => {
-    const ingredients = await IngredientModel.find({
-        name: { $regex: query, $options: 'i' },
-        type: { $all: [type] },
-    }).exec()
-
-    if (!ingredients) {
-        throw new Error('Ingredients not found')
-    }
-
-    return ingredients
+): Promise<IngredientModel[]> => {
+    return prisma.ingredient.findMany({
+        where: {
+            name: { contains: query, mode: 'insensitive' },
+            type: { has: type },
+        },
+    });
 }
 
-export const getManyIngredientsByLabelsDB = async (labels: string[]): Promise<Ingredient[]> => {
-    const ingredients = await IngredientModel.find({ name: { $in: labels } }).exec()
-
-    if (!ingredients) {
-        throw new Error('Ingredients not found')
-    }
-
-    return ingredients
+export const getManyIngredientsByLabelsDB = async (labels: string[]): Promise<IngredientModel[]> => {
+    return prisma.ingredient.findMany({
+        where: { name: { in: labels } },
+    });
 }

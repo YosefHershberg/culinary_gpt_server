@@ -1,35 +1,40 @@
 import { ZodError, ZodSchema } from 'zod';
 import { HttpStatusCode } from 'axios';
 
-import { verifyToken } from '@clerk/express';
 import { HttpError } from './lib/HttpError';
 import env from './utils/env';
 import logger from './config/logger';
+import { supabaseAdmin } from './config/supabase';
 
 import type { NextFunction, Request, Response } from 'express';
-import type{ ErrorResponse, CustomRequest } from './types';
+import type { User } from '@supabase/supabase-js';
+import type { ErrorResponse } from './types';
 
-export const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(' ')[1];
-
-  if (!token) {
-    res.status(HttpStatusCode.Unauthorized);
-    next(new Error('Unauthorized. No token provided'));
-  }
-
-  try {
-    const payload = await verifyToken(token as string, {
-      secretKey: env.CLERK_SECRET_KEY,
-    });
-
-    if (!req.userId) req.userId = payload.sub;
-    next()
-  } catch (error) {
-    logger.error(error);
-    res.status(HttpStatusCode.Unauthorized);
-    next(new Error('Unauthorized. Invalid token'));
+declare global {
+  namespace Express {
+    interface Request {
+      user?: User;
+    }
   }
 }
+
+export const authMiddleware = async (req: Request, _res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return next(new HttpError(HttpStatusCode.Unauthorized, 'Missing or invalid authorization header'));
+  }
+
+  const token = authHeader.slice(7);
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+
+  if (error || !user) {
+    return next(new HttpError(HttpStatusCode.Unauthorized, 'Invalid or expired token'));
+  }
+
+  req.user = user;
+  next();
+}
+
 
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
   res.status(HttpStatusCode.NotFound);

@@ -1,4 +1,5 @@
-import { IngredientType, Ingredient } from "../../../types";
+import type { IngredientModel } from "../../../generated/prisma/models";
+import type { IngredientType } from "../../../types";
 import { mockIngredients } from "../../../lib/mock/mockData";
 import { getIngredientsByCategoryDB, searchIngredientsByQueryAndTypeDB } from "../../data-access/ingredient.da";
 import { getUserIngredientsDB, addUserIngredientDB, addMultipleUserIngredientsDB, deleteUserIngredientDB, deleteAllUserIngredientsDB } from "../../data-access/userIngredient.da";
@@ -100,7 +101,7 @@ describe('ingredient services', () => {
     describe('ingredientServices.getByCategory', () => {
         it('should return ingredients by category successfully', async () => {
             const searchedCategory = 'Vegetables';
-            const mockIngredients: Ingredient[] = [{ name: 'Carrot', category } as unknown as Ingredient];
+            const mockIngredients: IngredientModel[] = [{ name: 'Carrot', category } as unknown as IngredientModel];
 
             (getIngredientsByCategoryDB as jest.Mock).mockResolvedValue(mockIngredients);
 
@@ -113,9 +114,9 @@ describe('ingredient services', () => {
 
     describe('ingredientServices.search', () => {
         it('should return ingredients matching the query successfully', async () => {
-            const query = { name: /Carrot/i };
+            const query = 'Carrot';
             const type = 'food';
-            const mockIngredients: Ingredient[] = [{ name: 'Carrot', category: ['Vegetables'] } as unknown as Ingredient];
+            const mockIngredients: IngredientModel[] = [{ name: 'Carrot', category: ['Vegetables'] } as unknown as IngredientModel];
 
             (searchIngredientsByQueryAndTypeDB as jest.Mock).mockResolvedValue(mockIngredients);
 

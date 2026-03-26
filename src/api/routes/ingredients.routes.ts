@@ -1,24 +1,25 @@
 import express from 'express';
 import * as ingredientControllers from '../controllers/ingredients.controller';
 import { validate } from '../../middlewares';
-import type { Ingredient, MessageResponse } from '../../types';
+import type { IngredientModel } from '../../generated/prisma/models';
+import type { MessageResponse } from '../../types';
 
 const router = express.Router();
 
-router.get<{}, Ingredient[] | MessageResponse>(
+router.get<{}, IngredientModel[] | MessageResponse>(
     '/suggestions/:category',
     validate(ingredientControllers.ingredientSuggestionsSchema),
     ingredientControllers.ingredientSuggestions
 );
 
 
-router.get<{}, Ingredient[] | MessageResponse>(
+router.get<{}, IngredientModel[] | MessageResponse>(
     '/search',
     validate(ingredientControllers.searchIngredientsSchema),
     ingredientControllers.searchIngredients
 );
 
-router.post<{}, Ingredient[] | MessageResponse>(
+router.post<{}, IngredientModel[] | MessageResponse>(
     '/image-detect',
     validate(ingredientControllers.imageIngredientDetectorSchema),
     ingredientControllers.imageIngredientDetector

@@ -2,9 +2,7 @@ import type { Request } from 'express'
 
 // REQUESTS -----------------------------------
 
-export type CustomRequest = Request & {
-  userId?: string;
-}
+export type CustomRequest = Request;
 
 // RESPONSES -----------------------------------
 

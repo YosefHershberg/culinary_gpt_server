@@ -6,8 +6,7 @@ import { getUserIngredientsByTypeDB } from "../data-access/userIngredient.da";
 import { createCocktailPrompt, createCocktailSchema, createCocktailImagePrompt, createCocktailTitlePrompt, createTitleSchema } from '../../utils/prompts&schemas/createCocktail';
 import { compressBase64string } from "../../utils/helperFunctions";
 
-import type { Response } from 'express';
-import type { Recipe, UserIngredientResponse } from "../../types";
+import type { RecipeContent, UserIngredientResponse } from "../../types";
 
 /**
  * @module createRecipe.service
@@ -71,9 +70,9 @@ const createCocktailServices = {
      * @returns {Recipe} recipe
      */
     createCocktailService: async (cocktailPrompt: string, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
-        let recipe = await aiServices.geminiCreate<Recipe>(cocktailPrompt, createCocktailSchema);
+        let recipe = await aiServices.geminiCreate<RecipeContent>(cocktailPrompt, createCocktailSchema);
 
-        /** @description Unique identifier used as the Firebase Storage filename for the recipe image. Used for uploading and deleting the image. */
+        /** @description Unique identifier used as the Supabase Storage filename for the recipe image. Used for uploading and deleting the image. */
         recipe.id = uuid();
 
         return streamData({ event: 'recipe', payload: recipe });

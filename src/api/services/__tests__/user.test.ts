@@ -5,7 +5,7 @@ import { mockUser } from "../../../lib/mock/mockData";
 jest.mock('../../data-access/user.da');
 jest.mock('../recipes.service');
 jest.mock('../ingredients.service');
-jest.mock('../firebase.service');
+jest.mock('../storage.service');
 jest.mock('../../data-access/recipe.da');
 jest.mock('../../data-access/kitchenUtils.da');
 
@@ -36,7 +36,7 @@ describe('user services', () => {
     //         (deleteUserRecipes as jest.Mock).mockResolvedValue(undefined);
     //         (deleteKitchenUtilsDB as jest.Mock).mockResolvedValue(undefined);
     //         (userIngredientServices.deleteAll as jest.Mock).mockResolvedValue(undefined);
-    //         (firebaseStorageServices.deleteImage as jest.Mock).mockResolvedValue(undefined);
+    //         (storageServices.deleteImage as jest.Mock).mockResolvedValue(undefined);
 
     //         const result = await userServices.deleteUser(userId);
 
@@ -45,7 +45,7 @@ describe('user services', () => {
     //         expect(deleteUserRecipes).toHaveBeenCalledWith(userId);
     //         expect(deleteKitchenUtilsDB).toHaveBeenCalledWith(userId);
     //         expect(userIngredientServices.deleteAll).toHaveBeenCalledWith(userId);
-    //         expect(firebaseStorageServices.deleteImage).toHaveBeenCalledTimes(mockRecipes.length);
+    //         expect(storageServices.deleteImage).toHaveBeenCalledTimes(mockRecipes.length);
     //         expect(result).toEqual(mockUser);
     //     });
     // });
@@ -54,8 +54,8 @@ describe('user services', () => {
         it('should update a user successfully', async () => {
             const userId = 'userId';
             const mockUpdate: UpdateUserDBProps = {
-                first_name: 'John',
-                last_name: 'Doe',
+                firstName: 'John',
+                lastName: 'Doe',
                 email: 'john.doe@example.com',
                 isSubscribed: false,
             };

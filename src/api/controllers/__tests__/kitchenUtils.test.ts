@@ -2,20 +2,20 @@ import request from 'supertest';
 import { HttpStatusCode } from 'axios';
 import app, { userId } from '../../../lib/mock/mockApp';
 import kitchenUtilsServices from '../../services/kitchenUtils.service';
-import type { KitchenUtils } from '../../../types';
+import type { KitchenUtilsModel } from '../../../generated/prisma/models';
 
 jest.mock('../../services/kitchenUtils.service');
 
-const mockKitchenUtils: KitchenUtils = {
-    "Stove Top": true,
-    "Oven": true,
-    "Microwave": true,
-    "Air Fryer": false,
-    "Blender": false,
-    "Food Processor": false,
-    "Slow Cooker": false,
-    "BBQ": true,
-    "Grill": true,
+const mockKitchenUtils: Omit<KitchenUtilsModel, 'id' | 'userId'> = {
+    stoveTop: true,
+    oven: true,
+    microwave: true,
+    airFryer: false,
+    blender: false,
+    foodProcessor: false,
+    slowCooker: false,
+    bbq: true,
+    grill: true,
 };
 
 describe('Kitchen Utils Controller', () => {

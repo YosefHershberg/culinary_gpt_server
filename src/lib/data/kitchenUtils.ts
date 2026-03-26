@@ -1,13 +1,13 @@
-import { type KitchenUtils } from "../../types";
+import type { KitchenUtilsModel } from "../../generated/prisma/models";
 
-export const kitchenUtils: KitchenUtils = {
-    "Stove Top": true,
-    "Oven": true,
-    "Microwave": false,
-    "Air Fryer": false,
-    "Blender": false,
-    "Food Processor": false,
-    "Slow Cooker": false,
-    "BBQ": true,
-    "Grill": false,
+export const kitchenUtils: Omit<KitchenUtilsModel, 'id' | 'userId'> = {
+    stoveTop: true,
+    oven: true,
+    microwave: false,
+    airFryer: false,
+    blender: false,
+    foodProcessor: false,
+    slowCooker: false,
+    bbq: true,
+    grill: false,
 }

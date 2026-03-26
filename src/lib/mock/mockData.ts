@@ -1,6 +1,6 @@
 import { CreateUserDBProps } from "../../api/data-access/user.da";
-import { UserDocument } from "../../api/models/user.model";
-import { RecipeWithImage, KitchenUtils, Ingredient } from "../../types";
+import type { KitchenUtilsModel, IngredientModel } from "../../generated/prisma/models";
+import type { RecipeWithImage } from "../../types";
 import { userId } from "./mockApp";
 
 export const mockRecipe: RecipeWithImage = {
@@ -35,46 +35,45 @@ export const mockRecipe: RecipeWithImage = {
 };
 
 export const mockUser: CreateUserDBProps = {
-    clerkId: 'clerk123',
-    first_name: 'John',
-    last_name: 'Doe',
+    userId: 'clerk123',
+    firstName: 'John',
+    lastName: 'Doe',
     email: 'john.doe@example.com',
     isSubscribed: false,
-    stripeCustomerId: null,
-    stripeSubscriptionId: null
 };
 
 export const mockUserDoc = {
-    first_name: 'John',
-    last_name: 'Doe',
-    clerkId: 'clerk123',
+    id: 'clerk123',
+    firstName: 'John',
+    lastName: 'Doe',
     email: 'john.doe@example.com',
     createdAt: new Date('2023-01-01T00:00:00Z'),
     updatedAt: new Date('2023-01-02T00:00:00Z'),
     isSubscribed: false,
-} as UserDocument; //Typed like this because UserDocument extends mongoose.Document
+    stripeCustomerId: null,
+    stripeSubscriptionId: null,
+};
 
-export const mockKitchenUtils: KitchenUtils = {
-    "Stove Top": true,
-    "Oven": true,
-    "Microwave": false,
-    "Air Fryer": false,
-    "Blender": false,
-    "Food Processor": false,
-    "Slow Cooker": false,
-    "BBQ": true,
-    "Grill": false,
+export const mockKitchenUtils: Omit<KitchenUtilsModel, 'id' | 'userId'> = {
+    stoveTop: true,
+    oven: true,
+    microwave: false,
+    airFryer: false,
+    blender: false,
+    foodProcessor: false,
+    slowCooker: false,
+    bbq: true,
+    grill: false,
 }
 
-export const mockIngredient = {
+export const mockIngredient: IngredientModel = {
     id: '2',
     name: 'Salt',
     category: ['spice'],
     popularity: 5,
     type: ['food'],
-} as Ingredient;
+};
 
 export const mockIngredients = [mockIngredient];
 
 export const mockMessageResponse = { message: 'Ingredient deleted successfully' };
-

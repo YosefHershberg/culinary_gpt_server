@@ -1,8 +1,9 @@
-import firebaseStorageServices from "./firebase.service";
+import storageServices from "./storage.service";
 import { addRecipeDB, deleteRecipeDB, getAllRecipesDB, getRecipeDB, getRecipesPageDB } from "../data-access/recipe.da";
 import { base64ToArrayBuffer } from "../../utils/helperFunctions";
 
 import type { MessageResponse, RecipeWithImage, GetUserPageRecipesProps } from "../../types";
+
 
 /**
  * @module recipes.service
@@ -36,7 +37,7 @@ const recipeServices = {
     },
 
     /**
-     * @description Converts the base64 image to an ArrayBuffer and uploads it to Firebase Storage and saves the link to it in the recipe to the DB
+     * @description Converts the base64 image to an ArrayBuffer and uploads it to Supabase Storage and saves the link to it in the recipe to the DB
      * @param recipe
      * @returns {RecipeWithImage}
      */
@@ -47,7 +48,7 @@ const recipeServices = {
         // Convert base64 to ArrayBuffer
         const imageBuffer = base64ToArrayBuffer(base64Image);
 
-        const image_url = await firebaseStorageServices.uploadImage(imageBuffer, recipe.recipe.id);
+        const image_url = await storageServices.uploadImage(imageBuffer, recipe.recipe.id);
 
         const newRecipe = await addRecipeDB({ ...recipe, image_url } as RecipeWithImage)
 
@@ -55,7 +56,7 @@ const recipeServices = {
     },
 
     /**
-     * @description Delete a recipe from the database and the image from Firebase Storage
+     * @description Delete a recipe from the database and the image from Supabase Storage
      * @param recipeId 
      * @returns {MessageResponse}
      */
@@ -67,7 +68,7 @@ const recipeServices = {
         }
 
         await Promise.all([
-            firebaseStorageServices.deleteImage(recipe.recipe.id),
+            storageServices.deleteImage(recipe.recipe.id),
             deleteRecipeDB(recipeId)
         ]);
 

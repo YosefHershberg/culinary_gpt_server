@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                   String    @id @db.Uuid
+  email                String    @unique
+  firstName            String    @map("first_name")
+  lastName             String    @map("last_name")
+  isSubscribed         Boolean   @default(false) @map("is_subscribed")
+  stripeCustomerId     String?   @map("stripe_customer_id")
+  stripeSubscriptionId String?   @map("stripe_subscription_id")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  recipes         Recipe[]
+  userIngredients UserIngredient[]
+  kitchenUtils    KitchenUtils?
+
+  @@map("users")
+}
+
+model Recipe {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  ingredients Json
+  steps       Json
+  time        String
+  level       String
+  type        String
+  recipeId    String   @map("recipe_id")
+  imageUrl    String   @map("image_url")
+  userId      String   @map("user_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("recipes")
+}
+
+model Ingredient {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  category   String[]
+  popularity Int
+  type       String[]
+
+  @@map("ingredients")
+}
+
+model UserIngredient {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  ingredientId String   @map("ingredient_id")
+  name         String
+  type         String[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, ingredientId])
+  @@map("user_ingredients")
+}
+
+model KitchenUtils {
+  id            String  @id @default(uuid()) @db.Uuid
+  userId        String  @unique @map("user_id") @db.Uuid
+  stoveTop      Boolean @default(true) @map("stove_top")
+  oven          Boolean @default(true)
+  microwave     Boolean @default(true)
+  airFryer      Boolean @default(false) @map("air_fryer")
+  blender       Boolean @default(true)
+  foodProcessor Boolean @default(false) @map("food_processor")
+  slowCooker    Boolean @default(false) @map("slow_cooker")
+  bbq           Boolean @default(false)
+  grill         Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("kitchen_utils")
+}

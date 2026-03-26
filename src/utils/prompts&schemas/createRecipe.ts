@@ -1,6 +1,6 @@
 import { Type, type Schema } from "@google/genai";
 import { CreateRecipeProps } from "../../api/services/createRecipe.service";
-import { KitchenUtils } from "../../types";
+import type { KitchenUtilsModel } from "../../generated/prisma/models";
 
 // Create recipe -------------------------------------------
 
@@ -83,7 +83,7 @@ export const createRecipeSchema: Schema = {
 type CreateRecipePromptProps = CreateRecipeProps & {
     userIngredients: string[];
     recipeTitle: string;
-    kitchenUtils: KitchenUtils;
+    kitchenUtils: KitchenUtilsModel;
 }
 
 export const createRecipePrompt = ({
@@ -150,7 +150,7 @@ export const createTitleSchema: Schema = {
 export const createRecipeTitlePrompt = (
     userIngredients: string[],
     prompt: string,
-    kitchenUtils: KitchenUtils
+    kitchenUtils: KitchenUtilsModel
 ) => {
     return `
         Generate an appealing recipe title based on these ingredients: ${userIngredients}

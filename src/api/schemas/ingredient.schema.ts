@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 /**
- * @description Ingredient schema
- * @note This zod schema is the single source of truth for the ingredient object
+ * @description Ingredient validation schema
+ * @note Used for request validation. The Prisma schema is the single source of truth for types.
  */
 
 export const ingredientSchema = z.object({

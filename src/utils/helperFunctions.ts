@@ -1,24 +1,5 @@
 import sharp from "sharp";
 
-export const mongooseVirtuals = {
-  toJSON: {
-    virtuals: true,
-    versionKey: false,
-    transform: (_doc: any, ret: any) => {
-      ret.id = ret._id;
-      delete ret._id;
-    }
-  },
-  toObject: {
-    virtuals: true,
-    versionKey: false,
-    transform: (_doc: any, ret: any) => {
-      ret.id = ret._id;
-      delete ret._id;
-    }
-  }
-}
-
 export const isValidJSON = (str: string): boolean => {
   try {
     JSON.parse(str);

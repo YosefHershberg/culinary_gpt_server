@@ -3,16 +3,17 @@ import express from 'express';
 import { validate } from '../../middlewares';
 
 import * as kitchenUtilsControllers from '../controllers/kitchenUtils.controller';
-import type { KitchenUtils, MessageResponse } from '../../types';
+import type { KitchenUtilsModel } from '../../generated/prisma/models';
+import type { MessageResponse } from '../../types';
 
 const router = express.Router();
 
-router.get<{}, KitchenUtils | MessageResponse>(
+router.get<{}, KitchenUtilsModel | MessageResponse>(
     '/',
     kitchenUtilsControllers.getKitchenUtils
 );
 
-router.patch<{}, KitchenUtils | MessageResponse>(
+router.patch<{}, KitchenUtilsModel | MessageResponse>(
     '/',
     validate(kitchenUtilsControllers.toggleKitchenUtilsSchema),
     kitchenUtilsControllers.toggleKitchenUtils

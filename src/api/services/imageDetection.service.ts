@@ -1,6 +1,6 @@
 import { getManyIngredientsByLabelsDB } from "../data-access/ingredient.da";
 import aiServices from "./ai.service";
-import type { Ingredient } from "../../types";
+import type { IngredientModel } from "../../generated/prisma/models";
 
 /**
  * @module vision.service
@@ -16,7 +16,7 @@ const imageDetectionServices = {
      * @param base64image 
      * @returns {Ingredient[]}
      */
-    getIngredientsFromImage: async (base64image: string): Promise<Ingredient[]> => {
+    getIngredientsFromImage: async (base64image: string): Promise<IngredientModel[]> => {
         const labels = await aiServices.detectLabels(base64image);
 
         console.log(labels);
