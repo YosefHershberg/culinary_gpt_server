@@ -2,88 +2,165 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
-
-CulinaryGPT Server is a Node.js/Express REST API that generates recipes using Google Gemini AI. It uses MongoDB with Mongoose, Supabase for image storage, Clerk for authentication, and Stripe for payments.
-
 ## Commands
 
 ```bash
-npm run dev          # Start development server (nodemon + ts-node)
-npm run build        # Compile TypeScript to dist/
-npm start            # Run compiled dist/index.js
-npm test             # Run Jest tests
-npm run test:watch   # Run tests in watch mode
-npm run lint         # Run ESLint with auto-fix
-npm run typecheck    # Type check without emitting
-npm run docs         # Generate JSDoc HTML
+npm run dev          # nodemon + ts-node (watch mode)
+npm start            # ts-node src/index.ts
+npm run build        # prisma generate + tsc → dist/
+npm run start:dist   # node dist/src/index.js
+npm test             # Jest
+npm run test:watch   # Jest watch mode
+npm run typecheck    # tsc --noEmit
+npm run lint         # ESLint with auto-fix
+npm run docs         # generate JSDoc HTML
 ```
 
 ## Architecture
 
-**Layered/Clean Architecture Pattern:**
+**Layered/Clean Architecture:**
 ```
-Controllers → Services → Data Access → MongoDB
+Controller → Service → Data Access (*.da.ts) → PostgreSQL (Prisma)
 ```
 
 Each request flows through:
-1. Route handler with Zod validation middleware
-2. Controller (handles HTTP, calls services)
-3. Service (business logic, AI integration)
-4. Data Access layer (Mongoose queries)
+1. Morgan + Helmet + CORS + Rate limiter
+2. Webhook routes (`/api/webhooks/*`) — bypass auth, verify signatures
+3. `express.json()` body parser
+4. `authMiddleware` — Supabase JWT verification, attaches `req.user`
+5. Zod `validate()` middleware (per route)
+6. Controller → Service → Data Access
 
 **Key Directories:**
-- `src/api/controllers/` - Request handlers with OpenAPI JSDoc annotations
-- `src/api/services/` - Business logic (recipes, AI generation, images)
-- `src/api/data-access/` - Database operations (`*.da.ts` files)
-- `src/api/models/` - Mongoose schemas
-- `src/api/routes/` - Express route definitions
-- `src/api/schemas/` - Zod validation schemas
-- `src/api/webhooks/` - Clerk and Stripe webhook handlers
-- `src/config/` - Database, logger, rate limiting, external clients
-- `src/utils/prompts&schemas/` - AI prompts and response schemas
+- `src/api/controllers/` — HTTP handlers (OpenAPI JSDoc annotations)
+- `src/api/services/` — Business logic & AI orchestration
+- `src/api/data-access/` — Prisma queries (`*.da.ts`)
+- `src/api/routes/` — Express route definitions
+- `src/api/schemas/` — Zod validation schemas
+- `src/api/webhooks/` — Clerk & Stripe webhook handlers
+- `src/config/` — External clients (Prisma, Supabase, Stripe, Gemini, logger, rate limiter)
+- `src/utils/prompts&schemas/` — AI prompt templates & Gemini response schemas
 
-## API Routes
+## Database
 
-- `/api/user/recipes` - Recipe CRUD and AI creation
-- `/api/user/ingredients` - User ingredient management
-- `/api/user/kitchen-utils` - User equipment management
-- `/api/user/subscriptions` - Stripe subscription management
-- `/api/ingredients` - Global ingredient catalog
-- `/api/webhooks/clerk` and `/api/webhooks/stripe` - External webhooks
-- `/health` - Health check (no auth)
-- `/docs` - Swagger UI
+**PostgreSQL via Prisma v7 with PrismaPg driver adapter.**
+
+Schema in `prisma/schema.prisma`. Generated client outputs to `src/generated/prisma/` (gitignored — regenerated at build time via `npx prisma generate`).
+
+Models: `User`, `Recipe`, `Ingredient`, `UserIngredient`, `KitchenUtils`
+
+Prisma config in `prisma.config.ts` — uses `DATABASE_URL` (pooler) for runtime, `DIRECT_URL` (direct) for migrations.
+
+```bash
+npm run db:migrate    # run migrations
+npm run db:push       # push schema without migration
+npm run db:seed       # seed data
+```
 
 ## Authentication
 
-Clerk JWT tokens via Bearer header. The `authMiddleware` verifies tokens and attaches `req.userId` to authenticated requests. Webhook routes bypass auth but verify signatures.
+**Supabase Auth** — JWT Bearer tokens.
 
-## External Services
+```typescript
+// middlewares.ts — authMiddleware
+const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+req.user = user;  // attaches Supabase User object
+```
 
-- **Google Gemini** (`@google/genai`) - Recipe/ingredient generation, image detection
-- **GetImg.ai** - AI image generation via REST
-- **Supabase Storage** - Image storage
-- **Clerk** - User authentication
-- **Stripe** - Payment processing
-- **Google Cloud Vision** - Image analysis
+All `/api/*` routes require auth. Exceptions: `/health`, `/docs`, `/api/webhooks/*`.
+
+Controllers access the user via `req.user.id` (Supabase UUID).
 
 ## Validation Pattern
 
-All routes use Zod schemas with the `validate()` middleware:
+All routes use Zod schemas with `validate()` middleware:
+
 ```typescript
 router.post('/create', validate(createRecipeSchema), createRecipe);
 ```
 
-Schemas are in `src/api/schemas/` - one file per resource.
+Schemas in `src/api/schemas/` — validates `{ body, query, params }` together.
 
-## Streaming (SSE)
-
-Recipe creation streams events to the client: `title`, `recipe`, `image`, `error`. See `createRecipe` in recipes controller.
-
-## Testing
-
-Jest with ts-jest preset. Tests use `supertest` for HTTP assertions and `mongodb-memory-server` for in-memory database. Test files are in `__tests__/` directories.
+**Error response:**
+```json
+{ "error": "Invalid data", "details": [{ "message": "field is Invalid" }] }
+```
 
 ## Environment Variables
 
-Validated at startup via Zod in `src/utils/env.ts`. Required: `MONGODB_URI`, `GEMINI_API_KEY`, `CLERK_*`, `STRIPE_*`, Supabase credentials.
+Validated at startup via Zod in `src/utils/env.ts`. Server fails fast if any are missing.
+
+Required: `PORT`, `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`, `GETIMGAI_API_KEY`, `CORS_ORIGIN`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
+
+Not validated by env.ts (read directly from `process.env`): `DIRECT_URL` (Prisma migrations), Clerk webhook secret
+
+## Streaming (SSE)
+
+Recipe/cocktail creation streams events to the client:
+
+```
+event: title   → { title: string }
+event: recipe  → { recipe: {...}, image_url: string }
+event: image   → { image_url: string }  (base64)
+event: error   → { message: string }
+```
+
+## Webhooks
+
+- **Clerk** (`/api/webhooks/clerk`) — user lifecycle: create user + kitchen utils on `user.created`, cascade delete on `user.deleted`, sync on `user.updated`
+- **Stripe** (`/api/webhooks/stripe`) — subscription: set `isSubscribed=true` on `checkout.session.completed`, false on `customer.subscription.deleted`
+
+## API Routes
+
+| Route | Method | Purpose |
+|---|---|---|
+| `/api/user/recipes/create` | POST | Generate recipe (SSE) |
+| `/api/user/recipes/create-cocktail` | POST | Generate cocktail (SSE) |
+| `/api/user/recipes` | GET | List recipes (paginated) |
+| `/api/user/recipes` | POST | Save recipe |
+| `/api/user/recipes/:id` | GET/DELETE | Get/delete recipe |
+| `/api/user/ingredients` | GET/POST/DELETE | Pantry CRUD |
+| `/api/user/ingredients/multiple` | POST | Bulk add |
+| `/api/user/ingredients/all` | DELETE | Clear pantry |
+| `/api/user/kitchen-utils` | GET/PATCH | Get/toggle equipment |
+| `/api/user/subscriptions/isSubscribed` | GET | Subscription status |
+| `/api/ingredients/suggestions/:category` | GET | Ingredient catalog |
+| `/api/ingredients/search` | GET | Search ingredients |
+| `/api/ingredients/image-detect` | POST | AI image detection |
+| `/health` | GET | Health check (no auth) |
+| `/docs` | GET | Swagger UI (no auth) |
+
+## Testing
+
+Jest with ts-jest. Tests use `supertest` for HTTP assertions. Test files are in `__tests__/` directories next to source files.
+
+```bash
+npm test
+npm run test:watch
+```
+
+## Docker
+
+`node:22-alpine` base image. Build runs `npx prisma generate` (required since `src/generated/prisma/` is gitignored).
+
+```dockerfile
+FROM node:22-alpine
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npx prisma generate
+EXPOSE 5000
+CMD ["npm", "start"]
+```
+
+## External Services
+
+| Service | Purpose | Config |
+|---|---|---|
+| Google Gemini | Recipe/cocktail generation, ingredient detection | `src/config/gemini.ts` |
+| GetImg.ai | AI image generation (REST) | Direct HTTP via Axios |
+| Supabase Storage | Image storage | `src/config/supabase.ts` |
+| Supabase Auth | JWT verification | `src/config/supabase.ts` |
+| Stripe | Subscription payments | `src/config/stripe.ts` |
+| Google Cloud Vision | Image ingredient detection | Service-level integration |

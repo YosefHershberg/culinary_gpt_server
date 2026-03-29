@@ -4,7 +4,7 @@
 
 CulinaryGPT is an AI-powered recipe generation platform. Users manage their kitchen inventory (ingredients and equipment), and the system generates personalized recipes and cocktails using Google Gemini AI, constrained to the user's available ingredients and tools. Generated dishes include AI-created images and are saved to the user's recipe collection.
 
-**Tech Stack:** Node.js, Express, TypeScript, MongoDB (Mongoose), Google Gemini AI, Supabase Storage, Clerk Auth, Stripe Payments, GetImg.ai
+**Tech Stack:** Node.js 22, Express, TypeScript, PostgreSQL (Prisma v7), Google Gemini AI, GetImg.ai, Supabase (Auth + Storage), Stripe Payments
 
 ---
 
@@ -14,347 +14,262 @@ CulinaryGPT is an AI-powered recipe generation platform. Users manage their kitc
 
 ```
 Client Request
-  --> Express Middleware (CORS, Helmet, Rate Limiter, Morgan)
-    --> Route + Zod Validation Middleware
-      --> Auth Middleware (Clerk JWT verification)
-        --> Controller (HTTP handling)
-          --> Service (business logic, AI orchestration)
-            --> Data Access Layer (Mongoose queries)
-              --> MongoDB
+  → Express Middleware (Morgan, Helmet, CORS, Rate Limiter)
+    → Webhook routes (bypass auth, verify signatures)
+      → Body Parser
+        → Auth Middleware (Supabase JWT verification, attaches req.user)
+          → Zod Validation Middleware
+            → Controller (HTTP handling)
+              → Service (business logic, AI orchestration)
+                → Data Access Layer (Prisma queries)
+                  → PostgreSQL
 ```
 
 ### 2.2 Directory Structure
 
 ```
 src/
-├── index.ts                     # Server entry point (listens on PORT)
-├── app.ts                       # Express app config & middleware pipeline
-├── middlewares.ts                # Auth, validation, error handling middleware
+├── index.ts                    # Server entry point (PORT 5000)
+├── app.ts                      # Express app config & middleware pipeline
+├── middlewares.ts              # Auth (Supabase JWT), validation, error handling
 ├── api/
-│   ├── controllers/             # HTTP request handlers (6 controllers)
-│   ├── services/                # Business logic (11 services)
-│   ├── data-access/             # MongoDB query layer (*.da.ts files)
-│   ├── models/                  # Mongoose schemas (5 models)
-│   ├── routes/                  # Express route definitions (6 route files)
-│   ├── schemas/                 # Zod validation schemas
-│   └── webhooks/                # Clerk & Stripe webhook handlers
-├── config/                      # DB, logger, rate limiter, Supabase, Stripe, Gemini
+│   ├── controllers/            # HTTP request handlers
+│   ├── services/               # Business logic (AI orchestration, CRUD)
+│   ├── data-access/            # Prisma query layer (*.da.ts)
+│   ├── routes/                 # Express route definitions
+│   ├── schemas/                # Zod validation schemas
+│   └── webhooks/               # Clerk & Stripe webhook handlers
+├── config/                     # Prisma, Supabase, Stripe, Gemini, logger, rate limiter
 ├── utils/
-│   ├── env.ts                   # Environment variable validation (Zod)
-│   ├── helperFunctions.ts       # Utility functions
-│   ├── swagger.ts               # Swagger/OpenAPI setup
-│   └── prompts&schemas/         # AI prompt templates & response schemas
-├── types/                       # TypeScript type definitions
+│   ├── env.ts                  # Environment variable validation (Zod)
+│   ├── swagger.ts              # Swagger/OpenAPI setup
+│   └── prompts&schemas/        # AI prompt templates & Gemini response schemas
+├── types/                      # TypeScript type definitions
 └── lib/
-    ├── HttpError.ts             # Custom HTTP error class
-    ├── verifyCvixHeaders.ts     # Svix webhook signature verification
-    ├── data/                    # Static data (kitchen utils defaults)
-    └── mock/                    # Test fixtures
+    ├── HttpError.ts            # Custom HTTP error class
+    └── data/                   # Static data (kitchen utils defaults)
+prisma/
+└── schema.prisma               # PostgreSQL schema (Prisma)
 ```
 
 ### 2.3 Middleware Pipeline (order of execution)
 
-1. `morgan('dev')` - HTTP request logging
-2. `helmet()` - Security headers
+1. `morgan('dev')` — HTTP request logging
+2. `helmet()` — Security headers
 3. Swagger UI setup (`/docs`)
 4. Trust proxy (1)
-5. CORS (restricted in production, open in dev)
+5. CORS (restricted in production to `CORS_ORIGIN`, open in dev)
 6. Rate limiter (500 requests per 5-minute window per IP)
-7. Webhook routes (bypass auth, verify signatures)
-8. `express.json()` - Body parsing
-9. `authMiddleware` - Clerk JWT verification, attaches `req.userId`
-10. API routes
-11. Health check (`/health`)
+7. Webhook routes `/api/webhooks` (no auth, signature verification enforced)
+8. `express.json()` — Body parsing
+9. `authMiddleware` — Supabase JWT verification, attaches `req.user`
+10. API routes `/api/*`
+11. Health check `/health`
 12. `notFound` handler (404)
 13. `errorHandler` (catches HttpError or returns 500)
 
 ### 2.4 External Service Integrations
 
-| Service | Purpose | Integration Method |
+| Service | Purpose | Integration |
 |---|---|---|
-| Google Gemini (`@google/genai`) | Recipe/cocktail/title generation, image-based ingredient detection | SDK, structured JSON output with schema validation |
-| GetImg.ai (Flux Schnell) | AI food & cocktail image generation | REST API via Axios |
+| Google Gemini (`@google/genai`) | Recipe/cocktail generation, ingredient detection from images | SDK, structured JSON output |
+| GetImg.ai | AI food & cocktail image generation | REST API via Axios |
+| Supabase Auth | User authentication (JWT verification) | Supabase JS SDK |
 | Supabase Storage | Persistent image storage | Supabase JS SDK |
-| Clerk | User authentication | JWT verification, webhooks for user lifecycle |
-| Stripe | Subscription payments | Webhooks for checkout & cancellation events |
-| MongoDB | Primary database | Mongoose ODM |
+| Stripe | Subscription payments | Webhooks for checkout & cancellation |
+| Google Cloud Vision | Image-based ingredient detection | Service-level integration |
 
 ---
 
 ## 3. Authentication & Authorization
 
-- **Method:** Clerk JWT tokens via `Authorization: Bearer <token>` header
-- **Middleware:** `authMiddleware` verifies token with `@clerk/express.verifyToken()` and attaches `req.userId`
+- **Method:** Supabase Auth JWT tokens via `Authorization: Bearer <token>` header
+- **Middleware:** `authMiddleware` calls `supabaseAdmin.auth.getUser(token)` and attaches `req.user` (Supabase `User` object)
 - **Scope:** All `/api/*` routes require authentication
 - **Exceptions:** `/health`, `/docs`, `/api/webhooks/*` bypass auth
-- **Webhook security:** Clerk uses Svix signature verification; Stripe uses `stripe.webhooks.constructEvent()`
+- **Webhook security:** Stripe uses `stripe.webhooks.constructEvent()`; Clerk uses Svix signature verification
 
 ---
 
 ## 4. Data Models
 
+Defined in `prisma/schema.prisma`. All IDs are UUIDs.
+
 ### 4.1 User
 
 | Field | Type | Notes |
 |---|---|---|
-| first_name | String | Required, trimmed |
-| last_name | String | Required, trimmed |
-| clerkId | String | Required, from Clerk auth |
-| email | String | Required, unique, lowercase |
-| isSubscribed | Boolean | Default: false |
-| stripeCustomerId | String | Optional, set on subscription |
-| stripeSubscriptionId | String | Optional, set on subscription |
-| createdAt | Date | Immutable, auto |
-| updatedAt | Date | Auto-updated via pre-save hook |
+| `id` | UUID | Primary key — sourced from Supabase Auth user ID |
+| `email` | String | Unique |
+| `firstName` | String | |
+| `lastName` | String | |
+| `isSubscribed` | Boolean | Default: false |
+| `stripeCustomerId` | String? | Set on Stripe checkout |
+| `stripeSubscriptionId` | String? | Set on Stripe checkout |
+| `createdAt` | DateTime | Auto |
+| `updatedAt` | DateTime | Auto-updated |
 
-### 4.2 Recipe (RecipeWithImage)
+### 4.2 Recipe
 
 | Field | Type | Notes |
 |---|---|---|
-| recipe.title | String | Required, trimmed |
-| recipe.description | String | Required, max 120 chars |
-| recipe.ingredients | Array<{ ingredient: String }> | At least 1 |
-| recipe.steps | Array<{ step: String, time: String }> | At least 1 |
-| recipe.time | String | Total duration |
-| recipe.level | Enum | 'easy', 'medium', 'hard' |
-| recipe.type | Enum | 'recipe', 'cocktail' |
-| recipe.id | String | UUID for deletion tracking |
-| image_url | String | Supabase Storage public URL |
-| userId | String | Reference to User |
-| createdAt | Date | Auto, default now |
+| `id` | UUID | Auto-generated |
+| `title` | String | |
+| `description` | String | |
+| `ingredients` | Json | Array of ingredient objects |
+| `steps` | Json | Array of step objects |
+| `time` | String | Total duration |
+| `level` | String | 'easy', 'medium', 'hard' |
+| `type` | String | 'recipe' or 'cocktail' |
+| `recipeId` | String | UUID used for storage deletion tracking |
+| `imageUrl` | String | Supabase Storage public URL |
+| `userId` | UUID | FK → User (cascade delete) |
+| `createdAt` | DateTime | Auto |
 
 ### 4.3 Ingredient (Global Catalog)
 
 | Field | Type | Notes |
 |---|---|---|
-| name | String | Required, trimmed |
-| category | Array\<String\> | Enum: common, dairy, vegetables, spices, carbs, meat, spirits, liqueurs, bitters, mixers, syrups, fruits, herbs |
-| popularity | Number | Required, for sorting |
-| type | Array\<String\> | Enum: 'food', 'drink' |
+| `id` | UUID | |
+| `name` | String | |
+| `category` | String[] | Enum: common, dairy, vegetables, spices, carbs, meat, spirits, liqueurs, bitters, mixers, syrups, fruits, herbs |
+| `popularity` | Int | For sorting |
+| `type` | String[] | 'food' or 'drink' |
 
 ### 4.4 UserIngredient
 
 | Field | Type | Notes |
 |---|---|---|
-| userId | String | Required |
-| ingredientId | String | Reference to Ingredient._id |
-| name | String | Denormalized from Ingredient |
-| type | Array\<String\> | Enum: 'food', 'drink' |
-
-**Serialization:** Custom `toJSON`/`toObject` transforms output to `{ id, name, type }` (strips userId, _id, ingredientId).
+| `id` | UUID | |
+| `userId` | UUID | FK → User (cascade delete) |
+| `ingredientId` | String | Reference to global Ingredient |
+| `name` | String | Denormalized |
+| `type` | String[] | 'food' or 'drink' |
+| — | — | Unique constraint: (userId, ingredientId) |
 
 ### 4.5 KitchenUtils
 
-| Field | Type | Default |
-|---|---|---|
-| userId | String | Required |
-| kitchenUtils."Stove Top" | Boolean | true |
-| kitchenUtils."Oven" | Boolean | true |
-| kitchenUtils."Microwave" | Boolean | true |
-| kitchenUtils."Air Fryer" | Boolean | false |
-| kitchenUtils."Blender" | Boolean | true |
-| kitchenUtils."Food Processor" | Boolean | false |
-| kitchenUtils."Slow Cooker" | Boolean | false |
-| kitchenUtils."BBQ" | Boolean | false |
-| kitchenUtils."Grill" | Boolean | false |
+| Field | Default |
+|---|---|
+| `stoveTop` | true |
+| `oven` | true |
+| `microwave` | true |
+| `blender` | true |
+| `airFryer` | false |
+| `foodProcessor` | false |
+| `slowCooker` | false |
+| `bbq` | false |
+| `grill` | false |
+
+One record per user. FK → User (cascade delete), unique on `userId`.
 
 ---
 
 ## 5. API Reference
 
-All routes under `/api/*` require Clerk JWT authentication unless noted otherwise.
+All `/api/*` routes require Supabase JWT authentication unless noted.
 
 ### 5.1 Recipe Endpoints (`/api/user/recipes`)
 
-#### POST `/api/user/recipes/create` - Generate Recipe (SSE)
+#### `POST /api/user/recipes/create` — Generate Recipe (SSE)
 
-Generates an AI recipe using the user's ingredients and kitchen equipment. Returns a Server-Sent Events stream.
-
-**Request Body:**
+**Request body:**
 ```typescript
 {
   mealSelected: 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert',
-  selectedTime: number,   // 5-120 minutes
-  prompt: string,         // max 100 chars, additional instructions
-  numOfPeople: number     // 1-99 servings
+  selectedTime: number,   // 5–120 minutes
+  prompt: string,         // max 100 chars
+  numOfPeople: number     // 1–99
 }
 ```
 
-**SSE Events:**
-| Event | Payload | Description |
-|---|---|---|
-| `title` | `{ title: string }` | Generated recipe title |
-| `recipe` | `RecipeWithImage` | Full recipe object |
-| `image` | `{ image_url: string }` | Base64 AI-generated image |
-| `error` | `{ message: string }` | Error during generation |
+**SSE events:**
 
-**Business Logic:**
-1. Fetch user's food ingredients and kitchen utils in parallel
+| Event | Payload |
+|---|---|
+| `title` | `{ title: string }` |
+| `recipe` | Full recipe object with `image_url` |
+| `image` | `{ image_url: string }` (base64) |
+| `error` | `{ message: string }` |
+
+**Business logic:**
+1. Fetch user's food ingredients + kitchen utils in parallel
 2. Validate minimum 4 ingredients
 3. Generate title via Gemini
-4. Generate recipe content (Gemini) and image (GetImg.ai) in parallel
+4. Generate recipe (Gemini) + image (GetImg.ai) in parallel
 5. Compress image to ~30KB base64
 6. Stream events to client
 
-#### POST `/api/user/recipes/create-cocktail` - Generate Cocktail (SSE)
+#### `POST /api/user/recipes/create-cocktail` — Generate Cocktail (SSE)
 
-**Request Body:**
+**Request body:** `{ prompt: string }`
+
+Same SSE event pattern. Uses drink-type ingredients only, max 5 in final cocktail, prioritizes classic cocktail names.
+
+#### `GET /api/user/recipes` — List Recipes (Paginated)
+
+**Query params:**
 ```typescript
 {
-  prompt: string   // cocktail instructions/preferences
+  page: number,
+  limit: number,
+  query?: string,
+  filter: 'recipes' | 'cocktails' | 'all',
+  sort: 'newest' | 'oldest' | 'a-z' | 'z-a'
 }
 ```
 
-**SSE Events:** Same as recipe creation.
+#### `POST /api/user/recipes` — Save Recipe
 
-**Business Logic:**
-- Uses drink-type ingredients only
-- Max 5 ingredients in final cocktail
-- Prioritizes classic cocktail names (Margarita, Mojito, etc.)
+**Business logic:** Decodes base64 image, uploads to Supabase Storage, stores public URL in DB.
 
-#### GET `/api/user/recipes` - List Recipes (Paginated)
+#### `GET /api/user/recipes/:id` — Get Recipe by ID
 
-**Query Parameters:**
-```typescript
-{
-  page: number,                              // required
-  limit: number,                             // required
-  query?: string,                            // optional search text
-  filter: 'recipes' | 'cocktails' | 'all',  // required
-  sort: 'newest' | 'oldest' | 'a-z' | 'z-a' // required
-}
-```
+#### `DELETE /api/user/recipes/:id` — Delete Recipe
 
-**Response:** `RecipeWithImage[]`
-
-#### POST `/api/user/recipes` - Save Recipe
-
-**Request Body:**
-```typescript
-{
-  recipe: {
-    title: string,        // 3-100 chars
-    description: string,  // max 500 chars
-    ingredients: [{ ingredient: string }],  // min 1, each min 2 chars
-    steps: [{ step: string, time: string }], // min 1
-    time: string,
-    level: string,
-    type: 'recipe' | 'cocktail',
-    id: string            // UUID
-  },
-  image_url: string       // base64 data URL
-}
-```
-
-**Response:** `RecipeWithImage`
-
-**Business Logic:** Decodes base64 image, uploads to Supabase Storage, stores public URL in MongoDB.
-
-#### GET `/api/user/recipes/:id` - Get Recipe by ID
-
-**Response:** `RecipeWithImage`
-
-#### DELETE `/api/user/recipes/:id` - Delete Recipe
-
-**Response:** `{ message: string }`
-
-**Business Logic:** Deletes recipe from MongoDB and image from Supabase Storage in parallel.
+Deletes from DB + Supabase Storage in parallel.
 
 ---
 
 ### 5.2 Global Ingredient Endpoints (`/api/ingredients`)
 
-#### GET `/api/ingredients/suggestions/:category` - Get Suggestions
+#### `GET /api/ingredients/suggestions/:category`
 
-**Path Parameters:**
-```typescript
-{
-  category: 'common' | 'vegetables' | 'dairy' | 'spices' | 'carbs' | 'meat' |
-            'spirits' | 'liqueurs' | 'bitters' | 'mixers' | 'syrups' | 'fruits' | 'herbs'
-}
-```
+**Path param:** `category` — one of: common, dairy, vegetables, spices, carbs, meat, spirits, liqueurs, bitters, mixers, syrups, fruits, herbs
 
-**Response:** `Ingredient[]`
-```typescript
-[{
-  category: string[],
-  name: string,
-  id: string,
-  popularity?: number,
-  type: ('food' | 'drink')[]
-}]
-```
+#### `GET /api/ingredients/search`
 
-#### GET `/api/ingredients/search` - Search Ingredients
+**Query params:** `{ query: string, type: 'food' | 'drink' }`
 
-**Query Parameters:**
-```typescript
-{
-  query: string,                // search text
-  type: 'food' | 'drink'       // filter by type
-}
-```
+#### `POST /api/ingredients/image-detect`
 
-**Response:** `Ingredient[]`
+**Body:** `{ imageUrl: string }` (base64)
 
-#### POST `/api/ingredients/image-detect` - Detect Ingredients from Image
-
-**Request Body:**
-```typescript
-{
-  imageUrl: string   // base64 image
-}
-```
-
-**Response:** `Ingredient[]` (only ingredients that exist in the global catalog)
-
-**Business Logic:**
-1. Send image to Gemini Vision for label detection
-2. Query MongoDB for matching ingredient names
-3. Return only catalog-matched ingredients
+**Business logic:** Send to Gemini Vision → match labels against global catalog → return matched `Ingredient[]`.
 
 ---
 
 ### 5.3 User Ingredient Endpoints (`/api/user/ingredients`)
 
-#### GET `/api/user/ingredients` - Get User's Pantry
-
-**Response:** `UserIngredientResponse[]`
-```typescript
-[{ name: string, id: string, type: ('food' | 'drink')[] }]
-```
-
-#### POST `/api/user/ingredients` - Add Single Ingredient
-
-**Request Body:** `Ingredient` (full ingredient object)
-
-**Response:** `UserIngredientResponse`
-
-#### POST `/api/user/ingredients/multiple` - Add Multiple Ingredients
-
-**Request Body:** `Ingredient[]`
-
-**Response:** `UserIngredientResponse[]`
-
-#### DELETE `/api/user/ingredients/:id` - Remove Ingredient
-
-**Response:** `{ message: string }`
-
-#### DELETE `/api/user/ingredients/all` - Clear Pantry
-
-**Response:** `{ message: string }`
+| Method | Route | Purpose |
+|---|---|---|
+| GET | `/api/user/ingredients` | Get pantry |
+| POST | `/api/user/ingredients` | Add single ingredient |
+| POST | `/api/user/ingredients/multiple` | Bulk add |
+| DELETE | `/api/user/ingredients/:id` | Remove ingredient |
+| DELETE | `/api/user/ingredients/all` | Clear pantry |
 
 ---
 
 ### 5.4 Kitchen Utils Endpoints (`/api/user/kitchen-utils`)
 
-#### GET `/api/user/kitchen-utils` - Get Equipment
+#### `GET /api/user/kitchen-utils` — Get Equipment State
 
-**Response:** `KitchenUtils` (object with 9 boolean fields)
+**Response:** Object with 9 boolean fields.
 
-#### PATCH `/api/user/kitchen-utils` - Toggle Equipment
+#### `PATCH /api/user/kitchen-utils` — Toggle Equipment
 
-**Request Body:**
+**Body:**
 ```typescript
 {
   name: 'Stove Top' | 'Oven' | 'Microwave' | 'Air Fryer' | 'Blender' |
@@ -362,18 +277,13 @@ Generates an AI recipe using the user's ingredients and kitchen equipment. Retur
 }
 ```
 
-**Response:** `KitchenUtils` (updated state)
-
 ---
 
 ### 5.5 Subscription Endpoints (`/api/user/subscriptions`)
 
-#### GET `/api/user/subscriptions/isSubscribed` - Check Subscription
+#### `GET /api/user/subscriptions/isSubscribed`
 
-**Response:**
-```typescript
-{ subscriptionActive: boolean }
-```
+**Response:** `{ subscriptionActive: boolean }`
 
 ---
 
@@ -381,40 +291,29 @@ Generates an AI recipe using the user's ingredients and kitchen equipment. Retur
 
 No authentication required. Signature verification enforced.
 
-#### POST `/api/webhooks/clerk` - Clerk User Events
-
-**Signature:** Svix headers verification
+#### `POST /api/webhooks/clerk` — Clerk User Events (Svix signature)
 
 | Event | Action |
 |---|---|
-| `user.created` | Create user in MongoDB + initialize kitchen utils |
-| `user.deleted` | Delete user, all recipes, ingredients, kitchen utils, and Firebase images |
-| `user.updated` | Update user first_name, last_name, email |
+| `user.created` | Create User record + initialize KitchenUtils |
+| `user.deleted` | Delete user + cascade all data + Supabase Storage images |
+| `user.updated` | Sync firstName, lastName, email |
 
-**Response:** `{ success: boolean, message: string }`
-
-#### POST `/api/webhooks/stripe` - Stripe Payment Events
-
-**Signature:** Stripe webhook secret verification
+#### `POST /api/webhooks/stripe` — Stripe Payment Events
 
 | Event | Action |
 |---|---|
-| `checkout.session.completed` | Set isSubscribed=true, store Stripe customer/subscription IDs |
-| `customer.subscription.deleted` | Set isSubscribed=false, clear Stripe IDs |
-
-**Response:** `{ received: true }`
+| `checkout.session.completed` | Set `isSubscribed=true`, store Stripe IDs |
+| `customer.subscription.deleted` | Set `isSubscribed=false`, clear Stripe IDs |
 
 ---
 
 ### 5.7 Utility Endpoints
 
-#### GET `/health` - Health Check (No Auth)
-
-**Response:** `{ status: 'ok2' }`
-
-#### GET `/docs` - Swagger UI (No Auth)
-
-Interactive OpenAPI documentation.
+| Route | Auth | Response |
+|---|---|---|
+| `GET /health` | None | `{ status: 'ok2' }` |
+| `GET /docs` | None | Swagger UI |
 
 ---
 
@@ -422,168 +321,120 @@ Interactive OpenAPI documentation.
 
 ### 6.1 AI Recipe Generation
 
-- Users select meal type, time constraint, serving size, and optional instructions
-- System fetches user's food ingredients and available kitchen equipment
+- User selects meal type, time constraint, serving size, optional text prompt
+- System fetches food ingredients + kitchen equipment
 - Minimum 4 ingredients required
-- Gemini generates a recipe title, then recipe content and image in parallel
-- GetImg.ai generates a hyper-realistic food photograph
-- Image compressed to ~30KB and streamed as base64
-- Results streamed via SSE for real-time UX
+- Gemini generates title → then recipe content (Gemini) + image (GetImg.ai) in parallel
+- Image compressed to ~30KB, streamed as base64
+- Full result streamed via SSE
 
 ### 6.2 AI Cocktail Generation
 
-- Users provide a text prompt describing desired cocktail
-- System fetches user's drink-type ingredients
-- Minimum 4 drink ingredients required
-- Max 5 ingredients in final cocktail recipe
-- Prioritizes classic cocktail names when ingredients match
-- Same SSE streaming pattern as recipes
+- User provides optional text prompt
+- System fetches drink-type ingredients (min 4 required)
+- Max 5 ingredients in final recipe; prioritizes classic cocktail names
+- Same SSE streaming pattern
 
 ### 6.3 Ingredient Management
 
-- Global ingredient catalog organized by category
-- Users build a personal pantry by selecting from the catalog
-- Search ingredients by name with type filtering (food/drink)
-- Image-based ingredient detection: upload a photo, AI identifies ingredients, matched against catalog
+- Global catalog organized by category (seeded in DB)
+- Users build a personal pantry from the catalog
+- Search by name + type filter (food/drink)
+- Image-based detection: upload photo → Gemini Vision → match against catalog
 - Bulk add/remove operations
 
 ### 6.4 Kitchen Equipment Management
 
-- 9 supported kitchen utilities with boolean availability
-- Toggle individual items on/off
-- Equipment constraints influence AI recipe generation (only uses available tools)
-- Initialized with sensible defaults on user creation
+- 9 appliances with boolean availability
+- Toggle individual items; affects AI recipe generation (only uses available tools)
+- Initialized with sensible defaults on user creation (via Clerk webhook)
 
 ### 6.5 Recipe Collection
 
-- Save AI-generated recipes with images to personal collection
-- Paginated browsing with filtering (recipes/cocktails/all) and sorting (date/alphabetical)
-- Text search by recipe title
-- Individual recipe view and deletion
+- Save AI-generated recipes with images
+- Paginated browsing with filter, sort, and text search
 - Images stored persistently in Supabase Storage
+- Delete removes both DB record and storage image
 
 ### 6.6 Subscription Management
 
 - Stripe-powered subscription billing
-- Checkout session flow via Stripe
-- Subscription status tracked in user document
-- Webhook-driven activation and cancellation
-
-### 6.7 User Lifecycle
-
-- Clerk-managed authentication (JWT)
-- Webhook-driven user creation: creates MongoDB user + initializes kitchen utils
-- Webhook-driven user deletion: cascading cleanup of all user data (recipes, ingredients, kitchen utils, storage images)
-- Profile updates synced from Clerk via webhooks
+- Webhook-driven activation (`checkout.session.completed`) and cancellation (`customer.subscription.deleted`)
+- Status checked via `GET /api/user/subscriptions/isSubscribed`
 
 ---
 
 ## 7. Validation
 
-All route validation uses Zod schemas with the `validate()` middleware.
+All routes use Zod schemas with the `validate()` middleware:
 
-**Pattern:**
 ```typescript
 router.post('/create', validate(createRecipeSchema), controller);
 ```
 
-**Validation targets:** `req.body`, `req.query`, `req.params`
+Validates `{ body, query, params }` together. Error response:
 
-**Error response on validation failure:**
-```typescript
-{
-  error: 'Invalid data',
-  details: ZodError[]   // detailed field-level errors
-}
+```json
+{ "error": "Invalid data", "details": [{ "message": "field is Invalid" }] }
 ```
-
-**Key Zod schemas:**
-- `createRecipeSchema` - Recipe generation input
-- `createCocktailSchema` - Cocktail generation input
-- `getRecipesSchema` - Pagination, filtering, sorting params
-- `addRecipeSchema` - Recipe save payload
-- `ingredientSchema` - Ingredient object shape
-- `addIngredientSchema` / `addMultipleIngredientsSchema` - User ingredient operations
-- `toggleKitchenUtilsSchema` - Kitchen util toggle
-- `ingredientSuggestionsSchema` - Category path param
-- `searchIngredientsSchema` - Search query + type
-- `imageIngredientDetectorSchema` - Image URL body
-- `doSomethingByIdSchema` - Generic `:id` path param
 
 ---
 
 ## 8. Error Handling
 
-- **HttpError class:** Custom error with `statusCode` and `message`
-- **Error middleware:** Catches all errors, returns appropriate status code
-- **Stack traces:** Hidden in production (`NODE_ENV === 'production'`)
-- **Status codes used:** 400 (validation), 401 (auth), 404 (not found), 500 (server error)
-- **AI service errors:** Logged but do not throw; return undefined/partial results, streamed as `error` SSE event
+- **`HttpError` class:** Custom error with `statusCode` and `message`
+- **Error middleware:** Returns appropriate status code; hides stack traces in production
+- **Status codes:** 400 (validation), 401 (auth), 404 (not found), 500 (server)
+- **AI service errors:** Logged; streamed as `error` SSE event to client
 
 ---
 
 ## 9. Streaming (SSE)
 
-Recipe and cocktail creation use Server-Sent Events for real-time response delivery:
-
 ```
-Client opens POST request
-  --> Server sets headers: Content-Type: text/event-stream
-  --> Server streams events as generation completes:
-      event: title    --> { title: "..." }
-      event: recipe   --> { recipe: {...}, image_url: "..." }
-      event: image    --> { image_url: "base64..." }
-      event: error    --> { message: "..." }  (on failure)
+Client POST request
+  → Server: Content-Type: text/event-stream
+  → event: title   → { title: "..." }
+  → event: recipe  → { recipe: {...}, image_url: "..." }
+  → event: image   → { image_url: "base64..." }
+  → event: error   → { message: "..." }  (on failure)
 ```
 
 ---
 
 ## 10. Testing
 
-- **Framework:** Jest with ts-jest preset
-- **HTTP testing:** Supertest for endpoint assertions
-- **Database:** mongodb-memory-server for isolated in-memory MongoDB
-- **Mocking:** External services (storage, data access, AI) mocked with `jest.mock()`
-- **Test locations:** `__tests__/` directories alongside source files
-- **Coverage:** Controller tests (3) and service tests (4)
-
-**Commands:**
-```bash
-npm test              # Run all tests
-npm run test:watch    # Watch mode
-```
+- **Framework:** Jest with ts-jest
+- **HTTP:** Supertest for endpoint assertions
+- **Test files:** `__tests__/` directories alongside source
 
 ---
 
-## 11. Deployment & CI/CD
+## 11. Deployment
 
 ### Docker
 
-- Base image: `node:18-alpine`
-- Exposes port 5000
+- Base image: `node:22-alpine`
+- Build step: `npx prisma generate` (generated client is gitignored)
 - Entry: `npm start`
 
-### CI/CD (GitHub Actions)
+### Railway (Production)
 
-- **Trigger:** Push to `main` branch
-- **Node version:** 20.x
-- **Steps:** Install -> Build -> Test
-- **Deployment:** Railway.app (production)
+Deployed on Railway. Env vars set in Railway dashboard (see `.env.example`).
 
 ### Environment Variables
 
-All validated at startup via Zod (`src/utils/env.ts`). Server fails fast on missing variables.
+All validated at startup via Zod. Server fails fast on missing variables.
 
 | Variable | Purpose |
 |---|---|
 | `PORT` | Server port |
-| `NODE_ENV` | Environment (development/production) |
-| `MONGODB_URI` | MongoDB connection string |
+| `DATABASE_URL` | PostgreSQL connection pooler URL (pgbouncer) |
+| `DIRECT_URL` | PostgreSQL direct URL (Prisma migrations only) |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase admin key (bypasses RLS) |
 | `GEMINI_API_KEY` | Google Gemini API key |
 | `GETIMGAI_API_KEY` | GetImg.ai API key |
-| `CLERK_SECRET_KEY` | Clerk backend secret |
-| `CLERK_PUBLISHABLE_KEY` | Clerk frontend key |
-| `WEBHOOK_SECRET` | Clerk webhook signing secret |
 | `CORS_ORIGIN` | Allowed CORS origin URL |
 | `STRIPE_SECRET_KEY` | Stripe API secret |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
@@ -593,21 +444,15 @@ All validated at startup via Zod (`src/utils/env.ts`). Server fails fast on miss
 ## 12. Logging
 
 - **Library:** Winston
-- **Transports:**
-  - `logs/error.log` - Error level only
-  - `logs/info.log` - Info level
-  - `logs/warning.log` - Warning level
-  - Console (development only, colorized)
-- **Format:** JSON (files), simple colorized (console)
-- **Timestamp:** `YYYY-MM-DD HH:mm:ss`
+- **Transports:** `logs/error.log`, `logs/info.log`, `logs/warning.log`, console (dev only)
+- **Format:** JSON (files), colorized (console)
 - **HTTP logging:** Morgan (`dev` format)
 
 ---
 
 ## 13. Known TODOs & Technical Debt
 
-1. **User deletion atomicity:** Cascading delete operations (user, recipes, ingredients, kitchen utils, storage images) lack a transaction - partial failures possible
+1. **User deletion atomicity:** Cascading deletes (user, recipes, ingredients, kitchen utils, storage images) lack a transaction — partial failures possible
 2. **Storage batch deletes:** Recipe image deletions during user removal are individual operations; should be batched
 3. **Subscription error handling:** `getUserBySubscriptionIdDB` has an unresolved error handling issue
-4. **Type safety:** `toggleKitchenUtilDB` uses `@ts-expect-error` for dynamic property access on kitchen util names
-5. **Stripe subscription deletion:** `customer.subscription.deleted` event handler noted as not fully tested
+4. **Stripe subscription deletion:** `customer.subscription.deleted` event handler not fully tested
