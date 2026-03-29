@@ -35,6 +35,8 @@ const userServices = {
         const recipes = await recipeServices.getAllUserRecipes(userId);
 
         // DB cascade handles recipes, kitchen utils, and user ingredients
+
+        // TODO: optimize this by deleting images in batch and not sequentially
         const [user] = await Promise.all([
             deleteUserDB(userId),
             ...recipes.map(recipe =>

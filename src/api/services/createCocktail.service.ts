@@ -24,7 +24,7 @@ const createCocktailServices = {
      * @note We create the title first and then the recipe and image simultaneously. This way is faster.
      * @param {string} userId
      * @param {string} prompt
-     * @param {Response} res
+     * @param {(data: { event: string, payload: any }) => void} streamData
      * @returns {RecipeWithImage}
      */
     createCocktail: async (userId: string, prompt: string, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
@@ -66,7 +66,7 @@ const createCocktailServices = {
     /**
      * @description This function creates a cocktail recipe using gemini API and returns a valid JSON
      * @param {string} cocktailPrompt
-     * @param {Response} res
+     * @param {(data: { event: string, payload: any }) => void} streamData
      * @returns {Recipe} recipe
      */
     createCocktailService: async (cocktailPrompt: string, streamData: (data: { event: string, payload: any }) => void): Promise<void> => {
