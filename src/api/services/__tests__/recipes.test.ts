@@ -57,7 +57,7 @@ describe('recipeServices', () => {
 
             expect(result).toEqual(mockRecipe);
             expect(base64ToArrayBuffer).toHaveBeenCalledWith(mockRecipe.image_url.replace(/^data:image\/(png|jpeg);base64,/, ''));
-            expect(storageServices.uploadImage).toHaveBeenCalledWith(mockImageBuffer, 'recipe123');
+            expect(storageServices.uploadImage).toHaveBeenCalledWith(mockImageBuffer, 'recipe123', mockRecipe.userId);
             expect(addRecipeDB).toHaveBeenCalledWith({ ...mockRecipe, image_url: mockImageUrl });
         });
     });
@@ -73,7 +73,7 @@ describe('recipeServices', () => {
 
             expect(result).toEqual({ message: 'Recipe deleted successfully' });
             expect(getRecipeDB).toHaveBeenCalledWith('recipeId');
-            expect(storageServices.deleteImage).toHaveBeenCalledWith(mockRecipe.recipe.id);
+            expect(storageServices.deleteImage).toHaveBeenCalledWith(mockRecipe.recipe.id, mockRecipe.userId);
             expect(deleteRecipeDB).toHaveBeenCalledWith('recipeId');
         });
     });

@@ -11,10 +11,16 @@ import kitchenUtilsRoutes from './kitchenUtils.routes';
 import recipesRoutes from './recipes.routes';
 import ingredientsRoutes from './ingredients.routes';
 import userSubscriptionRoutes from './userSubscription.routes';
+import userRoutes from './user.routes';
 
 const router = express.Router();
 
-router.use( 
+router.use(
+    '/user',
+    userRoutes
+)
+
+router.use(
     '/user/ingredients',
     userIngredientRoutes
 )

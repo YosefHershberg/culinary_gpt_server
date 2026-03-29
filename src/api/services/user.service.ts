@@ -2,7 +2,6 @@ import { createUserDB, CreateUserDBProps, deleteUserDB, getUserBySubscriptionIdD
 import { createKitchenUtilsDB } from "../data-access/kitchenUtils.da";
 
 import storageServices from "./storage.service";
-import recipeServices from "./recipes.service";
 import type { UserModel } from "../../generated/prisma/models";
 
 /**
@@ -32,16 +31,11 @@ const userServices = {
      * @returns {User}
      */
     deleteUser: async (userId: string): Promise<UserModel> => {
-        const recipes = await recipeServices.getAllUserRecipes(userId);
-
         // DB cascade handles recipes, kitchen utils, and user ingredients
-
-        // TODO: optimize this by deleting images in batch and not sequentially
+        // Storage images are organized by user folder and bulk-deleted in 2 calls
         const [user] = await Promise.all([
             deleteUserDB(userId),
-            ...recipes.map(recipe =>
-                storageServices.deleteImage(recipe.recipe.id)
-            ),
+            storageServices.deleteUserImages(userId),
         ]);
 
         return user;

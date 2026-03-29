@@ -3,7 +3,6 @@ import userServices from "../user.service";
 import { mockUser } from "../../../lib/mock/mockData";
 
 jest.mock('../../data-access/user.da');
-jest.mock('../recipes.service');
 jest.mock('../ingredients.service');
 jest.mock('../storage.service');
 jest.mock('../../data-access/recipe.da');

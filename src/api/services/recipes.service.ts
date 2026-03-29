@@ -48,7 +48,7 @@ const recipeServices = {
         // Convert base64 to ArrayBuffer
         const imageBuffer = base64ToArrayBuffer(base64Image);
 
-        const image_url = await storageServices.uploadImage(imageBuffer, recipe.recipe.id);
+        const image_url = await storageServices.uploadImage(imageBuffer, recipe.recipe.id, recipe.userId);
 
         const newRecipe = await addRecipeDB({ ...recipe, image_url } as RecipeWithImage)
 
@@ -68,7 +68,7 @@ const recipeServices = {
         }
 
         await Promise.all([
-            storageServices.deleteImage(recipe.recipe.id),
+            storageServices.deleteImage(recipe.recipe.id, recipe.userId),
             deleteRecipeDB(recipeId)
         ]);
 
