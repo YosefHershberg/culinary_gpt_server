@@ -37,7 +37,7 @@ Each request flows through:
 - `src/api/data-access/` — Prisma queries (`*.da.ts`)
 - `src/api/routes/` — Express route definitions
 - `src/api/schemas/` — Zod validation schemas
-- `src/api/webhooks/` — Clerk & Stripe webhook handlers
+- `src/api/webhooks/` — Stripe webhook handler
 - `src/config/` — External clients (Prisma, Supabase, Stripe, Gemini, logger, rate limiter)
 - `src/utils/prompts&schemas/` — AI prompt templates & Gemini response schemas
 
@@ -92,7 +92,7 @@ Validated at startup via Zod in `src/utils/env.ts`. Server fails fast if any are
 
 Required: `PORT`, `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`, `GETIMGAI_API_KEY`, `CORS_ORIGIN`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
 
-Not validated by env.ts (read directly from `process.env`): `DIRECT_URL` (Prisma migrations), Clerk webhook secret
+Not validated by env.ts (read directly from `process.env`): `DIRECT_URL` (Prisma migrations)
 
 ## Streaming (SSE)
 
@@ -107,7 +107,6 @@ event: error   → { message: string }
 
 ## Webhooks
 
-- **Clerk** (`/api/webhooks/clerk`) — user lifecycle: create user + kitchen utils on `user.created`, cascade delete on `user.deleted`, sync on `user.updated`
 - **Stripe** (`/api/webhooks/stripe`) — subscription: set `isSubscribed=true` on `checkout.session.completed`, false on `customer.subscription.deleted`
 
 ## API Routes

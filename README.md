@@ -53,7 +53,7 @@ src/
 │   ├── data-access/            # Prisma queries (*.da.ts)
 │   ├── routes/                 # Express route definitions
 │   ├── schemas/                # Zod validation schemas
-│   └── webhooks/               # Clerk & Stripe webhook handlers
+│   └── webhooks/               # Stripe webhook handler
 ├── config/                     # Prisma, Supabase, Stripe, Gemini, logger, rate limiter
 ├── utils/
 │   ├── env.ts                  # Zod env validation (fails fast on startup)
@@ -95,7 +95,6 @@ See `.env.example`. All validated at startup via Zod — server fails fast if an
 - `GET /api/ingredients/suggestions/:category` — Ingredient catalog
 - `GET /api/ingredients/search` — Search ingredients
 - `POST /api/ingredients/image-detect` — AI ingredient detection
-- `POST /api/webhooks/clerk` — User lifecycle events
 - `POST /api/webhooks/stripe` — Payment events
 - `GET /health` — Health check (no auth)
 - `GET /docs` — Swagger UI (no auth)

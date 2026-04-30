@@ -129,7 +129,7 @@ export const getRecipes = async (req: CustomRequest, res: Response<RecipeWithIma
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Recipe'
- *       400:
+ *       400:   
  *         description: Bad request - invalid input data
  *       401:
  *         description: Unauthorized access

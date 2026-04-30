@@ -9,17 +9,14 @@ const aiServices = {
 
     /**
      * @description This function creates a object with the gemini api
-     * @param prompt 
-     * @param schema 
+     * @param prompt
+     * @param schema
      * @returns {TResponse}
      */
     geminiCreate: async <TResponse>(prompt: string, schema: Schema): Promise<TResponse> => {
-
-        let result: TResponse;
-
         try {
             const response = await gemini.models.generateContent({
-                model: 'gemini-2.0-flash',
+                model: 'gemini-2.5-flash-lite',
                 contents: prompt,
                 config: {
                     responseMimeType: 'application/json',
@@ -27,12 +24,11 @@ const aiServices = {
                 },
             });
 
-            result = JSON.parse(response.text as string);
+            return JSON.parse(response.text as string) as TResponse;
         } catch (error) {
             logger.error(error);
+            throw error;
         }
-
-        return result! as TResponse;
     },
 
     /**
@@ -54,7 +50,7 @@ const aiServices = {
         let response
         try {
             response = await gemini.models.generateContent({
-                model: 'gemini-2.0-flash',
+                model: 'gemini-2.5-flash-lite',
                 contents: createUserContent([
                     `Send me the ingredients of this image.
                     Note: make the ingredients first letter uppercase.

@@ -42,8 +42,13 @@ export const notFound = (req: Request, res: Response, next: NextFunction) => {
   next(error);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function errorHandler(err: Error, _req: Request, res: Response<ErrorResponse>, _next: NextFunction) {
+export function errorHandler(err: Error, _req: Request, res: Response<ErrorResponse>, next: NextFunction) {
+  // SSE handlers may have already written headers/body before erroring.
+  // Express's default finalhandler will end the response — don't double-write.
+  if (res.headersSent) {
+    return next(err);
+  }
+
   if (err instanceof HttpError) {
     return res.status(err.statusCode).json({ message: err.message });
   }
