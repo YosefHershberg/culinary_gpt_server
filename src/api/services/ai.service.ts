@@ -5,6 +5,8 @@ import env from "../../utils/env";
 import gemini from "../../config/gemini";
 import { createUserContent, type Schema, Type } from "@google/genai";
 
+const GEMINI_MODEL = 'gemini-3.1-flash-lite';
+
 const aiServices = {
 
     /**
@@ -16,7 +18,7 @@ const aiServices = {
     geminiCreate: async <TResponse>(prompt: string, schema: Schema): Promise<TResponse> => {
         try {
             const response = await gemini.models.generateContent({
-                model: 'gemini-2.5-flash-lite',
+                model: GEMINI_MODEL,
                 contents: prompt,
                 config: {
                     responseMimeType: 'application/json',
@@ -50,7 +52,7 @@ const aiServices = {
         let response
         try {
             response = await gemini.models.generateContent({
-                model: 'gemini-2.5-flash-lite',
+                model: GEMINI_MODEL,
                 contents: createUserContent([
                     `Send me the ingredients of this image.
                     Note: make the ingredients first letter uppercase.
