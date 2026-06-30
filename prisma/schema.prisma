@@ -1,6 +1,10 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  // Emit a CommonJS client: the app is ESM (imports CJS fine), and this keeps
+  // the generated client free of ESM-only syntax that the CJS Jest transform
+  // (ts-jest) cannot parse. See jest.config.js.
+  moduleFormat = "cjs"
 }
 
 datasource db {
