@@ -33,11 +33,9 @@ npm run start:dist     # run compiled output
 npm run dev          # nodemon + ts-node watch mode
 npm start            # ts-node src/index.ts
 npm run build        # prisma generate + tsc → dist/
-npm run start:dist   # node dist/src/index.js
 npm test             # Jest
 npm run typecheck    # tsc --noEmit
 npm run lint         # ESLint with auto-fix
-npm run docs         # generate JSDoc HTML
 ```
 
 ## Project Structure

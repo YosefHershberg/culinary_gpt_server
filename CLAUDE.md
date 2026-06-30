@@ -12,7 +12,6 @@ npm test             # Jest
 npm run test:watch   # Jest watch mode
 npm run typecheck    # tsc --noEmit
 npm run lint         # ESLint with auto-fix
-npm run docs         # generate JSDoc HTML
 ```
 
 ## Module system
