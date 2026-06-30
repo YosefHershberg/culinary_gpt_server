@@ -5,16 +5,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev          # nodemon + ts-node (watch mode)
-npm start            # ts-node src/index.ts
-npm run build        # prisma generate + tsc → dist/
-npm run start:dist   # node dist/src/index.js
+npm run dev          # tsx watch (ESM, watch mode)
+npm start            # tsx src/index.ts
+npm run build        # prisma generate + tsc → dist/ (typecheck/CI)
 npm test             # Jest
 npm run test:watch   # Jest watch mode
 npm run typecheck    # tsc --noEmit
 npm run lint         # ESLint with auto-fix
 npm run docs         # generate JSDoc HTML
 ```
+
+## Module system
+
+This package is **ESM** (`"type": "module"`). tsconfig uses `module: esnext` +
+`moduleResolution: bundler`, and the app runs via **tsx** (no `.js` import
+extensions required, and ESM-only deps like `@google/genai` import cleanly).
+Tests run under Jest in **CommonJS** — ts-jest transpiles the test graph to CJS
+(`jest.config.js`), which keeps `jest.mock()` working without an ESM rewrite;
+`require()` of the ESM-only deps works on Node 22+.
 
 ## Architecture
 

@@ -340,7 +340,7 @@ async function main() {
 
     // Persist report
     const ts = new Date().toISOString().replace(/[:.]/g, '-');
-    const outDir = path.join(__dirname, 'results');
+    const outDir = path.join(import.meta.dirname, 'results');
     fs.mkdirSync(outDir, { recursive: true });
     const outPath = path.join(outDir, `benchmark-${ts}.json`);
     fs.writeFileSync(outPath, JSON.stringify({
