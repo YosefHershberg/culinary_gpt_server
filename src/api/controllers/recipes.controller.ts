@@ -195,7 +195,7 @@ export const getRecipeById = async (req: CustomRequest, res: Response<RecipeWith
     const id = req.params.id;
 
     try {
-        const recipe = await recipeServices.getRecipeById(id);
+        const recipe = await recipeServices.getRecipeById(id, req.user!.id);
 
         return res.json(recipe);
     } catch (error) {
@@ -242,7 +242,7 @@ export const deleteRecipe = async (req: CustomRequest, res: Response<MessageResp
     const recipeId = req.params.id;
 
     try {
-        const message = await recipeServices.deleteRecipe(recipeId);
+        const message = await recipeServices.deleteRecipe(recipeId, req.user!.id);
 
         return res.json(message);
     } catch (error) {

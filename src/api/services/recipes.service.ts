@@ -60,8 +60,9 @@ const recipeServices = {
      * @param recipeId 
      * @returns {MessageResponse}
      */
-    deleteRecipe: async (recipeId: string): Promise<MessageResponse> => {
-        const recipe = await getRecipeDB(recipeId)
+    deleteRecipe: async (recipeId: string, userId: string): Promise<MessageResponse> => {
+        // getRecipeDB is scoped by userId, so this also verifies ownership before deletion.
+        const recipe = await getRecipeDB(recipeId, userId)
 
         if (!recipe) {
             throw new Error('Recipe not found')
@@ -69,7 +70,7 @@ const recipeServices = {
 
         await Promise.all([
             storageServices.deleteImage(recipe.recipe.id, recipe.userId),
-            deleteRecipeDB(recipeId)
+            deleteRecipeDB(recipeId, userId)
         ]);
 
         return { message: 'Recipe deleted successfully' }
@@ -77,11 +78,12 @@ const recipeServices = {
 
     /**
      * @description Get a recipe by its id
-     * @param recipeId 
+     * @param recipeId
+     * @param userId
      * @returns {RecipeWithImage}
      */
-    getRecipeById: async (recipeId: string): Promise<RecipeWithImage> => {
-        const recipe = await getRecipeDB(recipeId)
+    getRecipeById: async (recipeId: string, userId: string): Promise<RecipeWithImage> => {
+        const recipe = await getRecipeDB(recipeId, userId)
 
         if (!recipe) {
             throw new Error('Recipe not found')

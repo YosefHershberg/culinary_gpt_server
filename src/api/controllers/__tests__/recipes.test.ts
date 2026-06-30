@@ -63,7 +63,7 @@ describe('Recipe Controller', () => {
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(mockRecipes[0]);
-            expect(recipeServices.getRecipeById).toHaveBeenCalledWith(recipeId);
+            expect(recipeServices.getRecipeById).toHaveBeenCalledWith(recipeId, userId);
         });
     });
 
@@ -79,7 +79,7 @@ describe('Recipe Controller', () => {
 
             expect(response.status).toBe(HttpStatusCode.Ok);
             expect(response.body).toEqual(deleteMessage);
-            expect(recipeServices.deleteRecipe).toHaveBeenCalledWith(recipeId);
+            expect(recipeServices.deleteRecipe).toHaveBeenCalledWith(recipeId, userId);
         });
     });
 
