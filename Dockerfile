@@ -16,11 +16,7 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
-# Ensure the runtime log directory exists and hand ownership to the
-# non-root "node" user (winston writes to ./logs at runtime)
-RUN mkdir -p logs && chown -R node:node /usr/src/app
-
-# Drop root privileges
+# Drop root privileges (logs go to stdout, so no writable dir is needed)
 USER node
 
 # Expose the port your application is running on

@@ -23,4 +23,3 @@ docs
 .claude
 coverage
 *.md
-c-gpt-task-def.json
