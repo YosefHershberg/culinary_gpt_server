@@ -138,17 +138,22 @@ npm test
 npm run test:watch
 ```
 
-## Docker
+## Deployment & Docker
 
-`node:22-alpine` base image. Build runs `npx prisma generate` (required since `src/generated/prisma/` is gitignored).
+Deploys to **Railway** (auto-deploy via GitHub integration on push to `main`). Railway builds from the `Dockerfile` (no railway/nixpacks config needed). The `.github/workflows/ci-cd.yml` workflow only runs build + tests; Railway handles the actual deploy. Logs go to **stdout** (winston Console transport — no log files), which Railway captures.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the full deploy + CI/CD guide and **when to use the Railway skill** (live deploys, logs, env vars, metrics, troubleshooting).
+
+`node:22-alpine` base image, runs as the non-root `node` user. Build runs `npx prisma generate` (required since `src/generated/prisma/` is gitignored). Uses `npm ci` for reproducible installs; `.dockerignore` excludes secrets (`.env*`, `*.pem`, `*.key`).
 
 ```dockerfile
 FROM node:22-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npx prisma generate
+USER node
 EXPOSE 5000
 CMD ["npm", "start"]
 ```
@@ -162,4 +167,5 @@ CMD ["npm", "start"]
 | Supabase Storage | Image storage | `src/config/supabase.ts` |
 | Supabase Auth | JWT verification | `src/config/supabase.ts` |
 | Stripe | Subscription payments | `src/config/stripe.ts` |
-| Google Cloud Vision | Image ingredient detection | Service-level integration |
+
+Image-based ingredient detection is done by **Gemini** (`aiServices.detectLabels` in `src/api/services/ai.service.ts`), not Google Cloud Vision.
