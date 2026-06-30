@@ -69,12 +69,12 @@ describe('recipeServices', () => {
             (storageServices.deleteImage as jest.Mock).mockResolvedValue(undefined);
             (deleteRecipeDB as jest.Mock).mockResolvedValue(undefined);
 
-            const result: MessageResponse = await recipeServices.deleteRecipe('recipeId');
+            const result: MessageResponse = await recipeServices.deleteRecipe('recipeId', userId);
 
             expect(result).toEqual({ message: 'Recipe deleted successfully' });
-            expect(getRecipeDB).toHaveBeenCalledWith('recipeId');
+            expect(getRecipeDB).toHaveBeenCalledWith('recipeId', userId);
             expect(storageServices.deleteImage).toHaveBeenCalledWith(mockRecipe.recipe.id, mockRecipe.userId);
-            expect(deleteRecipeDB).toHaveBeenCalledWith('recipeId');
+            expect(deleteRecipeDB).toHaveBeenCalledWith('recipeId', userId);
         });
     });
 
@@ -83,10 +83,10 @@ describe('recipeServices', () => {
 
             (getRecipeDB as jest.Mock).mockResolvedValue(mockRecipe);
 
-            const result = await recipeServices.getRecipeById('recipeId');
+            const result = await recipeServices.getRecipeById('recipeId', userId);
 
             expect(result).toEqual(mockRecipe);
-            expect(getRecipeDB).toHaveBeenCalledWith('recipeId');
+            expect(getRecipeDB).toHaveBeenCalledWith('recipeId', userId);
         });
     });
 

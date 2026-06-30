@@ -69,8 +69,9 @@ export const addRecipeDB = async (recipe: RecipeWithImage): Promise<RecipeWithIm
     return toRecipeResponse(created);
 }
 
-export const getRecipeDB = async (recipeId: string): Promise<RecipeWithImage> => {
-    const recipe = await prisma.recipe.findUnique({ where: { id: recipeId } });
+export const getRecipeDB = async (recipeId: string, userId: string): Promise<RecipeWithImage> => {
+    // Scope by userId: the service-role key bypasses RLS, so ownership must be enforced here.
+    const recipe = await prisma.recipe.findFirst({ where: { id: recipeId, userId } });
 
     if (!recipe) {
         throw new Error('Recipe not found');
@@ -79,9 +80,10 @@ export const getRecipeDB = async (recipeId: string): Promise<RecipeWithImage> =>
     return toRecipeResponse(recipe);
 }
 
-export const deleteRecipeDB = async (recipeId: string): Promise<RecipeWithImage> => {
-    const deleted = await prisma.recipe.delete({ where: { id: recipeId } });
-    return toRecipeResponse(deleted);
+export const deleteRecipeDB = async (recipeId: string, userId: string) => {
+    // deleteMany lets us scope by userId (delete requires a unique-only where);
+    // this prevents deleting another user's recipe when RLS is bypassed.
+    return prisma.recipe.deleteMany({ where: { id: recipeId, userId } });
 }
 
 export const deleteUserRecipesDB = async (userId: string) => {
