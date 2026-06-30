@@ -1,7 +1,26 @@
+# Dependencies & build output (reinstalled/regenerated inside the image)
 node_modules
-npm-debug.log
+dist
 build
+src/generated
+
+# Secrets & local credentials — never bake these into the image
 .env
+.env.*
+*.pem
+*.key
+
+# Logs & debug
 logs
+npm-debug.log*
+
+# Tooling, docs, CI, and editor config not needed at runtime
 docs
 .vscode
+.git
+.gitignore
+.github
+.claude
+coverage
+*.md
+c-gpt-task-def.json
