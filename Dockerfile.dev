@@ -1,0 +1,24 @@
+# Dev image — used by ../docker-compose.dev.yml (hot-reload via bind mount).
+# The prod image is Dockerfile (npm ci, non-root, npm start).
+FROM node:22-alpine
+
+WORKDIR /usr/src/app
+
+# Install dependencies separately so they cache between source changes.
+# The compose file overlays node_modules with a named volume, so this layer
+# seeds that volume on first build.
+COPY package*.json ./
+RUN npm ci
+
+# Copy the rest of the source. In dev this is overlaid by a bind mount,
+# but we still copy so the image is usable without compose.
+COPY . .
+
+# Generate Prisma client (src/generated is gitignored, and mounted as a
+# named volume in compose so it survives the source bind mount).
+RUN npx prisma generate
+
+EXPOSE 5000
+
+# tsx watch — recompiles/restarts on change (see package.json "dev").
+CMD ["npm", "run", "dev"]
